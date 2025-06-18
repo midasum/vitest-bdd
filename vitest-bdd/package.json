@@ -1,0 +1,32 @@
+{
+  "name": "vitest-bdd",
+  "version": "0.1.0",
+  "description": "",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "echo 'clean'",
+    "cleanx": "rimraf dist && git checkout HEAD dist",
+    "dev": "pnpm bundle --watch",
+    "build": "pnpm clean && pnpm bundle",
+    "bundle": "tsup src/index.ts --sourcemap --dts --format esm",
+    "prepare": "pnpm build",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "tilia": "2.0.0-canary.20250617T095051",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.3"
+  }
+}
