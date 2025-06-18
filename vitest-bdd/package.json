@@ -14,7 +14,6 @@
     "dev": "pnpm bundle --watch",
     "build": "pnpm clean && pnpm bundle",
     "bundle": "tsup src/index.ts --sourcemap --dts --format esm",
-    "prepare": "pnpm build",
     "test": "vitest"
   },
   "keywords": [],
@@ -30,6 +29,8 @@
     "vitest": "^3.2.3"
   },
   "dependencies": {
-    "@cucumber/gherkin": "^32.1.2"
+    "@cucumber/gherkin": "^32.1.2",
+    "@cucumber/messages": "^27.2.0",
+    "source-map": "^0.7.4"
   }
 }

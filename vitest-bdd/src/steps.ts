@@ -43,10 +43,10 @@ export const But = step;
 export const And = step;
 export const Or = step;
 
-export function loadedRunner(given: Step): Runner {
+export function load(given: Step): Runner {
   const build = builders[given.query];
   if (!build) {
-    throw new Error(`Runner for "${given.query}" not found`);
+    throw new Error(`Missing loader for "${given.text}"`);
   }
   return build(given);
 }

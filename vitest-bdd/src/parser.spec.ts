@@ -11,7 +11,7 @@ describe("parse", () => {
     Then the result is 3
     And the title is "basic"
 `;
-    const feature = parse("", text);
+    const feature = parse(text);
     expect(feature.title).toBe("Calculator");
     expect(feature.scenarios.length).toBe(1);
     const scenario = feature.scenarios[0];

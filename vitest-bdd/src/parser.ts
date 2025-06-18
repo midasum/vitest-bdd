@@ -4,9 +4,12 @@ import {
   GherkinInMarkdownTokenMatcher,
   Parser,
 } from "@cucumber/gherkin";
-import { IdGenerator } from "@cucumber/messages";
+import {
+  type Background as GBackground,
+  type Scenario as GScenario,
+} from "@cucumber/messages";
 
-import { loadedRunner as loadRunner } from "./steps";
+import { load as loadRunner } from "./steps";
 
 export type TestFile = {
   uri: string;
@@ -24,22 +27,39 @@ export type Step = {
   params: (number | string)[];
 };
 
+export type SourceLocation = {
+  line: number;
+  column?: number;
+};
+
+export type LocatedStep = Step & {
+  location: SourceLocation;
+};
+
 // Operation or Assertion
 export type Scenario = {
   title: string;
-  steps: Step[];
+  location: SourceLocation;
+  steps: LocatedStep[];
 };
+
 export type Feature = {
   title: string;
+  location: SourceLocation;
   scenarios: Scenario[];
 };
 
-export function parse(uri: string, text: string): Feature {
-  const uuidFn = IdGenerator.uuid();
+export function parse(
+  text: string,
+  type: "markdown" | "classic" = "classic"
+): Feature {
+  let i = 0;
+  const uuidFn = () => `id${++i}`;
   const builder = new AstBuilder(uuidFn);
-  const matcher = uri.endsWith(".md")
-    ? new GherkinInMarkdownTokenMatcher()
-    : new GherkinClassicTokenMatcher();
+  const matcher =
+    type === "markdown"
+      ? new GherkinInMarkdownTokenMatcher()
+      : new GherkinClassicTokenMatcher();
 
   const parser = new Parser(builder, matcher);
   const doc = parser.parse(text);
@@ -48,37 +68,23 @@ export function parse(uri: string, text: string): Feature {
   }
   const feature: Feature = {
     title: doc.feature.name,
+    location: { line: 1, column: 0 },
     scenarios: [],
   };
+
   let background: Scenario = {
     title: "",
+    location: { line: 1, column: 0 },
     steps: [],
   };
 
   feature.scenarios = doc.feature.children
     .map((child) => {
       if (child.scenario) {
-        const scenario: Scenario = {
-          title: child.scenario.name,
-          steps: [],
-        };
-        if (child.scenario.steps) {
-          for (const step of child.scenario.steps) {
-            scenario.steps.push(parseStep(step.text));
-          }
-        }
-        return scenario;
+        return parseScenario(child.scenario);
       }
       if (child.background) {
-        background = {
-          title: child.background.name,
-          steps: [],
-        };
-        if (child.background.steps) {
-          for (const step of child.background.steps) {
-            background.steps.push(parseStep(step.text));
-          }
-        }
+        background = parseScenario(child.background);
       }
       return null;
     })
@@ -89,7 +95,6 @@ export function parse(uri: string, text: string): Feature {
   }
 
   return feature;
-  // return parse1(uri, text);
 }
 
 const keywords = ["given", "when", "then", "and", "but", "*"];
@@ -163,4 +168,21 @@ function removeKeyword(text: string): string {
     }
   }
   return text;
+}
+
+function parseScenario(gsc: GScenario | GBackground): Scenario {
+  const s: Scenario = {
+    title: gsc.name,
+    location: gsc.location,
+    steps: [],
+  };
+  if (gsc.steps) {
+    for (const step of gsc.steps) {
+      s.steps.push({
+        ...parseStep(step.text),
+        location: { ...step.location },
+      });
+    }
+  }
+  return s;
 }
