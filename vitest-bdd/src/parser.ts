@@ -1,4 +1,18 @@
+import {
+  AstBuilder,
+  GherkinClassicTokenMatcher,
+  GherkinInMarkdownTokenMatcher,
+  Parser,
+} from "@cucumber/gherkin";
+import { IdGenerator } from "@cucumber/messages";
+
 import { loadedRunner as loadRunner } from "./steps";
+
+export type TestFile = {
+  uri: string;
+  text: string;
+  language: string;
+};
 
 export type Context = {
   execute: (step: Step) => void;
@@ -20,95 +34,65 @@ export type Feature = {
   scenarios: Scenario[];
 };
 
-export function parse(text: string): Feature[] {
-  const features: Feature[] = [];
-  const lines = text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+export function parse(uri: string, text: string): Feature {
+  const uuidFn = IdGenerator.uuid();
+  const builder = new AstBuilder(uuidFn);
+  const matcher = uri.endsWith(".md")
+    ? new GherkinInMarkdownTokenMatcher()
+    : new GherkinClassicTokenMatcher();
 
-  let currentFeature: Feature | null = null;
-  let currentScenario: Scenario | null = null;
+  const parser = new Parser(builder, matcher);
+  const doc = parser.parse(text);
+  if (!doc.feature) {
+    throw new Error("No feature found");
+  }
+  const feature: Feature = {
+    title: doc.feature.name,
+    scenarios: [],
+  };
+  let background: Scenario = {
+    title: "",
+    steps: [],
+  };
 
-  for (const line of lines) {
-    // Skip comments
-    if (line.startsWith("#")) {
-      continue;
-    }
-
-    // Feature declaration
-    if (line.toLowerCase().startsWith("feature:")) {
-      // Save previous feature if exists
-      if (currentFeature) {
-        // Add current scenario to feature if exists
-        if (currentScenario) {
-          currentFeature.scenarios.push(currentScenario);
-          currentScenario = null;
+  feature.scenarios = doc.feature.children
+    .map((child) => {
+      if (child.scenario) {
+        const scenario: Scenario = {
+          title: child.scenario.name,
+          steps: [],
+        };
+        if (child.scenario.steps) {
+          for (const step of child.scenario.steps) {
+            scenario.steps.push(parseStep(step.text));
+          }
         }
-        features.push(currentFeature);
+        return scenario;
       }
-
-      currentFeature = {
-        title: line.substring(8).trim(), // Remove "Feature:" prefix
-        scenarios: [],
-      };
-    }
-
-    // Scenario declaration
-    else if (line.toLowerCase().startsWith("scenario:")) {
-      if (!currentFeature) {
-        throw new Error("Scenario found without a Feature declaration");
+      if (child.background) {
+        background = {
+          title: child.background.name,
+          steps: [],
+        };
+        if (child.background.steps) {
+          for (const step of child.background.steps) {
+            background.steps.push(parseStep(step.text));
+          }
+        }
       }
+      return null;
+    })
+    .filter(Boolean) as Scenario[];
 
-      // Save previous scenario if exists
-      if (currentScenario) {
-        currentFeature.scenarios.push(currentScenario);
-      }
-
-      currentScenario = {
-        title: line.substring(9).trim(), // Remove "Scenario:" prefix
-        steps: [],
-      };
-    }
-
-    // Step declarations (Given, When, Then, And, But)
-    else if (isStepKeyword(line)) {
-      if (!currentScenario) {
-        throw new Error("Step found without a Scenario declaration");
-      }
-
-      currentScenario.steps.push(parseStep(line));
-    }
-
-    // Handle continuation lines (indented lines that continue previous steps)
-    else if (line.startsWith("  ") || line.startsWith("\t")) {
-      if (currentScenario && currentScenario.steps.length > 0) {
-        const idx = currentScenario.steps.length - 1;
-        // Append to the last step
-        const last = currentScenario.steps[idx];
-        currentScenario.steps[idx] = parseStep(last.text + "\n" + line);
-      }
-    }
+  for (const scenario of feature.scenarios) {
+    scenario.steps.unshift(...background.steps);
   }
 
-  // Don't forget to add the last feature and scenario
-  if (currentFeature) {
-    if (currentScenario) {
-      currentFeature.scenarios.push(currentScenario);
-    }
-    features.push(currentFeature);
-  }
-
-  return features;
+  return feature;
+  // return parse1(uri, text);
 }
+
 const keywords = ["given", "when", "then", "and", "but", "*"];
-
-function isStepKeyword(line: string): boolean {
-  const lowerLine = line.toLowerCase();
-  return keywords.some(
-    (keyword) => lowerLine.startsWith(keyword + " ") || lowerLine === keyword
-  );
-}
 
 export function runScenario(scenario: Scenario) {
   const given = scenario.steps[0];

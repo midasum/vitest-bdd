@@ -5,6 +5,6 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [vitestBdd(), tsconfigPaths()],
   test: {
-    include: ["**/*.feature", "**/*.spec.ts"],
+    include: ["**/*.feature", "**/*.md", "**/*.spec.ts"],
   },
 });

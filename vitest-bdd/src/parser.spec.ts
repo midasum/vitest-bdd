@@ -11,11 +11,10 @@ describe("parse", () => {
     Then the result is 3
     And the title is "basic"
 `;
-    const features = parse(text);
-    expect(features.length).toBe(1);
-    expect(features[0].title).toBe("Calculator");
-    expect(features[0].scenarios.length).toBe(1);
-    const scenario = features[0].scenarios[0];
+    const feature = parse("", text);
+    expect(feature.title).toBe("Calculator");
+    expect(feature.scenarios.length).toBe(1);
+    const scenario = feature.scenarios[0];
 
     expect(scenario.title).toBe("Add two numbers");
     expect(scenario.steps.length).toBe(4);
