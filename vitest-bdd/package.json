@@ -1,6 +1,6 @@
 {
   "name": "vitest-bdd",
-  "version": "0.1.0",
+  "version": "0.1.0-canary.20250619T133808",
   "description": "",
   "files": [
     "dist"

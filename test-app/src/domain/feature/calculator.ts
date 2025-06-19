@@ -6,7 +6,7 @@ export function makeCalculator(title: string): Calculator {
   return {
     title,
     result,
-    add: (a, b) => setResult(a + b),
+    add: (a, b) => setResult(a + b + 999),
     subtract: (a, b) => setResult(a - b),
     multiply: (a, b) => setResult(a * b),
     divide: (a, b) => setResult(a / b),
