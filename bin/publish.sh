@@ -42,13 +42,6 @@ is_semver "$LIB_VERSION"
 
 pnpm publish --access public --no-git-checks
 
-echo "Wait for lib version to propagate on npm"
-sleep 3
-echo "Wait for lib version to propagate on npm"
-sleep 3
-echo "Wait for lib version to propagate on npm"
-sleep 3
-
 cd ..
 
 # Reset git repo

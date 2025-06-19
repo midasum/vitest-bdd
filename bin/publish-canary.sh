@@ -45,13 +45,6 @@ LIB_VERSION=$LIB_VERSION-canary.$DATE
 npm --no-git-tag-version version $LIB_VERSION
 CANARY=true pnpm publish --tag canary --access public --no-git-checks
 
-echo "Wait for lib version to propagate on npm"
-sleep 3
-echo "Wait for lib version to propagate on npm"
-sleep 3
-echo "Wait for lib version to propagate on npm"
-sleep 3
-
 cd ..
 
 # Reset git repo

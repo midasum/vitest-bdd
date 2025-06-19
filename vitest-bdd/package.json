@@ -14,10 +14,13 @@
     "vitest",
     "bdd",
     "gherkin",
-    "test-runner",
     "cucumber",
-    "testing",
-    "typescript"
+    "test-runner",
+    "vitest-plugin",
+    "step-definitions",
+    "feature-files",
+    "typescript",
+    "testing"
   ],
   "author": "Gaspard Anna Bucher <g.a.bucher@midasum.com>",
   "license": "MIT",
