@@ -1,14 +1,23 @@
 # vitest-bdd
 
-Gherkins test runner for vitest.
+Gherkin test runner for vitest.
 
 The goal is to provide a simple and intuitive way to write tests for your
-application. Steps reuse and binding are collocated with the feature file to ease
-discovery and step reuse is explicit.
+application. Use with [vitest](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) and [Gherkin](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete) extensions for VS-Code.
 
-Tests can run in parallel (no shared state) and are fast.
+![vitest-bdd banner](https://raw.githubusercontent.com/midasum/vitest-bdd/refs/heads/main/misc/vitest-bdd.jpg)
 
-Parsing of Gherkin is done with [@cucumber/gherkin](https://github.com/cucumber/gherkin).
+Tests can run in parallel (no shared state) and are fast and hot reloadable.
+
+**Features**
+
+* Write with Gherkin, execute with vitest !
+* View failed tests in steps definitions and Gherkin
+* Supports number, string and table parameters
+* Steps are easy to write, and explicitly linked to your context
+* Support "Background"
+* Supports experimental "Gherkin in markdown"
+* Parsing of Gherkin is done with [@cucumber/gherkin](https://github.com/cucumber/gherkin).
 
 ## Usage
 
@@ -56,7 +65,7 @@ Feature: Calculator
     Then the result is 0.5
 ```
 
-And create a steps file with `.feature.ts` extension (and exact same name as
+Create a steps file with `.feature.ts` extension (and exact same name as
 the feature file):
 
 ```ts
@@ -140,7 +149,7 @@ Given("I have a preference manager", () => {
 And this is some more markdown that does nothing.
 ```
 
-`src/domain/test/some.md.ts`
+Define steps in `src/domain/test/some.md.ts`
 
 ### Gherkin Table
 
