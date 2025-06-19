@@ -53,6 +53,7 @@ cd ..
 
 # Reset git repo
 git reset --hard HEAD
+git clean -fd
 git tag v$LIB_VERSION
 
 echo "Published successfully!"
