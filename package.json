@@ -1,27 +1,19 @@
 {
-  "name": "vitest-bdd",
+  "name": "vitest-bdd-monorepo",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://tiliajs.com",
-  "description": "vitest-bdd monorepo",
-  "main": "index.js",
+  "description": "Monorepo for vitest-bdd plugin and related packages.",
+  "homepage": "https://github.com/midasum/vitest-bdd",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tiliajs/tilia.git"
+    "url": "https://github.com/midasum/vitest-bdd.git"
   },
   "scripts": {
-    "plugin": "pnpm --filter vitest-bdd",
-    "app": "pnpm --filter test-app",
     "build": "pnpm -r build",
+    "test": "pnpm -r test",
     "canary": "./bin/publish-canary.sh",
-    "pub": "./bin/publish.sh",
-    "pretest": "pnpm build",
-    "test": "pnpm -r test"
+    "pub": "./bin/publish.sh"
   },
-  "devDependencies": {
-    "vitest": "^3.1.3"
-  },
-  "keywords": [],
   "author": "Gaspard Anna Bucher <g.a.bucher@midasum.com>",
   "license": "MIT"
 }

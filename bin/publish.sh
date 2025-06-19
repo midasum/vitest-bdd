@@ -32,6 +32,8 @@ is_semver() {
 pnpm i
 # Check compilation for all projects
 pnpm build
+# Copy README.md
+cp README.md vitest-bdd/README.md
 
 # ================ VITEST-BDD
 cd vitest-bdd

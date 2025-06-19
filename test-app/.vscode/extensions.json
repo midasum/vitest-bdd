@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "vitest.explorer",
-    "alexkrechik.cucumberautocomplete"
+    "alexkrechik.cucumberautocomplete",
+    "midasum.diagonal-architecture"
   ]
 }

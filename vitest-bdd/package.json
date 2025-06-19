@@ -1,36 +1,75 @@
 {
   "name": "vitest-bdd",
-  "version": "0.1.0-canary.20250619T133808",
-  "description": "",
-  "files": [
-    "dist"
+  "version": "0.1.0",
+  "description": "Gherkin test runner for Vitest",
+  "homepage": "https://github.com/midasum/vitest-bdd",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/midasum/vitest-bdd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/midasum/vitest-bdd/issues"
+  },
+  "keywords": [
+    "vitest",
+    "bdd",
+    "gherkin",
+    "test-runner",
+    "cucumber",
+    "testing",
+    "typescript"
   ],
+  "author": "Gaspard Anna Bucher <g.a.bucher@midasum.com>",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist/index.d.ts",
+    "dist/index.js",
+    "dist/index.js.map",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
-    "clean": "echo 'clean'",
-    "cleanx": "rimraf dist && git checkout HEAD dist",
+    "clean": "rimraf dist",
     "dev": "pnpm bundle --watch",
     "build": "pnpm clean && pnpm bundle",
-    "bundle": "tsup src/index.ts --sourcemap --dts --format esm",
-    "test": "vitest"
+    "bundle": "tsup src/index.ts --splitting false --sourcemap --dts --format esm",
+    "test": "vitest",
+    "prepack": "pnpm build && clean-package",
+    "postpack": "clean-package restore"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/node": "^24.0.3",
-    "tilia": "2.0.0-canary.20250617T095051",
+    "clean-package": "^2.2.0",
+    "rimraf": "^5.0.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.3"
   },
   "dependencies": {
     "@cucumber/gherkin": "^32.1.2",
     "@cucumber/messages": "^27.2.0",
     "source-map": "^0.7.4"
+  },
+  "peerDependencies": {
+    "vitest": "*"
+  },
+  "clean-package": {
+    "remove": [
+      "scripts",
+      "devDependencies",
+      "clean-package"
+    ]
   }
 }

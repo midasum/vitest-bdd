@@ -1,8 +1,8 @@
+import type { Table } from "@feature/table";
 import { signal } from "tilia";
-import type { Table } from "../api/feature/table";
 
 export function makeTable(data: string[][]): Table {
-  const headers = data[0].map((name, i) => ({
+  const headers = data[0].map((name) => ({
     name,
     title: name,
     sortable: true,

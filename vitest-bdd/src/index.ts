@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { SourceMapGenerator } from "source-map";
-import type { Plugin } from "vite";
+import type { Plugin } from "vitest/config";
 import { parse, type SourceLocation } from "./parser";
 export * from "./steps";
 
@@ -8,7 +8,6 @@ export function vitestBdd(): Plugin {
   return {
     name: "vitest-bdd",
     enforce: "pre",
-    // Handle .foobar files as virtual modules
     resolveId(id) {
       if (id.endsWith(".feature") || id.endsWith(".md")) return id;
     },

@@ -34,6 +34,8 @@ is_semver() {
 pnpm i
 # Rebuild for all projects
 pnpm build
+# Copy README.md
+cp README.md vitest-bdd/README.md
 
 cd vitest-bdd
 LIB_VERSION=$(npm pkg get version | sed 's/"//g')
