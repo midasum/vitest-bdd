@@ -49,5 +49,6 @@ cd ..
 
 # Reset git repo
 git reset --hard HEAD
+git clean -fd
 
 echo "Canary version published successfully!"
