@@ -21,10 +21,12 @@ export type Context = {
   execute: (step: Step) => void;
 };
 
+export type DataTable = string[][];
+
 export type Step = {
   text: string;
   query: string;
-  params: (number | string)[];
+  params: (number | string | DataTable)[];
 };
 
 export type SourceLocation = {
@@ -106,23 +108,26 @@ export function runScenario(scenario: Scenario) {
   }
   const runner = loadRunner(given);
   for (const step of scenario.steps.slice(1)) {
-    runner.execute(step);
+    const operation = runner.operation(step.query);
+    operation(...step.params);
   }
 }
 
-export function parseStep(text: string): Step {
+export function parseStep(keyword: string, text: string): Step {
   // Extract quoted strings from the step text
   const strings: string[] = [];
-  const text2 = normalize(text).replace(/"([^"]*)"/g, (match) => {
+  const text2 = text.replace(/"([^"]*)"/g, (match) => {
     strings.push(match.slice(1, -1));
     return "{string}";
   });
 
   const numbers: number[] = [];
-  const query = text2.replace(/\b\d+(?:\.\d+)?\b/g, (match) => {
-    numbers.push(parseFloat(match));
-    return "{number}";
-  });
+  const query = normalize(
+    text2.replace(/\b\d+(?:\.\d+)?\b/g, (match) => {
+      numbers.push(parseFloat(match));
+      return "{number}";
+    })
+  );
 
   const params: (number | string)[] = [];
   for (const match of query.matchAll(/\{(string|number)\}/g)) {
@@ -148,7 +153,7 @@ export function parseStep(text: string): Step {
   }
 
   return {
-    text,
+    text: keyword + text,
     query,
     params,
   };
@@ -177,10 +182,16 @@ function parseScenario(gsc: GScenario | GBackground): Scenario {
     steps: [],
   };
   if (gsc.steps) {
-    for (const step of gsc.steps) {
+    for (const gstep of gsc.steps) {
+      const step = parseStep(gstep.keyword, gstep.text);
+      if (gstep.dataTable) {
+        step.params.push(
+          gstep.dataTable.rows.map((row) => row.cells.map((c) => c.value))
+        );
+      }
       s.steps.push({
-        ...parseStep(step.text),
-        location: { ...step.location },
+        ...step,
+        location: { ...gstep.location },
       });
     }
   }

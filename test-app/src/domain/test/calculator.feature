@@ -1,4 +1,3 @@
-
 Feature: Calculator
 
   Background:

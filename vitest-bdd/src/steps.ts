@@ -3,7 +3,7 @@ import { normalize, type Step } from "./parser";
 export type Operation = (...params: any[]) => void;
 
 export type Runner = {
-  execute: (step: Step) => void;
+  operation: (query: string) => Operation;
 };
 
 type Operations = Record<string, Operation>;
@@ -15,12 +15,12 @@ export function Given(key: string, build: Operation) {
   builders[normalize(key)] = (given: Step) => {
     const ops: Operations = {};
     const runner = {
-      execute: (step: Step) => {
-        const operation = ops[step.query];
+      operation: (query: string) => {
+        const operation = ops[query];
         if (!operation) {
-          throw new Error(`Step "${step.query}" not found`);
+          throw new Error(`Step "${query}" not found`);
         }
-        operation(...step.params);
+        return operation;
       },
     };
     collect = ops;

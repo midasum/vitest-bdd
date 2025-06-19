@@ -40,10 +40,7 @@ function compile(path: string) {
   const base = { line: 1, column: 0 };
   push(`import { describe, it } from "vitest";`, base);
   push(`import { load } from "vitest-bdd";`, base);
-  push(
-    `import ${JSON.stringify(path.replace(/\.[^.]+$/, ".steps.ts"))};`,
-    base
-  );
+  push(`import ${JSON.stringify(path + ".ts")};`, base);
   push(`describe(${JSON.stringify(feature.title)}, () => {`, feature.location);
   for (const scenario of feature.scenarios) {
     push(`  it(${JSON.stringify(scenario.title)}, () => {`, scenario.location);
@@ -53,7 +50,12 @@ function compile(path: string) {
     }
     push(`    const runner = load(${JSON.stringify(given)});`, given.location);
     for (const step of scenario.steps.slice(1)) {
-      push(`    runner.execute(${JSON.stringify(step)});`, step.location);
+      push(
+        `    runner.operation(${JSON.stringify(
+          step.query
+        )})(...${JSON.stringify(step.params)});`,
+        step.location
+      );
     }
     push(`  });`, given.location);
     push("", given.location);

@@ -16,7 +16,7 @@
     "canary": "./bin/publish-canary.sh",
     "pub": "./bin/publish.sh",
     "pretest": "pnpm build",
-    "test": "pnpm test"
+    "test": "pnpm -r test"
   },
   "devDependencies": {
     "vitest": "^3.1.3"
