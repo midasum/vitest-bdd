@@ -4,7 +4,9 @@ import type { Plugin } from "vitest/config";
 import { parse, type SourceLocation } from "./parser";
 export * from "./steps";
 
-export function vitestBdd(): Plugin {
+export function vitestBdd(
+  { debug }: { debug: boolean } = { debug: false }
+): Plugin {
   return {
     name: "vitest-bdd",
     enforce: "pre",
@@ -13,13 +15,13 @@ export function vitestBdd(): Plugin {
     },
     load(id) {
       if (id.endsWith(".feature") || id.endsWith(".md")) {
-        return compile(id);
+        return compile(id, debug);
       }
     },
   };
 }
 
-function compile(path: string) {
+function compile(path: string, debug = false) {
   const text = readFileSync(path, "utf8");
   const lines = text.split("\n");
   const feature = parse(text, path.endsWith(".md") ? "markdown" : "classic");
@@ -27,8 +29,9 @@ function compile(path: string) {
   const map = new SourceMapGenerator({ file: path });
   function push(text: string, location: SourceLocation) {
     const line = lines[location.line];
-    const column =
-      line.length - line.replace(/^(-|\*) /, "").trimStart().length;
+    const column = line
+      ? line.length - line.replace(/^(-|\*) /, "").trimStart().length
+      : 0;
     out.push(text);
     map.addMapping({
       source: path,
@@ -61,5 +64,8 @@ function compile(path: string) {
   }
   push(`});`, feature.location);
   push("", feature.location);
+  if (debug) {
+    console.log(out.join("\n"));
+  }
   return { code: out.join("\n"), map: map.toJSON() };
 }

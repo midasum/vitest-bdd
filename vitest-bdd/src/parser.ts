@@ -123,11 +123,12 @@ export function parseStep(keyword: string, text: string): Step {
 
   const numbers: number[] = [];
   const query = normalize(
-    text2.replace(/\b\d+(?:\.\d+)?\b/g, (match) => {
+    text2.replace(/-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g, (match) => {
       numbers.push(parseFloat(match));
       return "{number}";
     })
   );
+  console.log(query);
 
   const params: (number | string)[] = [];
   for (const match of query.matchAll(/\{(string|number)\}/g)) {

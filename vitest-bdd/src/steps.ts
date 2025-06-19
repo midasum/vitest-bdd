@@ -1,4 +1,4 @@
-import { normalize, type Step } from "./parser";
+import { normalize, type Step as StepType } from "./parser";
 
 export type Operation = (...params: any[]) => void;
 
@@ -8,11 +8,11 @@ export type Runner = {
 
 type Operations = Record<string, Operation>;
 
-const builders: Record<string, (given: Step) => Runner> = {};
+const builders: Record<string, (given: StepType) => Runner> = {};
 let collect: Operations | null = null;
 
 export function Given(key: string, build: Operation) {
-  builders[normalize(key)] = (given: Step) => {
+  builders[normalize(key)] = (given: StepType) => {
     const ops: Operations = {};
     const runner = {
       operation: (query: string) => {
@@ -30,20 +30,19 @@ export function Given(key: string, build: Operation) {
   };
 }
 
-export function step(key: string, op: Operation) {
+export function Step(key: string, op: Operation) {
   if (!collect) {
     throw new Error("Steps should start with a Given function");
   }
   collect[normalize(key)] = op;
 }
 
-export const When = step;
-export const Then = step;
-export const But = step;
-export const And = step;
-export const Or = step;
+export const When = Step;
+export const Then = Step;
+export const But = Step;
+export const And = Step;
 
-export function load(given: Step): Runner {
+export function load(given: StepType): Runner {
   const build = builders[given.query];
   if (!build) {
     throw new Error(`Missing loader for "${given.text}"`);

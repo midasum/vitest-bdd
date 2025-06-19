@@ -48,6 +48,24 @@ describe("parseStep", () => {
     expect(step.params).toEqual([1, 2]);
   });
 
+  it("Should parse a step with a negative number", () => {
+    const step = parseStep("When ", "I add -1 and 2");
+    expect(step.query).toBe("i add {number} and {number}");
+    expect(step.params).toEqual([-1, 2]);
+  });
+
+  it("Should parse a step numbers without word boundaries", () => {
+    const step = parseStep("When ", "I compute -123/245");
+    expect(step.query).toBe("i compute {number}/{number}");
+    expect(step.params).toEqual([-123, 245]);
+  });
+
+  it("Should parse complex numbers", () => {
+    const step = parseStep("When ", "I use -123.43E-2");
+    expect(step.query).toBe("i use {number}");
+    expect(step.params).toEqual([-1.2343]);
+  });
+
   it("Should parse a step with a string", () => {
     const step = parseStep("When ", 'I add "hello" and "world"');
     expect(step.text).toBe('When I add "hello" and "world"');

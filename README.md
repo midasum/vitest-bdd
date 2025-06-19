@@ -11,13 +11,13 @@ Tests can run in parallel (no shared state) and are fast and hot reloadable.
 
 **Features**
 
-* Write with Gherkin, execute with vitest !
-* View failed tests in steps definitions and Gherkin
-* Supports number, string and table parameters
-* Steps are easy to write, and explicitly linked to your context
-* Support "Background"
-* Supports experimental "Gherkin in markdown"
-* Parsing of Gherkin is done with [@cucumber/gherkin](https://github.com/cucumber/gherkin).
+- Write with Gherkin, execute with vitest !
+- View failed tests in steps definitions and Gherkin
+- Supports number, string and table parameters
+- Steps are easy to write, and explicitly linked to your context
+- Support "Background"
+- Supports experimental "Gherkin in markdown"
+- Parsing of Gherkin is done with [@cucumber/gherkin](https://github.com/cucumber/gherkin).
 
 ## Usage
 
@@ -37,9 +37,9 @@ import { defineConfig } from "vitest/config";
 import { vitestBdd } from "vitest-bdd";
 
 export default defineConfig({
+  plugins: [vitestBdd()],
   test: {
-    plugins: [vitestBdd()],
-    include: ["src/**/*.feature", "src/**/*.spec.ts"],
+    include: ["**/*.feature", "**/*.spec.ts"],
   },
 });
 ```
@@ -72,7 +72,7 @@ the feature file):
 // src/domain/test/calculator.feature.ts
 import { type Signal } from "tilia";
 import { expect } from "vitest";
-import { And, Given, Or, Then, When } from "vitest-bdd";
+import { And, Given, Then, When } from "vitest-bdd";
 import { makeCalculator } from "../feature/calculator";
 
 // You can reuse steps in multiple contexts
@@ -88,9 +88,9 @@ Given("I have a {string} calculator", (type) => {
     case "basic": {
       const calculator = basicCalculator();
       When("I add {number} and {number}", calculator.add);
-      Or("I subtract {number} and {number}", calculator.subtract);
-      Or("I multiply {number} by {number}", calculator.multiply);
-      Or("I divide {number} by {number}", calculator.divide);
+      And("I subtract {number} and {number}", calculator.subtract);
+      And("I multiply {number} by {number}", calculator.multiply);
+      And("I divide {number} by {number}", calculator.divide);
       resultAssertions(calculator);
       break;
     }
@@ -192,3 +192,94 @@ Given("I have a table", (data) => {
   });
 });
 ```
+
+## Non-english support
+
+You can write your tests in any language supported by Cucumber (around 40).
+
+```gherkin
+# language: fr
+# /some/feature/calculator.feature
+# language: fr
+Fonctionnalité: Calculatrice
+
+  Scénario: Addition de deux nombres
+    Soit une calculatrice
+    Quand j'ajoute 15 et 10
+    Alors le résultat doit être 25
+
+  Scénario: Addition de nombres négatifs
+    Soit une calculatrice
+    Quand j'ajoute -15 et -10
+    Alors le résultat doit être -25
+
+  Scénario: Soustraction de deux nombres
+    Soit une calculatrice
+    Quand je soustrais 5 à 12
+    Alors le résultat doit être 7
+```
+
+And the steps file:
+
+```ts
+// /some/feature/calculator.feature.ts
+import { expect } from "vitest";
+import { Given, Step } from "vitest-bdd";
+import { makeCalculator } from "../feature/calculator";
+const Soit = Given;
+const Quand = Step;
+const Alors = Step;
+
+Soit("un calculator", () => {
+  const calculator = makeCalculator();
+  Quand("j'ajoute {number} et {number}", calculator.add);
+  Quand("je soustrais {number} à {number}", calculator.subtract);
+
+  Alors("le résultat doit être {number}", (expected: string) => {
+    expect(calculator.result.value).toBe(expected);
+  });
+});
+```
+
+Don't forget to update some settings (if you use cucumber autocomplete VS Code Extension):
+
+```json
+{
+  "workbench.iconTheme": "diagonal-architecture-light-icon-theme",
+  "cucumberautocomplete.steps": ["src/domain/test/**/*.feature.ts"],
+  "cucumberautocomplete.formatConfOverride": {
+    "Fonctionnalité": 0,
+    "Scénario": 1,
+    "Soit": 2,
+    "Quand": 2,
+    "Alors": 2
+  },
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "cucumberautocomplete.smartSnippets": true,
+  "cucumberautocomplete.syncfeatures": "src/domain/test/**/*.feature"
+}
+```
+
+Some extensions for BDD and Gherkins.
+
+- The cucumberautocomplete extension adds syntax support and auto-complete for Gherkin.
+- The diagonal architecture extension helps structure projects and has icons for `.feature` and `.feature.ts`.
+
+```json
+{
+  "recommendations": [
+    "midasum.diagonal-architecture",
+    "alexkrechik.cucumberautocomplete"
+  ]
+}
+```
+
+# Changelog
+
+Complete changelog is available [here](https://github.com/midasum/vitest-bdd/blob/main/CHANGELOG.md).
+
+- **0.1.0**: Canary version
+
+- Create basic plugin
+- Added support for scientific number notation
+- Fixed negative number parsing
