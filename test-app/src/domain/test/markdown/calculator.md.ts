@@ -1,6 +1,6 @@
 import { expect } from "vitest";
 import { And, Given, Then, When } from "vitest-bdd";
-import { makeCalculator } from "../feature/calculator";
+import { makeCalculator } from "../../feature/calculator";
 
 Given("I have a {string} calculator", (name: string) => {
   const calculator = makeCalculator(name);

@@ -43,7 +43,10 @@ function compile(path: string, debug = false) {
   push(`import { describe, it } from "vitest";`, base);
   push(`import { load } from "vitest-bdd";`, base);
   push(`import ${JSON.stringify(path + ".ts")};`, base);
-  push(`describe(${JSON.stringify(feature.title)}, () => {`, feature.location);
+  push(
+    `describe(${JSON.stringify(feature.title)}, async () => {`,
+    feature.location
+  );
   for (const scenario of feature.scenarios) {
     push(`  it(${JSON.stringify(scenario.title)}, () => {`, scenario.location);
     const given = scenario.steps[0];

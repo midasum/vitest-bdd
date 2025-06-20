@@ -29,6 +29,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "require": "./dist/index.cjs",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -36,6 +37,8 @@
   "sideEffects": false,
   "files": [
     "dist/index.d.ts",
+    "dist/index.cjs",
+    "dist/index.cjs.map",
     "dist/index.js",
     "dist/index.js.map",
     "README.md"
@@ -47,7 +50,7 @@
     "clean": "rimraf dist",
     "dev": "pnpm bundle --watch",
     "build": "pnpm clean && pnpm bundle",
-    "bundle": "tsup src/index.ts --splitting false --sourcemap --dts --format esm",
+    "bundle": "tsup src/index.ts --splitting false --sourcemap --dts --format esm,cjs",
     "test": "vitest",
     "prepack": "pnpm build && clean-package",
     "postpack": "clean-package restore"

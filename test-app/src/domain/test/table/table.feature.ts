@@ -1,6 +1,6 @@
 import { expect } from "vitest";
 import { Given, Then, When } from "vitest-bdd";
-import { makeTable } from "../feature/table";
+import { makeTable } from "../../feature/table";
 
 Given("I have a table", (data) => {
   const table = makeTable(data);
