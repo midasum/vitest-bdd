@@ -11,13 +11,16 @@ Tests can run in parallel (no shared state) and are fast and hot reloadable.
 
 **Features**
 
-- Write with Gherkin, execute with vitest !
-- View failed tests in steps definitions and Gherkin
-- Supports number, string and table parameters
-- Steps are easy to write, and explicitly linked to your context
-- Support "Background"
-- Supports experimental "Gherkin in markdown"
-- Parsing of Gherkin is done with [@cucumber/gherkin](https://github.com/cucumber/gherkin).
+- **write with Gherkin, execute with vitest !**
+- async tests
+- concurrent testing
+- failed tests in steps definitions and Gherkin
+- supports number, string and table parameters
+- steps are explicitly linked to your context (easy to trace usage)
+- supports "Background"
+- experimental "Gherkin in markdown"
+- ESM and CJS projects support
+- Gherkin parsing with [@cucumber/gherkin](https://github.com/cucumber/gherkin).
 
 ## Usage
 
@@ -72,18 +75,23 @@ the feature file):
 // src/domain/test/calculator.feature.ts
 import { type Signal } from "tilia";
 import { expect } from "vitest";
-import { And, Given, Then, When } from "vitest-bdd";
+import { Given, type Step } from "vitest-bdd";
 import { makeCalculator } from "../feature/calculator";
 
 // You can reuse steps in multiple contexts
 // Here anything that has a result value.
-function resultAssertions(calculator: { result: Signal<number> }) {
-  Then("the result is {number}", (n: number) => {
+function resultAssertions(Then: Step, calculator: { result: Signal<number> }) {
+  // We define an async step, just to look cool 😎.
+  Then("the result is {number}", async (n: number) => {
+    await calculator.proccessBigComputation();
     expect(calculator.result.value).toBe(n);
   });
 }
 
-Given("I have a {string} calculator", (type) => {
+// You can use any variable name instead of When, And, and Then to match the
+// language of the Gherkin messages, such as { Quand, Alors, Et }, etc. We show
+// the code in an async situation (because it's the most difficult to handle).
+Given("I have a {string} calculator", async ({ When, And, Then }, type) => {
   switch (type) {
     case "basic": {
       const calculator = basicCalculator();
@@ -118,9 +126,9 @@ reuse the form steps:
 // src/domain/test/preference-manager.feature.ts
 import { formSteps } from "@steps/form";
 
-Given("I have a preference manager", () => {
+Given("I have a preference manager", ({ Step }) => {
   const preferenceManager = makePreferenceManager();
-  formSteps(preferenceManager);
+  formSteps(Step, preferenceManager);
 });
 ```
 
@@ -180,7 +188,7 @@ Feature: Table
 import { Given, Then, When } from "vitest-bdd";
 import { makeTable } from "../feature/table";
 
-Given("I have a table", (data) => {
+Given("I have a table", ({ When, Then }, data) => {
   // data : string[][]
   const table = makeTable(data);
 
@@ -224,13 +232,10 @@ And the steps file:
 ```ts
 // /some/feature/calculator.feature.ts
 import { expect } from "vitest";
-import { Given, Step } from "vitest-bdd";
+import { Given } from "vitest-bdd";
 import { makeCalculator } from "../feature/calculator";
-const Soit = Given;
-const Quand = Step;
-const Alors = Step;
 
-Soit("un calculator", () => {
+Soit("un calculator", ({ Quand, Alors }) => {
   const calculator = makeCalculator();
   Quand("j'ajoute {number} et {number}", calculator.add);
   Quand("je soustrais {number} à {number}", calculator.subtract);
@@ -241,9 +246,10 @@ Soit("un calculator", () => {
 });
 ```
 
-Don't forget to update some settings (if you use cucumber autocomplete VS Code Extension):
+Don't forget to update some vscode settings (if you use cucumber autocomplete VS Code Extension):
 
 ```json
+// .vscode/settings.json
 {
   "workbench.iconTheme": "diagonal-architecture-light-icon-theme",
   "cucumberautocomplete.steps": ["src/domain/test/**/*.feature.ts"],
@@ -260,10 +266,10 @@ Don't forget to update some settings (if you use cucumber autocomplete VS Code E
 }
 ```
 
-Some extensions for BDD and Gherkins.
+And finally, here are some nice extensions for VS Code that can support your BDD journey:
 
-- The cucumberautocomplete extension adds syntax support and auto-complete for Gherkin.
-- The diagonal architecture extension helps structure projects and has icons for `.feature` and `.feature.ts`.
+- The [Cucumber auto-complete](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete) extension adds syntax support and auto-complete for Gherkin.
+- The [diagonal architecture](https://marketplace.visualstudio.com/items?itemName=midasum.diagonal-architecture) extension helps structure projects and has icons for `.feature` and `.feature.ts`.
 
 ```json
 {
@@ -276,10 +282,12 @@ Some extensions for BDD and Gherkins.
 
 # Changelog
 
-Complete changelog is available [here](https://github.com/midasum/vitest-bdd/blob/main/CHANGELOG.md).
+Complete changelog is available [here](https://github.com/midasum/vitest-bdd/blob/main/CHANGELOG.md). Changelog is in reverse time order (latest at the top).
 
 - **0.1.0**: Canary version
 
-- Create basic plugin
-- Added support for scientific number notation
+- Add async support
+- Add concurrency support
 - Fixed negative number parsing
+- Added support for scientific number notation
+- Create basic plugin

@@ -101,15 +101,15 @@ export function parse(
 
 const keywords = ["given", "when", "then", "and", "but", "*"];
 
-export function runScenario(scenario: Scenario) {
+export async function runScenario(scenario: Scenario) {
   const given = scenario.steps[0];
   if (!given) {
     throw new Error("Scenario has no Given step");
   }
-  const runner = loadRunner(given);
+  const runner = await loadRunner(given);
   for (const step of scenario.steps.slice(1)) {
     const operation = runner.operation(step.query);
-    operation(...step.params);
+    await operation(...step.params);
   }
 }
 
@@ -128,7 +128,6 @@ export function parseStep(keyword: string, text: string): Step {
       return "{number}";
     })
   );
-  console.log(query);
 
   const params: (number | string)[] = [];
   for (const match of query.matchAll(/\{(string|number)\}/g)) {

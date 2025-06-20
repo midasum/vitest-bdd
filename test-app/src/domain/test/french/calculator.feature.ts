@@ -1,14 +1,11 @@
 import { expect } from "vitest";
-import { Given, Step } from "vitest-bdd";
+import { Given as Soit } from "vitest-bdd";
 import { makeCalculator } from "../../feature/calculator";
-const Soit = Given;
-const Quand = Step;
-const Alors = Step;
 
-Soit("un calculator", () => {
+Soit("un calculator", ({ Quand, Alors }) => {
   const calculator = makeCalculator("basic");
   Quand("j'ajoute {number} et {number}", calculator.add);
-  Quand("je soustrais {number} à {number}", (a, b) =>
+  Quand("je soustrais {number} à {number}", (a: number, b: number) =>
     calculator.subtract(b, a)
   );
 

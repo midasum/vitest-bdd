@@ -7,12 +7,13 @@ export type Runner = {
 };
 
 type Operations = Record<string, Operation>;
+export type Step = (key: string, op: Operation) => void;
+export type Context = Record<string, Step>;
 
-const builders: Record<string, (given: StepType) => Runner> = {};
-let collect: Operations | null = null;
+const builders: Record<string, (given: StepType) => Promise<Runner>> = {};
 
-export function Given(key: string, build: Operation) {
-  builders[normalize(key)] = (given: StepType) => {
+export function Given(key: string, build: (...params: any[]) => void) {
+  builders[normalize(key)] = async (given: StepType) => {
     const ops: Operations = {};
     const runner = {
       operation: (query: string) => {
@@ -23,26 +24,18 @@ export function Given(key: string, build: Operation) {
         return operation;
       },
     };
-    collect = ops;
-    build(...given.params);
-    collect = null;
+    const ctx: Context = new Proxy(
+      {},
+      {
+        get: () => (key: string, op: Operation) => (ops[normalize(key)] = op),
+      }
+    );
+    await build(ctx, ...given.params);
     return runner;
   };
 }
 
-export function Step(key: string, op: Operation) {
-  if (!collect) {
-    throw new Error("Steps should start with a Given function");
-  }
-  collect[normalize(key)] = op;
-}
-
-export const When = Step;
-export const Then = Step;
-export const But = Step;
-export const And = Step;
-
-export function load(given: StepType): Runner {
+export function load(given: StepType): Promise<Runner> {
   const build = builders[given.query];
   if (!build) {
     throw new Error(`Missing loader for "${given.text}"`);

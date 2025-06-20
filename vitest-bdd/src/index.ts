@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { SourceMapGenerator } from "source-map";
-import type { Plugin } from "vitest/config";
+import type { Plugin } from "vite";
 import { parse, type SourceLocation } from "./parser";
 export * from "./steps";
 
@@ -44,19 +44,25 @@ function compile(path: string, debug = false) {
   push(`import { load } from "vitest-bdd";`, base);
   push(`import ${JSON.stringify(path + ".ts")};`, base);
   push(
-    `describe(${JSON.stringify(feature.title)}, async () => {`,
+    `describe.concurrent(${JSON.stringify(feature.title)}, () => {`,
     feature.location
   );
   for (const scenario of feature.scenarios) {
-    push(`  it(${JSON.stringify(scenario.title)}, () => {`, scenario.location);
+    push(
+      `  it(${JSON.stringify(scenario.title)}, async () => {`,
+      scenario.location
+    );
     const given = scenario.steps[0];
     if (!given) {
       throw new Error("Scenario has no Given step");
     }
-    push(`    const runner = load(${JSON.stringify(given)});`, given.location);
+    push(
+      `    const runner = await load(${JSON.stringify(given)});`,
+      given.location
+    );
     for (const step of scenario.steps.slice(1)) {
       push(
-        `    runner.operation(${JSON.stringify(
+        `    await runner.operation(${JSON.stringify(
           step.query
         )})(...${JSON.stringify(step.params)});`,
         step.location

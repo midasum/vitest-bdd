@@ -11,7 +11,6 @@ Fonctionnalité: Calculator
     Quand j'ajoute -15 et -10
     Alors le résultat doit être -25
 
-
   Scénario: Soustraction de deux nombres
     Soit un calculator
     Quand je soustrais 5 à 12
