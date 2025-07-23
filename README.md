@@ -132,30 +132,39 @@ Given("I have a preference manager", ({ Step }) => {
 });
 ```
 
-### Gherkin Markdown
+### Gherkin in Markdown
 
-`src/domain/test/some.md`
+**vitest-bdd** parses the `gherkin` code fences and compiles them into a test suite.
 
-```md
-# Feature: Calculator in md
+Example: `src/domain/test/some.md`
 
-## Background:
+````markdown
+### Basic calculator
 
-- Given I have a "basic" calculator
-- Then the title is "basic"
+```gherkin
+Feature: Calculator in md
 
-## Scenario: Add two numbers
-
-- When I add 1 and 2
-- Then the result is 3
-
-## Scenario: Advanced calculator
-
-- When I divide 1 by 2
-- Then the result is 0.5
-
-And this is some more markdown that does nothing.
+Background:
+  Given I have a "basic" calculator
+  Then the title is "basic"
 ```
+
+Some other markdown that does nothing.
+
+## Basic operations
+
+```gherkin
+Scenario: Add two numbers
+  When I add 1 and 2
+  Then the result is 4
+
+Scenario: Advanced calculator
+  When I divide 1 by 2
+  Then the result is 0.5
+```
+
+And this is some more markdown.
+````
 
 Define steps in `src/domain/test/some.md.ts`
 
@@ -284,10 +293,12 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 
 Complete changelog is available [here](https://github.com/midasum/vitest-bdd/blob/main/CHANGELOG.md). Changelog is in reverse time order (latest at the top).
 
-- **0.1.0**: Canary version
-
-- Add async support
-- Add concurrency support
-- Fixed negative number parsing
-- Added support for scientific number notation
-- Create basic plugin
+- **0.2.0** (2025-07-23)
+  - Add support for Gherkin in markdown
+  - Add basic support for ReScript step definitions
+- **0.1.0** (2025-07-04)
+  - Add async support
+  - Add concurrency support
+  - Fixed negative number parsing
+  - Added support for scientific number notation
+  - Create basic plugin

@@ -11,7 +11,7 @@ Given("I have a {string} calculator", ({ When, Then, And }, name: string) => {
   When("I divide {number} by {number}", calculator.divide);
 
   Then("the result is {number}", (n: number) => {
-    expect(calculator.result.value).toBe(n);
+    expect(calculator.result).toBe(n);
   });
   And("the title is {string}", (s: string) => {
     expect(calculator.title).toBe(s);

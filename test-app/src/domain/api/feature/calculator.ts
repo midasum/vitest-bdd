@@ -1,8 +1,6 @@
-import type { Signal } from "tilia";
-
 export interface Calculator {
-  title: string;
-  result: Signal<number>;
+  readonly title: string;
+  readonly result: number;
   add: (a: number, b: number) => void;
   subtract: (a: number, b: number) => void;
   multiply: (a: number, b: number) => void;

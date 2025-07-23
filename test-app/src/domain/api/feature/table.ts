@@ -1,5 +1,3 @@
-import type { Signal } from "tilia";
-
 export interface Header {
   readonly name: string;
   readonly title: string;
@@ -10,6 +8,6 @@ export type Row = string[];
 
 export interface Table {
   readonly headers: Header[];
-  readonly rows: Signal<Row[]>;
+  readonly rows: Row[];
   sort(column: string): void;
 }

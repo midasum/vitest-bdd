@@ -1,5 +1,5 @@
 import type { Table } from "@feature/table";
-import { signal } from "tilia";
+import { computed, signal, tilia } from "tilia";
 
 export function makeTable(data: string[][]): Table {
   const headers = data[0].map((name) => ({
@@ -7,11 +7,11 @@ export function makeTable(data: string[][]): Table {
     title: name,
     sortable: true,
   }));
-  const [rows, setRows] = signal(data.slice(1));
+  const rows = signal(data.slice(1));
 
-  return {
+  return tilia({
     headers,
-    rows,
+    rows: computed(() => rows.value),
     sort(column: string) {
       const sortIdx = headers.findIndex((h) => h.name === column);
       if (sortIdx === -1) {
@@ -19,7 +19,7 @@ export function makeTable(data: string[][]): Table {
       }
       const list = [...rows.value];
       list.sort((a, b) => a[sortIdx].localeCompare(b[sortIdx]));
-      setRows(list);
+      rows.value = list;
     },
-  };
+  });
 }

@@ -1,7 +1,6 @@
 import {
   AstBuilder,
   GherkinClassicTokenMatcher,
-  GherkinInMarkdownTokenMatcher,
   Parser,
 } from "@cucumber/gherkin";
 import {
@@ -51,21 +50,47 @@ export type Feature = {
   scenarios: Scenario[];
 };
 
-export function parse(
-  text: string,
-  type: "markdown" | "classic" = "classic"
-): Feature {
+export function mdToGherkin(atext: string, linemapper: Record<number, number>) {
+  const lines = atext.split("\n");
+  const gherkin: string[] = [];
   let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.startsWith("```gherkin")) {
+      i += 1;
+      while (i < lines.length && !lines[i].startsWith("```")) {
+        gherkin.push(lines[i]);
+        linemapper[gherkin.length] = i + 1;
+        i++;
+      }
+    }
+    i++;
+  }
+  return gherkin.join("\n");
+}
+
+export function parse(
+  atext: string,
+  type: "markdown" | "classic" = "classic"
+): Feature | null {
+  let i = 0;
+  let text = atext;
   const uuidFn = () => `id${++i}`;
   const builder = new AstBuilder(uuidFn);
-  const matcher =
-    type === "markdown"
-      ? new GherkinInMarkdownTokenMatcher()
-      : new GherkinClassicTokenMatcher();
+  const linemapper: Record<number, number> = {};
+  if (type === "markdown") {
+    // Pre-parse (and store source mapping)
+    text = mdToGherkin(atext, linemapper);
+  }
+  const matcher = new GherkinClassicTokenMatcher();
 
   const parser = new Parser(builder, matcher);
   const doc = parser.parse(text);
   if (!doc.feature) {
+    if (type === "markdown") {
+      // ignore
+      return null;
+    }
     throw new Error("No feature found");
   }
   const feature: Feature = {
@@ -83,10 +108,10 @@ export function parse(
   feature.scenarios = doc.feature.children
     .map((child) => {
       if (child.scenario) {
-        return parseScenario(child.scenario);
+        return parseScenario(child.scenario, linemapper);
       }
       if (child.background) {
-        background = parseScenario(child.background);
+        background = parseScenario(child.background, linemapper);
       }
       return null;
     })
@@ -175,10 +200,20 @@ function removeKeyword(text: string): string {
   return text;
 }
 
-function parseScenario(gsc: GScenario | GBackground): Scenario {
+function parseScenario(
+  gsc: GScenario | GBackground,
+  linemapper: Record<number, number>
+): Scenario {
+  function loc(location: GScenario["location"]): GScenario["location"] {
+    const line = linemapper[location.line] ?? location.line;
+    return {
+      ...location,
+      line,
+    };
+  }
   const s: Scenario = {
     title: gsc.name,
-    location: gsc.location,
+    location: loc(gsc.location),
     steps: [],
   };
   if (gsc.steps) {
@@ -191,7 +226,7 @@ function parseScenario(gsc: GScenario | GBackground): Scenario {
       }
       s.steps.push({
         ...step,
-        location: { ...gstep.location },
+        location: loc(gstep.location),
       });
     }
   }

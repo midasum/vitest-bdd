@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parse, parseStep } from "./parser";
+import { mdToGherkin, parse, parseStep } from "./parser";
 
 describe("parse", () => {
   it("Should parse a simple feature", () => {
@@ -83,5 +83,65 @@ describe("parseStep", () => {
       "i say {number} and {string} and {string} and {number}"
     );
     expect(step.params).toEqual([12, "Hello", "World!", 7.12]);
+  });
+});
+
+describe("mdToGherkin", () => {
+  it("Should convert markdown to gherkin", () => {
+    const text = `# Title
+Some text.
+
+## Sub-title
+
+\`\`\`gherkin
+Feature: Calculator
+\`\`\`
+
+Some text
+
+\`\`\`gherkin
+Scenario: Add two numbers
+  Given I have a calculator
+  When I add 1 and 2
+  Then the result is 3
+\`\`\`
+
+Some other text
+
+\`\`\`gherkin
+Scenario: Subtract two numbers
+  Given I have a calculator
+  When I subtract 1 from 2
+  Then the result is 1
+\`\`\`
+`;
+    const linemapper: Record<number, number> = {};
+    const gherkin = mdToGherkin(text, linemapper);
+    expect(gherkin).toBe(`Feature: Calculator
+Scenario: Add two numbers
+  Given I have a calculator
+  When I add 1 and 2
+  Then the result is 3
+Scenario: Subtract two numbers
+  Given I have a calculator
+  When I subtract 1 from 2
+  Then the result is 1`);
+    expect(
+      Object.entries(linemapper)
+        .map(
+          ([line, i]) =>
+            `${line.padStart(2, "0")}: ${String(i).padStart(2, "0")}`
+        )
+        .sort()
+        .join("\n")
+    ).toBe(`01: 07
+02: 13
+03: 14
+04: 15
+05: 16
+06: 22
+07: 23
+08: 24
+09: 25`);
   });
 });

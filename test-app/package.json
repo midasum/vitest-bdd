@@ -4,7 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "res:build": "rescript",
+    "res:clean": "rescript clean",
+    "res:dev": "rescript -w"
   },
   "devDependencies": {
     "vite-tsconfig-paths": "^5.1.4",
@@ -12,6 +15,8 @@
     "vitest-bdd": "workspace:^"
   },
   "dependencies": {
-    "tilia": "2.0.0-canary.20250617T095051"
+    "@rescript/core": "1.6.1",
+    "rescript": "11.1.4",
+    "tilia": "2.0.0"
   }
 }

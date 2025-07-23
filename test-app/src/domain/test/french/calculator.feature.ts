@@ -10,6 +10,6 @@ Soit("une calculatrice", ({ Quand, Alors }) => {
   );
 
   Alors("le résultat doit être {number}", (expected: string) => {
-    expect(calculator.result.value).toBe(expected);
+    expect(calculator.result).toBe(expected);
   });
 });
