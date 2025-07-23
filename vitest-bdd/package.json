@@ -1,6 +1,6 @@
 {
   "name": "vitest-bdd",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Gherkin test runner for Vitest",
   "homepage": "https://github.com/midasum/vitest-bdd",
   "repository": {
