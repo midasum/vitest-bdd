@@ -7,11 +7,16 @@ application. Use with [vitest](https://marketplace.visualstudio.com/items?itemNa
 
 ![vitest-bdd banner](https://raw.githubusercontent.com/midasum/vitest-bdd/refs/heads/main/misc/vitest-bdd.jpg)
 
+You can also write tests in Markdown with Gherkin code blocks for Spec Driven Development:
+
+<img width="514" height="241" alt="image" src="https://github.com/user-attachments/assets/eb0372f2-fa09-439b-add1-bff5bed200d5" />
+
 Tests can run in parallel (no shared state) and are fast and hot reloadable.
 
 **Features**
 
 - **write with Gherkin, execute with vitest !**
+- Gherkin in markdown
 - async tests
 - concurrent testing
 - failed tests in steps definitions and Gherkin
