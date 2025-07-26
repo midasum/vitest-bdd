@@ -47,7 +47,32 @@ import { vitestBdd } from "vitest-bdd";
 export default defineConfig({
   plugins: [vitestBdd()],
   test: {
-    include: ["**/*.feature", "**/*.spec.ts"],
+    include: ["**/*.feature", "**/*.spec.ts", "**/*.mdx"],
+  },
+});
+```
+
+### Options
+
+Options are passed as an object to the vitestBdd function. The default options are:
+
+```ts
+{
+  debug: false,
+  markdownExtensions: [".md", ".mdx", ".markdown"],
+  gherkinExtensions: [".feature"],
+}
+```
+
+```ts
+// vitest.config.ts
+import { defineConfig } from "vitest/config";
+import { vitestBdd } from "vitest-bdd";
+
+export default defineConfig({
+  plugins: [vitestBdd({ markdownExtensions: [".mdx", ".text"] })],
+  test: {
+    include: ["**/*.feature", "**/*.spec.ts", "**/*.mdx", "**/*.text"],
   },
 });
 ```
@@ -296,11 +321,12 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 
 # Changelog
 
-Complete changelog is available [here](https://github.com/midasum/vitest-bdd/blob/main/CHANGELOG.md). Changelog is in reverse time order (latest at the top).
-
+- **0.3.0** (2025-07-26)
+  - Add options for markdown extension (and default support for .mdx)
 - **0.2.0** (2025-07-23)
-  - Add support for Gherkin in markdown
+  - Add support for Gherkin code blocks in markdown
   - Add basic support for ReScript step definitions
+  - (remove experimental Gherkin in markdown support)
 - **0.1.0** (2025-07-04)
   - Add async support
   - Add concurrency support

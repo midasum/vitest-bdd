@@ -71,14 +71,14 @@ export function mdToGherkin(atext: string, linemapper: Record<number, number>) {
 
 export function parse(
   atext: string,
-  type: "markdown" | "classic" = "classic"
+  markdown: boolean = false
 ): Feature | null {
   let i = 0;
   let text = atext;
   const uuidFn = () => `id${++i}`;
   const builder = new AstBuilder(uuidFn);
   const linemapper: Record<number, number> = {};
-  if (type === "markdown") {
+  if (markdown) {
     // Pre-parse (and store source mapping)
     text = mdToGherkin(atext, linemapper);
   }
@@ -87,7 +87,7 @@ export function parse(
   const parser = new Parser(builder, matcher);
   const doc = parser.parse(text);
   if (!doc.feature) {
-    if (type === "markdown") {
+    if (markdown) {
       // ignore
       return null;
     }

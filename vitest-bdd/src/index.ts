@@ -1,31 +1,54 @@
 import { existsSync, readFileSync } from "node:fs";
+import { extname } from "node:path";
 import { SourceMapGenerator } from "source-map";
 import type { Plugin } from "vite";
 import { parse, type SourceLocation } from "./parser";
 export * from "./steps";
 
-export function vitestBdd(
-  { debug }: { debug: boolean } = { debug: false }
-): Plugin {
+export type VitestBddOptions = {
+  debug?: boolean;
+  markdownExtensions?: string[];
+  gherkinExtensions?: string[];
+};
+
+const defaultOptions: Required<VitestBddOptions> = {
+  debug: false,
+  markdownExtensions: [".md", ".mdx", ".markdown"],
+  gherkinExtensions: [".feature"],
+};
+
+export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
+  const options: Required<VitestBddOptions> = { ...defaultOptions, ...opts };
   return {
     name: "vitest-bdd",
     enforce: "pre",
     resolveId(id) {
-      if (id.endsWith(".feature") || id.endsWith(".md")) return id;
+      const ext = extname(id);
+      if (
+        options.markdownExtensions.includes(ext) ||
+        options.gherkinExtensions.includes(ext)
+      )
+        return id;
     },
     load(id) {
-      if (id.endsWith(".feature") || id.endsWith(".md")) {
-        return compile(id, debug);
+      const ext = extname(id);
+      const markdown = options.markdownExtensions.includes(ext);
+      if (markdown || options.gherkinExtensions.includes(ext)) {
+        return compile(id, markdown, options);
       }
     },
   };
 }
 
-function compile(path: string, debug = false) {
+function compile(
+  path: string,
+  markdown: boolean,
+  opts: Required<VitestBddOptions>
+) {
+  const { debug } = opts;
   const text = readFileSync(path, "utf8");
   const lines = text.split("\n");
-  const markdown = path.endsWith(".md");
-  const feature = parse(text, markdown ? "markdown" : "classic");
+  const feature = parse(text, markdown);
   if (!feature) {
     return `
     import { describe} from "vitest";
