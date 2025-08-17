@@ -38,14 +38,6 @@
     "./src/VitestBdd.mjs": "./src/VitestBdd.mjs"
   },
   "sideEffects": false,
-  "files": [
-    "dist/index.d.ts",
-    "dist/index.cjs",
-    "dist/index.cjs.map",
-    "dist/index.js",
-    "dist/index.js.map",
-    "README.md"
-  ],
   "engines": {
     "node": ">=18.0.0"
   },

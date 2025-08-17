@@ -8,5 +8,5 @@
 # Include ReScript configuration
 !rescript.json
 
-# TypeScript target: include build result
+# TypeScript target: include build result from esbuild
 !dist/*
