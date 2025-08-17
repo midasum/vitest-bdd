@@ -3,27 +3,26 @@
 import * as Tilia from "tilia/src/Tilia.mjs";
 
 function make(name) {
-  var result = Tilia.signal(0);
-  var title = Tilia.signal(name);
+  var match = Tilia.signal(0);
+  var setResult = match[1];
+  var result = match[0];
   return Tilia.tilia({
               add: (function (a, b) {
-                  result.value = a + b;
+                  setResult(a + b);
                 }),
               subtract: (function (a, b) {
-                  result.value = a - b;
+                  setResult(a - b);
                 }),
               multiply: (function (a, b) {
-                  result.value = a * b;
+                  setResult(a * b);
                 }),
               divide: (function (a, b) {
-                  result.value = a / b;
+                  setResult(a / b);
                 }),
               result: Tilia.computed(function () {
                     return result.value;
                   }),
-              title: Tilia.computed(function () {
-                    return title.value;
-                  })
+              title: name
             });
 }
 

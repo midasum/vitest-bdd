@@ -2,6 +2,8 @@
 
 set -e
 
+# ============================================ UTILS and basic CHECKS
+
 # Set up environment
 if ! command -v pnpm &>/dev/null; then
   echo "pnpm is not installed. Please install it first."
@@ -28,25 +30,53 @@ is_semver() {
   fi
 }
 
+DATE=$(date +'%Y%m%dT%H%M%S')
+
 # Install dependencies
 pnpm i
-# Check compilation for all projects
+# Rebuild for all projects
 pnpm build
-# Copy README.md
-cp README.md vitest-bdd/README.md
 
-# ================ VITEST-BDD
+VERSION=$(npm pkg get version | sed 's/"//g')
+is_semver "$VERSION"
+
+# ============================================ PUBLISH
+
+# Update version if publishing beta (--beta argument)
+if [[ $1 == "--beta" ]]; then
+  VERSION=$VERSION-beta.$DATE
+elif [[ $1 == "--canary" ]]; then
+  VERSION=$VERSION-canary.$DATE
+fi
+
+# ================ vitest-bdd
 cd vitest-bdd
-LIB_VERSION=$(npm pkg get version | sed 's/"//g')
-is_semver "$LIB_VERSION"
+npm --no-git-tag-version version $VERSION
 
-pnpm publish --access public --no-git-checks
-
+if [[ $1 == "--beta" ]]; then
+  pnpm publish --tag beta --access public --no-git-checks
+elif [[ $1 == "--canary" ]]; then
+  CANARY=true pnpm publish --tag canary --access public --no-git-checks
+else
+  pnpm publish --access public --no-git-checks
+fi
 cd ..
+
+echo "Wait for version to propagate on npm"
+sleep 3
+echo "Wait for version to propagate on npm"
+sleep 3
+echo "Wait for version to propagate on npm"
+sleep 3
 
 # Reset git repo
 git reset --hard HEAD
-git clean -fd
-git tag v$LIB_VERSION
 
-echo "Published successfully!"
+if [[ $1 == "--beta" ]]; then
+  echo "Beta versions published successfully!"
+elif [[ $1 == "--canary" ]]; then
+  echo "Canary versions published successfully!"
+else
+  echo "Published successfully!"
+fi
+

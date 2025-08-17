@@ -1,6 +1,6 @@
 {
   "name": "vitest-bdd",
-  "version": "0.3.0",
+  "version": "0.0.0",
   "description": "Gherkin test runner for Vitest",
   "homepage": "https://github.com/midasum/vitest-bdd",
   "repository": {
@@ -19,6 +19,7 @@
     "vitest-plugin",
     "step-definitions",
     "feature-files",
+    "rescript",
     "typescript",
     "testing"
   ],
@@ -31,7 +32,10 @@
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
-    }
+    },
+    "./src/VitestBdd.res": "./src/VitestBdd.res",
+    "./src/VitestBdd.resi": "./src/VitestBdd.resi",
+    "./src/VitestBdd.mjs": "./src/VitestBdd.mjs"
   },
   "sideEffects": false,
   "files": [
@@ -46,9 +50,14 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "res:build": "rescript",
+    "res:dev-build": "rescript build -with-deps",
+    "res:clean": "rescript clean",
+    "res:dev": "rescript -w",
     "clean": "rimraf dist",
     "dev": "pnpm bundle --watch",
-    "build": "pnpm clean && pnpm bundle",
+    "build": "pnpm bundle",
+    "prebuild": "pnpm clean && rescript",
     "bundle": "tsup src/index.ts --splitting false --sourcemap --dts --format esm,cjs",
     "test": "vitest",
     "prepack": "pnpm build && clean-package",
@@ -57,6 +66,7 @@
   "devDependencies": {
     "@types/node": "^24.0.3",
     "clean-package": "^2.2.0",
+    "rescript": "11.1.4",
     "rimraf": "^5.0.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",

@@ -5,16 +5,16 @@ import * as VitestBdd from "vitest-bdd";
 import * as ResCalculator from "../../feature/ResCalculator.mjs";
 
 VitestBdd.Given("I have a {string} calculator", (function (param, name) {
-        var when_ = param.When;
+        var step = param.step;
         var calculator = ResCalculator.make(name);
-        when_("I add {number} and {number}", calculator.add);
-        when_("I subtract {number} and {number}", calculator.subtract);
-        when_("I multiply {number} and {number}", calculator.multiply);
-        when_("I divide {number} by {number}", calculator.divide);
-        param.Then("the result is {number}", (function (n) {
+        step("I add {number} and {number}", calculator.add);
+        step("I subtract {number} and {number}", calculator.subtract);
+        step("I multiply {number} and {number}", calculator.multiply);
+        step("I divide {number} by {number}", calculator.divide);
+        step("the result is {number}", (function (n) {
                 Vitest.expect(calculator.result).toBe(n);
               }));
-        param.And("the title is {string}", (function (s) {
+        step("the title is {string}", (function (s) {
                 Vitest.expect(calculator.title).toBe(s);
               }));
       }));

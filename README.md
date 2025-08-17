@@ -16,14 +16,14 @@ Tests can run in parallel (no shared state) and are fast and hot reloadable.
 **Features**
 
 - **write with Gherkin, execute with vitest !**
-- Gherkin in markdown
+- Gherkin block inside markdown
+- ReScript step definitions
 - async tests
 - concurrent testing
 - failed tests in steps definitions and Gherkin
 - supports number, string and table parameters
 - steps are explicitly linked to your context (easy to trace usage)
 - supports "Background"
-- experimental "Gherkin in markdown"
 - ESM and CJS projects support
 - Gherkin parsing with [@cucumber/gherkin](https://github.com/cucumber/gherkin).
 
@@ -61,6 +61,43 @@ Options are passed as an object to the vitestBdd function. The default options a
   debug: false,
   markdownExtensions: [".md", ".mdx", ".markdown"],
   gherkinExtensions: [".feature"],
+  stepsResolver: stepsResolver,
+}
+```
+
+And the default stepsResolver function is below. This resulver would find the following files for a "./test/foobar.feature" file:
+
+- `./test/foobar.feature.ts`
+- `./test/foobar.feature.js`
+- ... etc
+- `./test/foobar.steps.ts`
+- `./test/foobar.steps.js`
+- ... etc
+- `./test/foobarSteps.ts`
+- `./test/foobarSteps.js`
+- ... etc
+
+The last setting helps for ReScript users to mach `./test/Foobar.feature` with `./test/FoobarSteps.res` steps files.
+
+```ts
+function baseResolver(path: string): string | null {
+  for (const ext of [".ts", ".js", ".mjs", ".cjs", ".res.mjs"]) {
+    const p = `${path}${ext}`;
+    if (existsSync(p)) {
+      return p;
+    }
+  }
+  return null;
+}
+
+export function stepsResolver(path: string): string | null {
+  for (const r of [".feature", ".steps", "Steps"]) {
+    const p = baseResolver(path.replace(/\.feature$/, r));
+    if (p) {
+      return p;
+    }
+  }
+  return null;
 }
 ```
 
@@ -129,7 +166,7 @@ Given("I have a {string} calculator", async ({ When, And, Then }, type) => {
       And("I subtract {number} and {number}", calculator.subtract);
       And("I multiply {number} by {number}", calculator.multiply);
       And("I divide {number} by {number}", calculator.divide);
-      resultAssertions(calculator);
+      resultAssertions(Then, calculator);
       break;
     }
     case "rpn": {
@@ -137,13 +174,48 @@ Given("I have a {string} calculator", async ({ When, And, Then }, type) => {
       When("I enter {number}", calculator.enter);
       And("I enter {number}", calculator.enter);
       And("I divide", calculator.divide);
-      resultAssertions(calculator);
+      resultAssertions(Then, calculator);
       break;
     }
     default:
       throw new Error(`Unknown calculator type "${type}"`);
   }
 });
+```
+
+For ReScript, the bindings are a little bit simpler for now:
+
+```rescript
+// src/domain/test/CalculatorSteps.res
+open VitestBdd
+
+// To show assertion reuse (could be just added in the given block).
+let resultAssertions = (step, calculator) => {
+  // We define an async step, just to look cool 😎 (again).
+  step("the result is {number}", async (n: number) => {
+    await calculator.proccessBigComputation()
+    expect(calculator.result.value).toBe(n)
+  })
+}
+
+given("I have a {string} calculator", async ({step}, ctype) => {
+  switch ctype {
+  | "basic" => {
+    let calculator = basicCalculator()
+    step("I add {number} and {number}", calculator.add)
+    step("I subtract {number} and {number}", calculator.subtract)
+    step("I multiply {number} by {number}", calculator.multiply)
+    step("I divide {number} by {number}", calculator.divide)
+    resultAssertions(step, calculator)
+  }
+  | "rpn": {
+    let calculator = rpnCalculator()
+    step("I enter {number}", calculator.enter)
+    step("I enter {number}", calculator.enter)
+    step("I divide", calculator.divide)
+    resultAssertions(step, calculator)
+  }
+})
 ```
 
 ### Reuse steps

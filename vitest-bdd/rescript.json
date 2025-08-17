@@ -1,0 +1,20 @@
+{
+  "name": "vitest-bdd",
+  "sources": [
+    {
+      "dir": "src",
+      "public": [
+        "VitestBdd"
+      ],
+      "subdirs": true
+    }
+  ],
+  "package-specs": {
+    "module": "esmodule",
+    "in-source": true
+  },
+  "suffix": ".mjs",
+  "bs-dependencies": [],
+  "bs-dev-dependencies": [],
+  "bsc-flags": []
+}

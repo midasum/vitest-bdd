@@ -9,12 +9,14 @@ export type VitestBddOptions = {
   debug?: boolean;
   markdownExtensions?: string[];
   gherkinExtensions?: string[];
+  stepsResolver?: (path: string) => string | null;
 };
 
 const defaultOptions: Required<VitestBddOptions> = {
   debug: false,
   markdownExtensions: [".md", ".mdx", ".markdown"],
   gherkinExtensions: [".feature"],
+  stepsResolver,
 };
 
 export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
@@ -70,7 +72,7 @@ function compile(
     });
   }
   const base = { line: 1, column: 0 };
-  const stepsPath = findStepsPath(path);
+  const stepsPath = opts.stepsResolver(path);
   if (!stepsPath) {
     const shortpath =
       path.split("/").slice(-4, -1).join("/") + ".[ts|js|mjs|cjs|res.mjs]";
@@ -132,10 +134,20 @@ function compile(
   return { code: out.join("\n"), map: map.toJSON() };
 }
 
-function findStepsPath(path: string): string | null {
+function baseResolver(path: string): string | null {
   for (const ext of [".ts", ".js", ".mjs", ".cjs", ".res.mjs"]) {
     const p = `${path}${ext}`;
     if (existsSync(p)) {
+      return p;
+    }
+  }
+  return null;
+}
+
+export function stepsResolver(path: string): string | null {
+  for (const r of [".feature", ".steps", "Steps"]) {
+    const p = baseResolver(path.replace(/\.feature$/, r));
+    if (p) {
       return p;
     }
   }

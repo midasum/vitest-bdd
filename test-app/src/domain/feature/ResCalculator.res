@@ -9,23 +9,14 @@ type t = {
 }
 
 let make = (name: string) => {
-  let result = signal(0.)
-  let title = signal(name)
+  let (result, setResult) = signal(0.)
 
   tilia({
-    add: (a, b) => {
-      result.value = a +. b
-    },
-    subtract: (a, b) => {
-      result.value = a -. b
-    },
-    multiply: (a, b) => {
-      result.value = a *. b
-    },
-    divide: (a, b) => {
-      result.value = a /. b
-    },
+    add: (a, b) => setResult(a +. b),
+    subtract: (a, b) => setResult(a -. b),
+    multiply: (a, b) => setResult(a *. b),
+    divide: (a, b) => setResult(a /. b),
     result: computed(() => result.value),
-    title: computed(() => title.value),
+    title: name,
   })
 }
