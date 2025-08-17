@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mdToGherkin, parse, parseStep } from "./parser";
 
 describe("parse", () => {
-  it("Should parse a simple feature", () => {
+  it("Should parse a simple feature", (r) => {
     const text = `Feature: Calculator
 
   Scenario: Add two numbers

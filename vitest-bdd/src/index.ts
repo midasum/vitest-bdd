@@ -3,20 +3,25 @@ import { extname } from "node:path";
 import { SourceMapGenerator } from "source-map";
 import type { Plugin } from "vite";
 import { parse, type SourceLocation } from "./parser";
+import { resCompile, resCompiledResolver } from "./resCompile";
 export * from "./steps";
 
 export type VitestBddOptions = {
   debug?: boolean;
   markdownExtensions?: string[];
   gherkinExtensions?: string[];
+  rescriptExtensions?: string[];
   stepsResolver?: (path: string) => string | null;
+  resCompiledResolver?: (path: string) => string | null;
 };
 
 const defaultOptions: Required<VitestBddOptions> = {
   debug: false,
   markdownExtensions: [".md", ".mdx", ".markdown"],
   gherkinExtensions: [".feature"],
+  rescriptExtensions: [".res"],
   stepsResolver,
+  resCompiledResolver,
 };
 
 export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
@@ -33,24 +38,25 @@ export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
         return id;
     },
     load(id) {
-      const ext = extname(id);
-      const markdown = options.markdownExtensions.includes(ext);
-      if (markdown || options.gherkinExtensions.includes(ext)) {
-        return compile(id, markdown, options);
-      }
+      return compile(id, options);
     },
   };
 }
 
-function compile(
-  path: string,
-  markdown: boolean,
-  opts: Required<VitestBddOptions>
-) {
-  const { debug } = opts;
+function compile(path: string, opts: Required<VitestBddOptions>) {
+  const { debug, rescriptExtensions, markdownExtensions, gherkinExtensions } =
+    opts;
+  const ext = extname(path);
+  if (rescriptExtensions.includes(ext)) {
+    return resCompile(path, opts);
+  }
+  const isMarkdown = markdownExtensions.includes(ext);
+  if (!gherkinExtensions.includes(ext) && !isMarkdown) {
+    return;
+  }
   const text = readFileSync(path, "utf8");
   const lines = text.split("\n");
-  const feature = parse(text, markdown);
+  const feature = parse(text, isMarkdown);
   if (!feature) {
     return `
     import { describe} from "vitest";

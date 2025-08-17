@@ -13,6 +13,8 @@
     "canary": "./bin/publish.sh --canary",
     "beta": "./bin/publish.sh --beta",
     "pub": "./bin/publish.sh",
+    "app": "pnpm -filter test-app",
+    "bdd": "pnpm -filter vitest-bdd",
     "test": "pnpm -r test"
   },
   "author": "Gaspard Anna Bucher <g.a.bucher@midasum.com>",

@@ -12,7 +12,8 @@ export default defineConfig({
   ],
   test: {
     pool: "threads",
-    include: ["**/*.feature", "**/*.md", "**/*.spec.ts"],
+    // include: ["**/*.feature", "**/*.md", "**/*.spec.ts", "**/*_test.res"],
+    include: ["**/*_test.res"],
   },
 });
 

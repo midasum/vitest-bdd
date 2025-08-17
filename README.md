@@ -393,6 +393,8 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 
 # Changelog
 
+- **0.4.0** (2025-08-17)
+  - Add support for ReScript unit tests (with source maps!)
 - **0.3.0** (2025-07-26)
   - Add options for markdown extension (and default support for .mdx)
 - **0.2.0** (2025-07-23)
