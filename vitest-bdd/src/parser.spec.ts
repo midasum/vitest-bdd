@@ -7,7 +7,7 @@ describe("parse", () => {
 
   Scenario: Add two numbers
     Given I have a "basic" calculator
-    When I add 1 and 2
+    When I add 1 with 2
     Then the result is 3
     And the title is "basic"
 `;
@@ -25,8 +25,8 @@ describe("parse", () => {
     expect(scenario.steps[0].text).toBe('Given I have a "basic" calculator');
     expect(scenario.steps[0].query).toBe("i have a {string} calculator");
 
-    expect(scenario.steps[1].text).toBe("When I add 1 and 2");
-    expect(scenario.steps[1].query).toBe("i add {number} and {number}");
+    expect(scenario.steps[1].text).toBe("When I add 1 with 2");
+    expect(scenario.steps[1].query).toBe("i add {number} with {number}");
 
     expect(scenario.steps[2].text).toBe("Then the result is 3");
     expect(scenario.steps[2].query).toBe("the result is {number}");
@@ -45,15 +45,15 @@ describe("parseStep", () => {
   });
 
   it("Should parse a step with a number", () => {
-    const step = parseStep("When ", "I add 1 and 2");
-    expect(step.text).toBe("When I add 1 and 2");
-    expect(step.query).toBe("i add {number} and {number}");
+    const step = parseStep("When ", "I add 1 with 2");
+    expect(step.text).toBe("When I add 1 with 2");
+    expect(step.query).toBe("i add {number} with {number}");
     expect(step.params).toEqual([1, 2]);
   });
 
   it("Should parse a step with a negative number", () => {
-    const step = parseStep("When ", "I add -1 and 2");
-    expect(step.query).toBe("i add {number} and {number}");
+    const step = parseStep("When ", "I add -1 to 2");
+    expect(step.query).toBe("i add {number} to {number}");
     expect(step.params).toEqual([-1, 2]);
   });
 
@@ -70,9 +70,9 @@ describe("parseStep", () => {
   });
 
   it("Should parse a step with a string", () => {
-    const step = parseStep("When ", 'I add "hello" and "world"');
-    expect(step.text).toBe('When I add "hello" and "world"');
-    expect(step.query).toBe("i add {string} and {string}");
+    const step = parseStep("When ", 'I add "hello" to "world"');
+    expect(step.text).toBe('When I add "hello" to "world"');
+    expect(step.query).toBe("i add {string} to {string}");
     expect(step.params).toEqual(["hello", "world"]);
   });
 
@@ -83,9 +83,61 @@ describe("parseStep", () => {
     );
     expect(step.text).toBe('When I say 12 and "Hello" and "World!" and 7.12');
     expect(step.query).toBe(
-      "i say {number} and {string} and {string} and {number}"
+      "i say {number} and {string[]} and {number}"
     );
-    expect(step.params).toEqual([12, "Hello", "World!", 7.12]);
+    expect(step.params).toEqual([12, ["Hello", "World!"], 7.12]);
+  });
+
+  it("Should parse a step with a string array using commas", () => {
+    const step = parseStep("Given ", 'I call "bob", "mary"');
+    expect(step.text).toBe('Given I call "bob", "mary"');
+    expect(step.query).toBe("i call {string[]}");
+    expect(step.params).toEqual([["bob", "mary"]]);
+  });
+
+  it("Should parse a step with a string array using 'and'", () => {
+    const step = parseStep("Given ", 'I call "bob" and "mary"');
+    expect(step.text).toBe('Given I call "bob" and "mary"');
+    expect(step.query).toBe("i call {string[]}");
+    expect(step.params).toEqual([["bob", "mary"]]);
+  });
+
+  it("Should parse a step with a string array using comma and 'and'", () => {
+    const step = parseStep("Given ", 'I call "bob", "alice" and "mary"');
+    expect(step.text).toBe('Given I call "bob", "alice" and "mary"');
+    expect(step.query).toBe("i call {string[]}");
+    expect(step.params).toEqual([["bob", "alice", "mary"]]);
+  });
+
+  it("Should parse a step with multiple string parameters", () => {
+    const step = parseStep("Given ", 'I call "bob" and then "mary"');
+    expect(step.text).toBe('Given I call "bob" and then "mary"');
+    expect(step.query).toBe("i call {string} and then {string}");
+    expect(step.params).toEqual(["bob", "mary"]);
+  });
+
+  it("Should parse a step with a number array", () => {
+    const step = parseStep("Given ", 'I have numbers 1, 2, and 3');
+    expect(step.text).toBe('Given I have numbers 1, 2, and 3');
+    expect(step.query).toBe("i have numbers {number[]}");
+    expect(step.params).toEqual([[1, 2, 3]]);
+  });
+
+  it("Should parse a step with mixed parameters", () => {
+    const step = parseStep(
+      "When ",
+      'I have user "John" with scores 90, 85, and 95 at age 30'
+    );
+    expect(step.text).toBe('When I have user "John" with scores 90, 85, and 95 at age 30');
+    expect(step.query).toBe("i have user {string} with scores {number[]} at age {number}");
+    expect(step.params).toEqual(["John", [90, 85, 95], 30]);
+  });
+
+  it("Should parse a step with empty array", () => {
+    const step = parseStep("Given ", 'I call no one');
+    expect(step.text).toBe('Given I call no one');
+    expect(step.query).toBe("i call no one");
+    expect(step.params).toEqual([]);
   });
 });
 

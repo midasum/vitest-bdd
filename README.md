@@ -57,12 +57,14 @@ export default defineConfig({
 Options are passed as an object to the vitestBdd function. The default options are:
 
 ```ts
-{
-  debug: false,
-  markdownExtensions: [".md", ".mdx", ".markdown"],
-  gherkinExtensions: [".feature"],
-  stepsResolver: stepsResolver,
-}
+export type VitestBddOptions = {
+  debug?: boolean; // false
+  markdownExtensions?: string[]; // [".md", ".mdx", ".markdown"]
+  gherkinExtensions?: string[]; // [".feature"]
+  rescriptExtensions?: string[]; // [".res"]
+  stepsResolver?: (path: string) => string | null;
+  resCompiledResolver?: (path: string) => string | null;
+};
 ```
 
 And the default stepsResolver function is below. This resulver would find the following files for a "./test/foobar.feature" file:
@@ -124,8 +126,13 @@ Feature: Calculator
 
   Scenario: Add two numbers
     Given I have a "basic" calculator
-    When I add 1 and 2
+    When I add 1 to 2
     Then the result is 3
+
+  Scenario: Sum many numbers
+    Given I have a "basic" calculator
+    When I sum 1, 2, and 3
+    Then the result is 6
 
   Scenario: Advanced calculator
     Given I have an "rpn" calculator
@@ -162,8 +169,9 @@ Given("I have a {string} calculator", async ({ When, And, Then }, type) => {
   switch (type) {
     case "basic": {
       const calculator = basicCalculator();
-      When("I add {number} and {number}", calculator.add);
-      And("I subtract {number} and {number}", calculator.subtract);
+      When("I add {number} to {number}", calculator.add);
+      And("I sum {number[]}", calculator.sum);
+      And("I subtract {number} to {number}", calculator.subtract);
       And("I multiply {number} by {number}", calculator.multiply);
       And("I divide {number} by {number}", calculator.divide);
       resultAssertions(Then, calculator);
@@ -202,8 +210,9 @@ given("I have a {string} calculator", async ({step}, ctype) => {
   switch ctype {
   | "basic" => {
     let calculator = basicCalculator()
-    step("I add {number} and {number}", calculator.add)
-    step("I subtract {number} and {number}", calculator.subtract)
+    step("I add {number} to {number}", calculator.add)
+    step("I sum {number[]}", calculator.sum)
+    step("I subtract {number} to {number}", calculator.subtract)
     step("I multiply {number} by {number}", calculator.multiply)
     step("I divide {number} by {number}", calculator.divide)
     resultAssertions(step, calculator)
@@ -393,6 +402,8 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 
 # Changelog
 
+- **0.5.0** (2025-08-27)
+  - Add support for arrays in tests
 - **0.4.0** (2025-08-17)
   - Add support for ReScript unit tests (with source maps!)
 - **0.3.0** (2025-07-26)
