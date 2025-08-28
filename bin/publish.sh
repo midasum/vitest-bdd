@@ -71,6 +71,7 @@ sleep 3
 
 # Reset git repo
 git reset --hard HEAD
+git tag v$VERSION
 
 if [[ $1 == "--beta" ]]; then
   echo "Beta versions published successfully!"

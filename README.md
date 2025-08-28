@@ -393,6 +393,10 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 
 # Changelog
 
+- **0.5.1** (2025-08-28)
+  - Remove support for arrays in tests (accidental breaking change)
+- **0.5.0** (2025-08-27)
+  - Add support for arrays in tests
 - **0.4.0** (2025-08-17)
   - Add support for ReScript unit tests (with source maps!)
 - **0.3.0** (2025-07-26)
