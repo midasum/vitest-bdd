@@ -30,7 +30,7 @@ Task:
 
 ```gherkin
 Scenario: Add two numbers
-  When I add 1 to 2
+  When I add 1 and 2
   Then the result is 3
 
 Scenario: Advanced calculator

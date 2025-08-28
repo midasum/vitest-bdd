@@ -25,7 +25,7 @@ export type DataTable = string[][];
 export type Step = {
   text: string;
   query: string;
-  params: (number | string | DataTable | (number | string)[])[];
+  params: (number | string | DataTable)[];
 };
 
 export type SourceLocation = {
@@ -154,9 +154,7 @@ export function parseStep(keyword: string, text: string): Step {
     })
   );
 
-  // Extract all parameters normally
   const params: (number | string)[] = [];
-  
   for (const match of query.matchAll(/\{(string|number)\}/g)) {
     switch (match[1]) {
       case "number": {
@@ -179,73 +177,12 @@ export function parseStep(keyword: string, text: string): Step {
     }
   }
 
-  return parseArray(keyword, text, query, params);
-}
-
-function parseArray(keyword: string, text: string, query: string, allParams: (number | string)[]): Step {
-  const params: (number | string | (number | string)[])[] = [];
-  const parts: string[] = [];
-  
-  const allParts = query.split(/{|}/);
-  const textParts = allParts.filter((_, i) => i % 2 === 0);
-  const types = allParts.filter((_, i) => i % 2 !== 0);
-  
-  let i = 0;
-  let partIndex = 0;
-  
-  while (i < allParams.length) {
-    const ctype = types[i];
-    const group: (number | string)[] = [allParams[i]];
-    
-    let j = i + 1;
-    while (j < allParams.length && types[j] === ctype) {
-      if (j < textParts.length && 
-        [',', ', and', 'and'].includes(textParts[j].trim())) {
-        group.push(allParams[j]);
-        j++;
-      } else {
-        break;
-      }
-    }
-    
-    if (group.length > 1) {
-      params.push(group);
-      
-      if (partIndex < textParts.length) {
-        parts.push(textParts[partIndex]);
-      }
-      
-      parts.push(`{${ctype}[]}`);
-      
-      partIndex += group.length;
-      
-      i = j;
-    } else {
-      params.push(group[0]);
-      
-      if (partIndex < textParts.length) {
-        parts.push(textParts[partIndex]);
-      }
-      
-      parts.push(`{${ctype}}`);
-      
-      partIndex++;
-      i++;
-    }
-  }
-  
-  while (partIndex < textParts.length) {
-    parts.push(textParts[partIndex]);
-    partIndex++;
-  }
-  
   return {
     text: keyword + text,
-    query: parts.join(''),
-    params: params,
+    query,
+    params,
   };
 }
-
 
 export function normalize(text: string): string {
   return removeKeyword(text.toLocaleLowerCase())
@@ -295,6 +232,3 @@ function parseScenario(
   }
   return s;
 }
-
-
-

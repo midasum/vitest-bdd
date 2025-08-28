@@ -7,13 +7,10 @@ import * as ResCalculator from "../../feature/ResCalculator.mjs";
 VitestBdd.Given("I have a {string} calculator", (function (param, name) {
         var step = param.step;
         var calculator = ResCalculator.make(name);
-        step("I add {number} to {number}", calculator.add);
-        step("I subtract {number} to {number}", calculator.subtract);
-        step("I multiply {number} with {number}", calculator.multiply);
+        step("I add {number} and {number}", calculator.add);
+        step("I subtract {number} and {number}", calculator.subtract);
+        step("I multiply {number} and {number}", calculator.multiply);
         step("I divide {number} by {number}", calculator.divide);
-        step("I sum {number[]}", (function (numbers) {
-                calculator.sum(numbers);
-              }));
         step("the result is {number}", (function (n) {
                 Vitest.expect(calculator.result).toBe(n);
               }));
