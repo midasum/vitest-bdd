@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "res:build": "rescript",
     "res:clean": "rescript clean",
     "res:dev": "rescript -w"

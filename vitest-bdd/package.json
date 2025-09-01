@@ -51,7 +51,8 @@
     "build": "pnpm bundle",
     "prebuild": "pnpm clean && rescript",
     "bundle": "tsup src/index.ts --splitting false --sourcemap --dts --format esm,cjs",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepack": "pnpm build && clean-package",
     "postpack": "clean-package restore"
   },

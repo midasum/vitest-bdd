@@ -2,6 +2,8 @@
   "workbench.iconTheme": "diagonal-architecture-icon-theme",
   "cucumberautocomplete.steps": [
     "*/src/domain/test/**/*.feature.ts",
+    "*/src/domain/test/**/*Steps.res",
+    "*/src/domain/test/**/*.steps.res",
   ],
   "cucumberautocomplete.formatConfOverride": {
     "Fonctionnalité": 0,

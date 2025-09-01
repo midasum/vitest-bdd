@@ -5,6 +5,7 @@ import type { Plugin } from "vite";
 import { parse, type SourceLocation } from "./parser";
 import { resCompile, resCompiledResolver } from "./resCompile";
 export * from "./steps";
+export * from "./utils";
 
 export type VitestBddOptions = {
   debug?: boolean;
@@ -81,7 +82,7 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
   const stepsPath = opts.stepsResolver(path);
   if (!stepsPath) {
     const shortpath =
-      path.split("/").slice(-4, -1).join("/") + ".[ts|js|mjs|cjs|res.mjs]";
+      path.split("/").slice(-4).join("/");
     push(`import { describe, it, assert } from "vitest";`, base);
     push(
       `describe.concurrent(${JSON.stringify(feature.title)}, () => {`,
@@ -93,7 +94,7 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
     );
     push(
       `    assert.fail(${JSON.stringify(
-        `Steps file definition ${JSON.stringify(shortpath)} not found.`
+        `Steps file for feature ${JSON.stringify(shortpath)} not found.`
       )});`,
       feature.location
     );

@@ -1,7 +1,7 @@
 {
   "name": "vitest-bdd-monorepo",
   "private": true,
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Monorepo for vitest-bdd plugin and related packages.",
   "homepage": "https://github.com/midasum/vitest-bdd",
   "repository": {
@@ -15,7 +15,9 @@
     "pub": "./bin/publish.sh",
     "app": "pnpm -filter test-app",
     "bdd": "pnpm -filter vitest-bdd",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "pretest": "pnpm -r res:build",
+    "test:watch": "pnpm -r test:watch"
   },
   "author": "Gaspard Anna Bucher <g.a.bucher@midasum.com>",
   "license": "MIT"

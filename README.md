@@ -17,7 +17,7 @@ Tests can run in parallel (no shared state) and are fast and hot reloadable.
 
 - **write with Gherkin, execute with vitest !**
 - Gherkin block inside markdown
-- ReScript step definitions
+- ReScript step definitions and bindings for vitest
 - async tests
 - concurrent testing
 - failed tests in steps definitions and Gherkin
@@ -296,21 +296,22 @@ Feature: Table
 
 ```ts
 // src/domain/test/tabular.feature.ts
-import { Given, Then, When } from "vitest-bdd";
+import { Given, Then, When, toRecords } from "vitest-bdd";
 import { makeTable } from "../feature/table";
 
 Given("I have a table", ({ When, Then }, data) => {
-  // data : string[][]
+  // data : User[]
   const table = makeTable(data);
 
   When("I sort by {string}", table.sort);
   Then("the table is", (data) => {
-    expect([table.headers.map((h) => h.name), ...table.rows.value]).toEqual(
-      data
-    );
+    expect(table.list).toEqual(toRecords(data));
   });
 });
 ```
+
+You can also use `toNumbers` or `toStrings` to convert the first column of a
+table to a list of numbers or strings.
 
 ## Non-english support
 
@@ -357,13 +358,16 @@ Soit("un calculator", ({ Quand, Alors }) => {
 });
 ```
 
-Don't forget to update some vscode settings (if you use cucumber autocomplete VS Code Extension):
+Don't forget to update some vscode settings (if you use the cucumber autocomplete extension for VS Code):
 
 ```json
 // .vscode/settings.json
 {
   "workbench.iconTheme": "diagonal-architecture-light-icon-theme",
-  "cucumberautocomplete.steps": ["src/domain/test/**/*.feature.ts"],
+  "cucumberautocomplete.steps": [
+    "*/src/domain/test/**/*.feature.ts",
+    "*/src/domain/test/**/*Steps.res" // This is for ReScript
+  ],
   "cucumberautocomplete.formatConfOverride": {
     "Fonctionnalité": 0,
     "Scénario": 1,
@@ -393,6 +397,8 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 
 # Changelog
 
+- **0.6.0** (2025-09-01)
+  - Add support for table parsing (toRecords, toNumbers, toStrings)
 - **0.5.1** (2025-08-28)
   - Remove support for arrays in tests (accidental breaking change)
 - **0.5.0** (2025-08-27)

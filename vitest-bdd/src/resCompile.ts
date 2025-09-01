@@ -8,6 +8,8 @@ type Stone = {
   line: number;
 };
 
+// Parse rescript tests
+// TODO: Also use this SourceMap maker to parse ReScript Gherkins steps
 export function resCompile(path: string, opts: Required<VitestBddOptions>) {
   const { resCompiledResolver } = opts;
   const text = readFileSync(path, "utf8");

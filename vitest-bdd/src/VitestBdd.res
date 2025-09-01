@@ -6,6 +6,15 @@ type assertions<'a> = {toBe: 'a => unit, toEqual: 'a => unit}
 @module("vitest-bdd")
 external given: (string, (given, 'args) => unit) => unit = "Given"
 
+@module("vitest-bdd")
+external toRecords: array<array<string>> => array<'a> = "toRecords"
+
+@module("vitest-bdd")
+external toStrings: array<array<string>> => array<string> = "toStrings"
+
+@module("vitest-bdd")
+external toNumbers: array<array<string>> => array<float> = "toNumbers"
+
 // ========= Vitest ==========
 
 type rec testContext = {
