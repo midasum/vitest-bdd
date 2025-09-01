@@ -9,6 +9,7 @@ export * from "./utils";
 
 export type VitestBddOptions = {
   debug?: boolean;
+  concurrent?: boolean;
   markdownExtensions?: string[];
   gherkinExtensions?: string[];
   rescriptExtensions?: string[];
@@ -18,6 +19,7 @@ export type VitestBddOptions = {
 
 const defaultOptions: Required<VitestBddOptions> = {
   debug: false,
+  concurrent: true,
   markdownExtensions: [".md", ".mdx", ".markdown"],
   gherkinExtensions: [".feature"],
   rescriptExtensions: [".res"],
@@ -47,6 +49,7 @@ export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
 function compile(path: string, opts: Required<VitestBddOptions>) {
   const { debug, rescriptExtensions, markdownExtensions, gherkinExtensions } =
     opts;
+  const concurrent = opts.concurrent ? ".concurrent" : "";
   const ext = extname(path);
   if (rescriptExtensions.includes(ext)) {
     return resCompile(path, opts);
@@ -81,11 +84,10 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
   const base = { line: 1, column: 0 };
   const stepsPath = opts.stepsResolver(path);
   if (!stepsPath) {
-    const shortpath =
-      path.split("/").slice(-4).join("/");
+    const shortpath = path.split("/").slice(-4).join("/");
     push(`import { describe, it, assert } from "vitest";`, base);
     push(
-      `describe.concurrent(${JSON.stringify(feature.title)}, () => {`,
+      `describe${concurrent}(${JSON.stringify(feature.title)}, () => {`,
       feature.location
     );
     push(
@@ -105,7 +107,7 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
     push(`import { load } from "vitest-bdd";`, base);
     push(`import ${JSON.stringify(stepsPath)};`, base);
     push(
-      `describe.concurrent(${JSON.stringify(feature.title)}, () => {`,
+      `describe${concurrent}(${JSON.stringify(feature.title)}, () => {`,
       feature.location
     );
     for (const scenario of feature.scenarios) {

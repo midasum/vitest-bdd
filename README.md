@@ -59,6 +59,7 @@ Options are passed as an object to the vitestBdd function. The default options a
 ```ts
 {
   debug: false,
+  concurrent: true,
   markdownExtensions: [".md", ".mdx", ".markdown"],
   gherkinExtensions: [".feature"],
   stepsResolver: stepsResolver,
@@ -399,6 +400,7 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 
 - **0.6.0** (2025-09-01)
   - Add support for table parsing (toRecords, toNumbers, toStrings)
+  - Add `concurrent` option (true by default)
 - **0.5.1** (2025-08-28)
   - Remove support for arrays in tests (accidental breaking change)
 - **0.5.0** (2025-08-27)
