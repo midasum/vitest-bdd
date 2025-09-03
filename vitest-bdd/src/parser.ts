@@ -7,6 +7,7 @@ import {
   type Background as GBackground,
   type Scenario as GScenario,
 } from "@cucumber/messages";
+import type { TestContext } from "vitest";
 
 import { load as loadRunner } from "./steps";
 
@@ -126,12 +127,15 @@ export function parse(
 
 const keywords = ["given", "when", "then", "and", "but", "*"];
 
-export async function runScenario(scenario: Scenario) {
+export async function runScenario(
+  scenario: Scenario,
+  testContext: TestContext
+) {
   const given = scenario.steps[0];
   if (!given) {
     throw new Error("Scenario has no Given step");
   }
-  const runner = await loadRunner(given);
+  const runner = await loadRunner(given, testContext);
   for (const step of scenario.steps.slice(1)) {
     const operation = runner.operation(step.query);
     await operation(...step.params);

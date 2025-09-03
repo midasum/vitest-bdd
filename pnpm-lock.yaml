@@ -27,7 +27,7 @@ importers:
         specifier: ^3.1.3
         version: 3.2.3(@types/node@24.0.3)
       vitest-bdd:
-        specifier: workspace:^
+        specifier: file:../vitest-bdd
         version: link:../vitest-bdd
 
   vitest-bdd:

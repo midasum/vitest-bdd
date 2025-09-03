@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
-import { extname } from "node:path";
+import { basename, extname, join } from "node:path";
 import { SourceMapGenerator } from "source-map";
 import type { Plugin } from "vite";
 import { parse, type SourceLocation } from "./parser";
@@ -103,7 +103,7 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
     push(`  });`, feature.location);
     push(`});`, feature.location);
   } else {
-    push(`import { describe, it } from "vitest";`, base);
+    push(`import { describe, test } from "vitest";`, base);
     push(`import { load } from "vitest-bdd";`, base);
     push(`import ${JSON.stringify(stepsPath)};`, base);
     push(
@@ -112,7 +112,7 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
     );
     for (const scenario of feature.scenarios) {
       push(
-        `  it(${JSON.stringify(scenario.title)}, async () => {`,
+        `  test(${JSON.stringify(scenario.title)}, async (ctx) => {`,
         scenario.location
       );
       const given = scenario.steps[0];
@@ -120,7 +120,7 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
         throw new Error("Scenario has no Given step");
       }
       push(
-        `    const runner = await load(${JSON.stringify(given)});`,
+        `    const runner = await load(${JSON.stringify(given)}, ctx);`,
         given.location
       );
       for (const step of scenario.steps.slice(1)) {
@@ -160,5 +160,5 @@ export function stepsResolver(path: string): string | null {
       return p;
     }
   }
-  return null;
+  return baseResolver(join(basename(path), "steps"));
 }

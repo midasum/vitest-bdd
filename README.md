@@ -92,13 +92,21 @@ function baseResolver(path: string): string | null {
 }
 
 export function stepsResolver(path: string): string | null {
+  // Resolves to a specific steps file
+  // from /foo/bar.feature
+  // to   /foo/bar.feature[.ts|.js|...]
+  // or   /foo/bar.steps[.ts|.js|...]
+  // or   /foo/barSteps[.ts|.js|...]
   for (const r of [".feature", ".steps", "Steps"]) {
     const p = baseResolver(path.replace(/\.feature$/, r));
     if (p) {
       return p;
     }
   }
-  return null;
+  // Resolves to a common steps file in the directory:
+  // from /foo/bar.feature
+  // to   /foo/steps[.ts|.js|...]
+  return baseResolver(join(basename(path), "steps"));
 }
 ```
 
@@ -159,29 +167,33 @@ function resultAssertions(Then: Step, calculator: { result: Signal<number> }) {
 // You can use any variable name instead of When, And, and Then to match the
 // language of the Gherkin messages, such as { Quand, Alors, Et }, etc. We show
 // the code in an async situation (because it's the most difficult to handle).
-Given("I have a {string} calculator", async ({ When, And, Then }, type) => {
-  switch (type) {
-    case "basic": {
-      const calculator = basicCalculator();
-      When("I add {number} and {number}", calculator.add);
-      And("I subtract {number} and {number}", calculator.subtract);
-      And("I multiply {number} by {number}", calculator.multiply);
-      And("I divide {number} by {number}", calculator.divide);
-      resultAssertions(Then, calculator);
-      break;
+// The last parameter is the test context (vitest.TestContext).
+Given(
+  "I have a {string} calculator",
+  async ({ When, And, Then }, mode, _testContext) => {
+    switch (mode) {
+      case "basic": {
+        const calculator = basicCalculator();
+        When("I add {number} and {number}", calculator.add);
+        And("I subtract {number} and {number}", calculator.subtract);
+        And("I multiply {number} by {number}", calculator.multiply);
+        And("I divide {number} by {number}", calculator.divide);
+        resultAssertions(Then, calculator);
+        break;
+      }
+      case "rpn": {
+        const calculator = rpnCalculator();
+        When("I enter {number}", calculator.enter);
+        And("I enter {number}", calculator.enter);
+        And("I divide", calculator.divide);
+        resultAssertions(Then, calculator);
+        break;
+      }
+      default:
+        throw new Error(`Unknown calculator type "${type}"`);
     }
-    case "rpn": {
-      const calculator = rpnCalculator();
-      When("I enter {number}", calculator.enter);
-      And("I enter {number}", calculator.enter);
-      And("I divide", calculator.divide);
-      resultAssertions(Then, calculator);
-      break;
-    }
-    default:
-      throw new Error(`Unknown calculator type "${type}"`);
   }
-});
+);
 ```
 
 For ReScript, the bindings are a little bit simpler for now:
@@ -401,6 +413,7 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 - **0.6.0** (2025-09-01)
   - Add support for table parsing (toRecords, toNumbers, toStrings)
   - Add `concurrent` option (true by default)
+  - Add test context as last parameter to given step
 - **0.5.1** (2025-08-28)
   - Remove support for arrays in tests (accidental breaking change)
 - **0.5.0** (2025-08-27)
