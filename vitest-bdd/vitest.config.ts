@@ -1,8 +1,9 @@
 import { defineConfig } from "vitest/config";
+import { vitestBdd } from "./src/index";
 
 export default defineConfig({
-  plugins: [],
+  plugins: [vitestBdd()],
   test: {
-    include: ["**/*.spec.ts"],
+    include: ["**/*.spec.ts", "**/*_test.res"],
   },
 });

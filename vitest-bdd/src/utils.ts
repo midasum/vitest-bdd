@@ -1,4 +1,4 @@
-export function toRecords(table: string[][]) : Record<string, string>[] {
+export function toRecords(table: string[][]): Record<string, string>[] {
   if (table.length < 2) {
     return [];
   }
@@ -6,14 +6,17 @@ export function toRecords(table: string[][]) : Record<string, string>[] {
   const rows = table.slice(1);
 
   return rows.map((row) => {
-    return row.reduce((acc, cell, index) => {
-      acc[headers[index]] = cell;
-      return acc;
-    }, {} as Record<string, string>);
+    return row.reduce(
+      (acc, cell, index) => {
+        acc[headers[index]] = cell;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
   });
 }
 
-export function toStrings(table: string[][]) : string[] {
+export function toStrings(table: string[][]): string[] {
   if (table.length < 2) {
     return [];
   }
@@ -22,7 +25,7 @@ export function toStrings(table: string[][]) : string[] {
   return rows.map((row) => row[0]);
 }
 
-export function toNumbers(table: string[][]) : number[] {
+export function toNumbers(table: string[][]): number[] {
   if (table.length < 2) {
     return [];
   }

@@ -2,23 +2,13 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@model/*": [
-        "./src/domain/api/model/*"
-      ],
-      "@feature/*": [
-        "./src/domain/api/feature/*"
-      ],
-      "@service/*": [
-        "src/domain/api/service/*"
-      ],
+      "@model/*": ["./src/domain/api/model/*"],
+      "@feature/*": ["./src/domain/api/feature/*"],
+      "@service/*": ["src/domain/api/service/*"]
     },
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
@@ -32,9 +22,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

@@ -17,7 +17,7 @@ Tests can run in parallel (no shared state) and are fast and hot reloadable.
 
 - **write with Gherkin, execute with vitest !**
 - Gherkin block inside markdown
-- ReScript step definitions and bindings for vitest
+- ReScript step definitions and full bindings for vitest
 - async tests
 - concurrent testing
 - failed tests in steps definitions and Gherkin
@@ -203,7 +203,7 @@ For ReScript, the bindings are a little bit simpler for now:
 open VitestBdd
 
 // To show assertion reuse (could be just added in the given block).
-let resultAssertions = (step, calculator) => {
+let resultAssertions = ({ step }, calculator) => {
   // We define an async step, just to look cool 😎 (again).
   step("the result is {number}", async (n: number) => {
     await calculator.proccessBigComputation()
@@ -211,7 +211,7 @@ let resultAssertions = (step, calculator) => {
   })
 }
 
-given("I have a {string} calculator", async ({step}, ctype) => {
+given("I have a {string} calculator", async ({ step }, ctype) => {
   switch ctype {
   | "basic" => {
     let calculator = basicCalculator()
@@ -414,6 +414,7 @@ And finally, here are some nice extensions for VS Code that can support your BDD
   - Add support for table parsing (toRecords, toNumbers, toStrings)
   - Add `concurrent` option (true by default)
   - Add test context as last parameter to given step
+  - Add full bindings for vitest assertions in ReScript
 - **0.5.1** (2025-08-28)
   - Remove support for arrays in tests (accidental breaking change)
 - **0.5.0** (2025-08-27)

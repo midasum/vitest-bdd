@@ -11,16 +11,10 @@ type Operations = Record<string, Operation>;
 export type Step = (key: string, op: Operation) => void;
 export type Context = Record<string, Step>;
 
-const builders: Record<
-  string,
-  (given: StepType, testContext: TestContext) => Promise<Runner>
-> = {};
+const builders: Record<string, (given: StepType, testContext: TestContext) => Promise<Runner>> = {};
 
 export function Given(key: string, build: (...params: any[]) => void) {
-  builders[normalize(key)] = async (
-    given: StepType,
-    testContext: TestContext
-  ) => {
+  builders[normalize(key)] = async (given: StepType, testContext: TestContext) => {
     const ops: Operations = {};
     const runner = {
       operation: (query: string) => {
@@ -35,17 +29,14 @@ export function Given(key: string, build: (...params: any[]) => void) {
       {},
       {
         get: () => (key: string, op: Operation) => (ops[normalize(key)] = op),
-      }
+      },
     );
     await build(ctx, ...[...given.params, testContext]);
     return runner;
   };
 }
 
-export function load(
-  given: StepType,
-  testContext: TestContext
-): Promise<Runner> {
+export function load(given: StepType, testContext: TestContext): Promise<Runner> {
   const build = builders[given.query];
   if (!build) {
     throw new Error(`Missing loader for "${given.text}"`);

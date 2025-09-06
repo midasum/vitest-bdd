@@ -12,10 +12,10 @@ VitestBdd.Given("I have a {string} calculator", (function (param, name) {
         step("I multiply {number} and {number}", calculator.multiply);
         step("I divide {number} by {number}", calculator.divide);
         step("the result is {number}", (function (n) {
-                Vitest.expect(calculator.result).toBe(n);
+                return Vitest.expect(calculator.result).toBe(n);
               }));
         step("the title is {string}", (function (s) {
-                Vitest.expect(calculator.title).toBe(s);
+                return Vitest.expect(calculator.title).toBe(s);
               }));
       }));
 

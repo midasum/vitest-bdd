@@ -1,5 +1,105 @@
 type given = {step: 'a. (string, 'a) => unit}
-type assertions<'a> = {toBe: 'a => unit, toEqual: 'a => unit}
+
+type pollOptions = {
+  interval: float,
+  timeout: float,
+  message?: string,
+}
+
+type asymmetricMatcher<'a> = {
+  asymmetricMatch: 'a => bool,
+  toString: unit => string,
+}
+
+type serializer = {
+  test: 'a. 'a => bool,
+  print: 'a. 'a => string,
+}
+
+type matcherResult = {
+  pass: bool,
+  message: unit => string,
+}
+
+type rec assertions<'a> = {
+  // Modifiers
+  not: assertions<'a>,
+  poll: (unit => 'a, pollOptions) => assertions<'a>,
+  // Basic equality and identity
+  toBe: 'never. 'a => 'never,
+  toEqual: 'never. 'a => 'never,
+  toStrictEqual: 'never. 'a => 'never,
+  // Truthiness
+  toBeTruthy: 'never. unit => 'never,
+  toBeFalsy: 'never. unit => 'never,
+  toBeDefined: 'never. unit => 'never,
+  toBeUndefined: 'never. unit => 'never,
+  toBeNull: 'never. unit => 'never,
+  toBeNaN: 'never. unit => 'never,
+  toBeTypeOf: 'never. string => 'never,
+  // Numbers
+  toBeCloseTo: 'never. (float, ~numDigits: int=?) => 'never,
+  toBeGreaterThan: 'never. float => 'never,
+  toBeGreaterThanOrEqual: 'never. float => 'never,
+  toBeLessThan: 'never. float => 'never,
+  toBeLessThanOrEqual: 'never. float => 'never,
+  // Strings
+  toMatch: 'never. Js.Re.t => 'never,
+  toMatchInlineSnapshot: 'never. (~message: string=?, string) => 'never,
+  toMatchSnapshot: 'never. (~message: string=?) => 'never,
+  // Arrays and objects
+  toContain: 'b 'never. 'b => 'never,
+  toContainEqual: 'b 'never. 'b => 'never,
+  toHaveLength: 'never. int => 'never,
+  toHaveProperty: 'b 'never. (string, ~value: 'b=?) => 'never,
+  // Collections
+  toBeOneOf: 'never. array<'a> => 'never,
+  // Functions
+  toThrow: 'never. (~message: string=?) => 'never,
+  toThrowError: 'b 'never. (~error: 'b=?, ~message: string=?) => 'never,
+  // Promises (async)
+  resolves: 'b. assertions<'b>,
+  rejects: 'b. assertions<'b>,
+  // Custom matchers
+  toSatisfy: 'never. ('a => bool) => 'never,
+  // Object/Array structure
+  toMatchObject: 'b 'never. 'b => 'never,
+  // File system (if using @vitest/utils)
+  toMatchFileSnapshot: 'never. (string, ~message: string=?) => 'never,
+  // Error assertions
+  toThrowErrorMatchingSnapshot: 'never. (~message: string=?) => 'never,
+  toThrowErrorMatchingInlineSnapshot: 'never. (~message: string=?, string) => 'never,
+}
+
+type expected = {
+  soft: 'a. 'a => assertions<'a>,
+  poll: 'a. (unit => 'a, pollOptions) => assertions<'a>,
+  // Assertion counting
+  assertions: int => unit,
+  hasAssertions: unit => unit,
+  // Unreachable
+  unreachable: 'never. (~message: string=?) => 'never,
+  closeTo: 'a. (float, ~precision: int=?) => 'a,
+  anything: 'a. unit => 'a,
+  any: 'a 'b. 'a => 'b,
+  arrayContaining: 'a 'b. array<'a> => 'b,
+  objectContaining: 'a 'b. 'a => 'b,
+  stringContaining: 'a. string => 'a,
+  stringMatching: 'a. Js.Re.t => 'a,
+  // Snapshot serializers
+  addSnapshotSerializer: 'a. 'a => unit,
+  // Custom matchers
+  extend: 'a. 'a => unit,
+  // Equality testers
+  addEqualityTesters: 'a. array<'a> => unit,
+}
+
+module OfType = {
+  external string: 'a = "String"
+  external number: 'a = "Number"
+  external boolean: 'a = "Boolean"
+  external array: 'a = "Array"
+}
 
 // ========= Gherkin ==========
 
@@ -24,6 +124,9 @@ type rec testContext = {
 
 @module("vitest")
 external expect: 'a => assertions<'a> = "expect"
+
+@module("vitest")
+external expected: expected = "expect"
 
 @module("vitest")
 external concurrent: (string, unit => unit) => unit = "describe.concurrent"

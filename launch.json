@@ -6,10 +6,7 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": [
-        "run",
-        "test:watch"
-      ],
+      "runtimeArgs": ["run", "test:watch"],
       "cwd": "${workspaceRoot}/vitest-bdd",
       "protocol": "inspector",
       "console": "integratedTerminal",
@@ -20,10 +17,7 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": [
-        "run",
-        "test:watch"
-      ],
+      "runtimeArgs": ["run", "test:watch"],
       "cwd": "${workspaceRoot}/test-app",
       "protocol": "inspector",
       "console": "integratedTerminal",

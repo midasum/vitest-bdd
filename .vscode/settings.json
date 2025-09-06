@@ -3,7 +3,7 @@
   "cucumberautocomplete.steps": [
     "*/src/domain/test/**/*.feature.ts",
     "*/src/domain/test/**/*Steps.res",
-    "*/src/domain/test/**/*.steps.res",
+    "*/src/domain/test/**/*.steps.res"
   ],
   "cucumberautocomplete.formatConfOverride": {
     "Fonctionnalité": 0,
@@ -11,12 +11,11 @@
     "Soit": 2,
     "Quand": 2,
     "Alors": 2,
-    // In a real app, you would only support one language
     "Feature": 0,
     "Scenario": 1,
     "Given": 2,
     "When": 2,
-    "Then": 2,
+    "Then": 2
   },
   "cucumberautocomplete.strictGherkinCompletion": true,
   "cucumberautocomplete.smartSnippets": true,

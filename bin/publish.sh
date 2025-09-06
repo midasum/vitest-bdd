@@ -18,6 +18,8 @@ else
   echo "Repository is clean. Proceeding with the operation."
 fi
 
+cp README.md vitest-bdd/README.md
+
 is_semver() {
   local version="$1"
   # Regex for SemVer compliance

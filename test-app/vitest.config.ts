@@ -10,6 +10,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+
   test: {
     pool: "threads",
     include: ["**/*.feature", "**/*.md", "**/*.spec.ts", "**/*_test.res"],

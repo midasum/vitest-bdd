@@ -3,9 +3,7 @@
   "sources": [
     {
       "dir": "src",
-      "public": [
-        "VitestBdd"
-      ],
+      "public": ["VitestBdd"],
       "subdirs": true
     }
   ],
@@ -14,7 +12,7 @@
     "in-source": true
   },
   "suffix": ".mjs",
-  "bs-dependencies": [],
+  "bs-dependencies": ["@rescript/core"],
   "bs-dev-dependencies": [],
-  "bsc-flags": []
+  "bsc-flags": ["-open RescriptCore"]
 }

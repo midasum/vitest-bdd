@@ -1,0 +1,31 @@
+/**
+ * @type {import('@biomejs/biome').BiomeConfig}
+ */
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": ["**/*.ts", "**/*.json"]
+  },
+  "linter": {
+    "enabled": false,
+    "rules": {
+      "correctness": {
+        "noUnusedImports": "error"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "lineWidth": 120,
+    "indentWidth": 2,
+    "indentStyle": "space",
+    "lineEnding": "lf"
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}

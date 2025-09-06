@@ -12,13 +12,17 @@
     "build": "pnpm -r build",
     "canary": "./bin/publish.sh --canary",
     "beta": "./bin/publish.sh --beta",
+    "format": "biome format --fix",
     "pub": "./bin/publish.sh",
-    "app": "pnpm -filter test-app",
-    "bdd": "pnpm -filter vitest-bdd",
+    "test-app": "pnpm -filter test-app",
+    "vitest-bdd": "pnpm -filter vitest-bdd",
     "test": "pnpm -r test",
     "pretest": "pnpm -r res:build",
     "test:watch": "pnpm -r test:watch"
   },
   "author": "Gaspard Anna Bucher <g.a.bucher@midasum.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.3"
+  }
 }

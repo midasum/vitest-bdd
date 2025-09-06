@@ -47,20 +47,11 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
       out.push(text);
       sm(0, out.length);
     };
-    const shortpath =
-      path.split("/").slice(-4, -1).join("/") + ".[ts|js|mjs|cjs|res.mjs]";
+    const shortpath = path.split("/").slice(-4, -1).join("/") + ".[ts|js|mjs|cjs|res.mjs]";
     push(`import { describe, it, assert } from "vitest";`);
-    push(
-      `describe.concurrent(${JSON.stringify(
-        path.split("/").slice(-1)[0]
-      )}, () => {`
-    );
+    push(`describe.concurrent(${JSON.stringify(path.split("/").slice(-1)[0])}, () => {`);
     push(`  it(${JSON.stringify("Should have a compiled file")}, () => {`);
-    push(
-      `    assert.fail(${JSON.stringify(
-        `Compiled js file for ${JSON.stringify(shortpath)} not found.`
-      )});`
-    );
+    push(`    assert.fail(${JSON.stringify(`Compiled js file for ${JSON.stringify(shortpath)} not found.`)});`);
     push(`  });`);
     push(`});`);
     return { code: out.join("\n"), map: map.toJSON() };

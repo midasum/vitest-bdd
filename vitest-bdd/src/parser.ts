@@ -1,12 +1,5 @@
-import {
-  AstBuilder,
-  GherkinClassicTokenMatcher,
-  Parser,
-} from "@cucumber/gherkin";
-import {
-  type Background as GBackground,
-  type Scenario as GScenario,
-} from "@cucumber/messages";
+import { AstBuilder, GherkinClassicTokenMatcher, Parser } from "@cucumber/gherkin";
+import { type Background as GBackground, type Scenario as GScenario } from "@cucumber/messages";
 import type { TestContext } from "vitest";
 
 import { load as loadRunner } from "./steps";
@@ -70,10 +63,7 @@ export function mdToGherkin(atext: string, linemapper: Record<number, number>) {
   return gherkin.join("\n");
 }
 
-export function parse(
-  atext: string,
-  markdown: boolean = false
-): Feature | null {
+export function parse(atext: string, markdown: boolean = false): Feature | null {
   let i = 0;
   let text = atext;
   const uuidFn = () => `id${++i}`;
@@ -127,10 +117,7 @@ export function parse(
 
 const keywords = ["given", "when", "then", "and", "but", "*"];
 
-export async function runScenario(
-  scenario: Scenario,
-  testContext: TestContext
-) {
+export async function runScenario(scenario: Scenario, testContext: TestContext) {
   const given = scenario.steps[0];
   if (!given) {
     throw new Error("Scenario has no Given step");
@@ -155,7 +142,7 @@ export function parseStep(keyword: string, text: string): Step {
     text2.replace(/-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g, (match) => {
       numbers.push(parseFloat(match));
       return "{number}";
-    })
+    }),
   );
 
   const params: (number | string)[] = [];
@@ -189,10 +176,7 @@ export function parseStep(keyword: string, text: string): Step {
 }
 
 export function normalize(text: string): string {
-  return removeKeyword(text.toLocaleLowerCase())
-    .trim()
-    .replace(/ an /g, " a ")
-    .replace(/ the /, " ");
+  return removeKeyword(text.toLocaleLowerCase()).trim().replace(/ an /g, " a ").replace(/ the /, " ");
 }
 
 function removeKeyword(text: string): string {
@@ -204,10 +188,7 @@ function removeKeyword(text: string): string {
   return text;
 }
 
-function parseScenario(
-  gsc: GScenario | GBackground,
-  linemapper: Record<number, number>
-): Scenario {
+function parseScenario(gsc: GScenario | GBackground, linemapper: Record<number, number>): Scenario {
   function loc(location: GScenario["location"]): GScenario["location"] {
     const line = linemapper[location.line] ?? location.line;
     return {
@@ -224,9 +205,7 @@ function parseScenario(
     for (const gstep of gsc.steps) {
       const step = parseStep(gstep.keyword, gstep.text);
       if (gstep.dataTable) {
-        step.params.push(
-          gstep.dataTable.rows.map((row) => row.cells.map((c) => c.value))
-        );
+        step.params.push(gstep.dataTable.rows.map((row) => row.cells.map((c) => c.value)));
       }
       s.steps.push({
         ...step,

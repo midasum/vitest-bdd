@@ -77,14 +77,9 @@ describe("parseStep", () => {
   });
 
   it("Should parse a step with many strings and numbers", () => {
-    const step = parseStep(
-      "When ",
-      'I say 12 and "Hello" and "World!" and 7.12'
-    );
+    const step = parseStep("When ", 'I say 12 and "Hello" and "World!" and 7.12');
     expect(step.text).toBe('When I say 12 and "Hello" and "World!" and 7.12');
-    expect(step.query).toBe(
-      "i say {number} and {string} and {string} and {number}"
-    );
+    expect(step.query).toBe("i say {number} and {string} and {string} and {number}");
     expect(step.params).toEqual([12, "Hello", "World!", 7.12]);
   });
 });
@@ -131,12 +126,9 @@ Scenario: Subtract two numbers
   Then the result is 1`);
     expect(
       Object.entries(linemapper)
-        .map(
-          ([line, i]) =>
-            `${line.padStart(2, "0")}: ${String(i).padStart(2, "0")}`
-        )
+        .map(([line, i]) => `${line.padStart(2, "0")}: ${String(i).padStart(2, "0")}`)
         .sort()
-        .join("\n")
+        .join("\n"),
     ).toBe(`01: 07
 02: 13
 03: 14

@@ -34,11 +34,7 @@ export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
     enforce: "pre",
     resolveId(id) {
       const ext = extname(id);
-      if (
-        options.markdownExtensions.includes(ext) ||
-        options.gherkinExtensions.includes(ext)
-      )
-        return id;
+      if (options.markdownExtensions.includes(ext) || options.gherkinExtensions.includes(ext)) return id;
     },
     load(id) {
       return compile(id, options);
@@ -47,8 +43,7 @@ export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
 }
 
 function compile(path: string, opts: Required<VitestBddOptions>) {
-  const { debug, rescriptExtensions, markdownExtensions, gherkinExtensions } =
-    opts;
+  const { debug, rescriptExtensions, markdownExtensions, gherkinExtensions } = opts;
   const concurrent = opts.concurrent ? ".concurrent" : "";
   const ext = extname(path);
   if (rescriptExtensions.includes(ext)) {
@@ -71,9 +66,7 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
   const map = new SourceMapGenerator({ file: path });
   function push(text: string, location: SourceLocation) {
     const line = lines[location.line];
-    const column = line
-      ? line.length - line.replace(/^(-|\*) /, "").trimStart().length
-      : 0;
+    const column = line ? line.length - line.replace(/^(-|\*) /, "").trimStart().length : 0;
     out.push(text);
     map.addMapping({
       source: path,
@@ -86,19 +79,11 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
   if (!stepsPath) {
     const shortpath = path.split("/").slice(-4).join("/");
     push(`import { describe, it, assert } from "vitest";`, base);
+    push(`describe${concurrent}(${JSON.stringify(feature.title)}, () => {`, feature.location);
+    push(`  it(${JSON.stringify("Should have step definitions")}, () => {`, feature.location);
     push(
-      `describe${concurrent}(${JSON.stringify(feature.title)}, () => {`,
-      feature.location
-    );
-    push(
-      `  it(${JSON.stringify("Should have step definitions")}, () => {`,
-      feature.location
-    );
-    push(
-      `    assert.fail(${JSON.stringify(
-        `Steps file for feature ${JSON.stringify(shortpath)} not found.`
-      )});`,
-      feature.location
+      `    assert.fail(${JSON.stringify(`Steps file for feature ${JSON.stringify(shortpath)} not found.`)});`,
+      feature.location,
     );
     push(`  });`, feature.location);
     push(`});`, feature.location);
@@ -106,29 +91,18 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
     push(`import { describe, test } from "vitest";`, base);
     push(`import { load } from "vitest-bdd";`, base);
     push(`import ${JSON.stringify(stepsPath)};`, base);
-    push(
-      `describe${concurrent}(${JSON.stringify(feature.title)}, () => {`,
-      feature.location
-    );
+    push(`describe${concurrent}(${JSON.stringify(feature.title)}, () => {`, feature.location);
     for (const scenario of feature.scenarios) {
-      push(
-        `  test(${JSON.stringify(scenario.title)}, async (ctx) => {`,
-        scenario.location
-      );
+      push(`  test(${JSON.stringify(scenario.title)}, async (ctx) => {`, scenario.location);
       const given = scenario.steps[0];
       if (!given) {
         throw new Error("Scenario has no Given step");
       }
-      push(
-        `    const runner = await load(${JSON.stringify(given)}, ctx);`,
-        given.location
-      );
+      push(`    const runner = await load(${JSON.stringify(given)}, ctx);`, given.location);
       for (const step of scenario.steps.slice(1)) {
         push(
-          `    await runner.operation(${JSON.stringify(
-            step.query
-          )})(...${JSON.stringify(step.params)});`,
-          step.location
+          `    await runner.operation(${JSON.stringify(step.query)})(...${JSON.stringify(step.params)});`,
+          step.location,
         );
       }
       push(`  });`, given.location);

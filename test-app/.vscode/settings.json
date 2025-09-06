@@ -1,20 +1,17 @@
 {
   "workbench.iconTheme": "diagonal-architecture-icon-theme",
-  "cucumberautocomplete.steps": [
-    "src/domain/test/**/*.feature.ts",
-  ],
+  "cucumberautocomplete.steps": ["src/domain/test/**/*.feature.ts"],
   "cucumberautocomplete.formatConfOverride": {
     "Fonctionnalité": 0,
     "Scénario": 1,
     "Soit": 2,
     "Quand": 2,
     "Alors": 2,
-    // In a real app, you would only support one language
     "Feature": 0,
     "Scenario": 1,
     "Given": 2,
     "When": 2,
-    "Then": 2,
+    "Then": 2
   },
   "cucumberautocomplete.strictGherkinCompletion": true,
   "cucumberautocomplete.smartSnippets": true,
