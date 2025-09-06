@@ -21,54 +21,104 @@ type matcherResult = {
   message: unit => string,
 }
 
+type rec passertions<'a> = {
+  // Modifiers
+  not: passertions<'a>,
+  poll: (unit => 'a, pollOptions) => passertions<'a>,
+  // Basic equality and identity
+  toBe: 'a => promise<unit>,
+  toEqual: 'a => promise<unit>,
+  toStrictEqual: 'a => promise<unit>,
+  // Truthiness
+  toBeTruthy: unit => promise<unit>,
+  toBeFalsy: unit => promise<unit>,
+  toBeDefined: unit => promise<unit>,
+  toBeUndefined: unit => promise<unit>,
+  toBeNull: unit => promise<unit>,
+  toBeNaN: unit => promise<unit>,
+  toBeTypeOf: string => promise<unit>,
+  // Numbers
+  toBeCloseTo: (float, ~numDigits: int=?) => promise<unit>,
+  toBeGreaterThan: float => promise<unit>,
+  toBeGreaterThanOrEqual: float => promise<unit>,
+  toBeLessThan: float => promise<unit>,
+  toBeLessThanOrEqual: float => promise<unit>,
+  // Strings
+  toMatch: Js.Re.t => promise<unit>,
+  toMatchInlineSnapshot: (~message: string=?, string) => promise<unit>,
+  toMatchSnapshot: (~message: string=?) => promise<unit>,
+  // Arrays and objects
+  toContain: 'b. 'b => promise<unit>,
+  toContainEqual: 'b. 'b => promise<unit>,
+  toHaveLength: int => promise<unit>,
+  toHaveProperty: 'b. (string, ~value: 'b=?) => promise<unit>,
+  // Collections
+  toBeOneOf: array<'a> => promise<unit>,
+  // Functions
+  toThrow: (~message: string=?) => promise<unit>,
+  toThrowError: 'b. (~error: 'b=?, ~message: string=?) => promise<unit>,
+  // Promises (async)
+  resolves: 'b. passertions<'b>,
+  rejects: 'b. passertions<'b>,
+  // Custom matchers
+  toSatisfy: ('a => bool) => promise<unit>,
+  // Object/Array structure
+  toMatchObject: 'b. 'b => promise<unit>,
+  // File system (if using @vitest/utils)
+  toMatchFileSnapshot: (string, ~message: string=?) => promise<unit>,
+  // Error assertions
+  toThrowErrorMatchingSnapshot: (~message: string=?) => promise<unit>,
+  toThrowErrorMatchingInlineSnapshot: (~message: string=?, string) => promise<unit>,
+}
+
 type rec assertions<'a> = {
   // Modifiers
   not: assertions<'a>,
   poll: (unit => 'a, pollOptions) => assertions<'a>,
   // Basic equality and identity
-  toBe: 'never. 'a => 'never,
-  toEqual: 'never. 'a => 'never,
-  toStrictEqual: 'never. 'a => 'never,
+  toBe: 'a => unit,
+  toEqual: 'a => unit,
+  toStrictEqual: 'a => unit,
   // Truthiness
-  toBeTruthy: 'never. unit => 'never,
-  toBeFalsy: 'never. unit => 'never,
-  toBeDefined: 'never. unit => 'never,
-  toBeUndefined: 'never. unit => 'never,
-  toBeNull: 'never. unit => 'never,
-  toBeNaN: 'never. unit => 'never,
-  toBeTypeOf: 'never. string => 'never,
+  toBeTruthy: unit => unit,
+  toBeFalsy: unit => unit,
+  toBeDefined: unit => unit,
+  toBeUndefined: unit => unit,
+  toBeNull: unit => unit,
+  toBeNaN: unit => unit,
+  toBeTypeOf: string => unit,
   // Numbers
-  toBeCloseTo: 'never. (float, ~numDigits: int=?) => 'never,
-  toBeGreaterThan: 'never. float => 'never,
-  toBeGreaterThanOrEqual: 'never. float => 'never,
-  toBeLessThan: 'never. float => 'never,
-  toBeLessThanOrEqual: 'never. float => 'never,
+  toBeCloseTo: (float, ~numDigits: int=?) => unit,
+  toBeGreaterThan: float => unit,
+  toBeGreaterThanOrEqual: float => unit,
+  toBeLessThan: float => unit,
+  toBeLessThanOrEqual: float => unit,
   // Strings
-  toMatch: 'never. Js.Re.t => 'never,
-  toMatchInlineSnapshot: 'never. (~message: string=?, string) => 'never,
-  toMatchSnapshot: 'never. (~message: string=?) => 'never,
+  toMatch: Js.Re.t => unit,
+  toMatchInlineSnapshot: (~message: string=?, string) => unit,
+  toMatchSnapshot: (~message: string=?) => unit,
   // Arrays and objects
-  toContain: 'b 'never. 'b => 'never,
-  toContainEqual: 'b 'never. 'b => 'never,
-  toHaveLength: 'never. int => 'never,
-  toHaveProperty: 'b 'never. (string, ~value: 'b=?) => 'never,
+  toContain: 'b. 'b => unit,
+  toContainEqual: 'b. 'b => unit,
+  toHaveLength: int => unit,
+  toHaveProperty: 'b. (string, ~value: 'b=?) => unit,
   // Collections
-  toBeOneOf: 'never. array<'a> => 'never,
+  toBeOneOf: array<'a> => unit,
   // Functions
-  toThrow: 'never. (~message: string=?) => 'never,
-  toThrowError: 'b 'never. (~error: 'b=?, ~message: string=?) => 'never,
+  toThrow: (~message: string=?) => unit,
+  toThrowError: 'b. (~error: 'b=?, ~message: string=?) => unit,
   // Promises (async)
-  resolves: 'b. assertions<'b>,
-  rejects: 'b. assertions<'b>,
+  resolves: 'b. passertions<'b>,
+  rejects: 'b. passertions<'b>,
   // Custom matchers
-  toSatisfy: 'never. ('a => bool) => 'never,
+  toSatisfy: ('a => bool) => unit,
   // Object/Array structure
-  toMatchObject: 'b 'never. 'b => 'never,
+  toMatchObject: 'b. 'b => unit,
   // File system (if using @vitest/utils)
-  toMatchFileSnapshot: 'never. (string, ~message: string=?) => 'never,
+  toMatchFileSnapshot: (string, ~message: string=?) => promise<unit>,
   // Error assertions
-  toThrowErrorMatchingSnapshot: 'never. (~message: string=?) => 'never,
-  toThrowErrorMatchingInlineSnapshot: 'never. (~message: string=?, string) => 'never,
+  toThrowErrorMatchingSnapshot: (~message: string=?) => unit,
+  toThrowErrorMatchingInlineSnapshot: (~message: string=?, string) => unit,
 }
 
 type expected = {
@@ -78,7 +128,7 @@ type expected = {
   assertions: int => unit,
   hasAssertions: unit => unit,
   // Unreachable
-  unreachable: 'never. (~message: string=?) => 'never,
+  unreachable: (~message: string=?) => unit,
   closeTo: 'a. (float, ~precision: int=?) => 'a,
   anything: 'a. unit => 'a,
   any: 'a 'b. 'a => 'b,

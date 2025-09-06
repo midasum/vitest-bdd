@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VitestBdd > should match snapshot 1`] = `
+{
+  "age": 31,
+  "name": "John",
+}
+`;
+
+exports[`VitestBdd > should support toMatchSnapshot 1`] = `
+{
+  "age": 30,
+  "name": "John",
+}
+`;
+
+exports[`VitestBdd > should support toThrowErrorMatchingSnapshot 1`] = `
+{
+  "Error": [Error],
+  "RE_EXN_ID": "Failure",
+  "_1": "fail",
+}
+`;

@@ -48,6 +48,12 @@ describe("VitestBdd", () => {
   it("should support toBe", () => {
     expect(1).toBe(1)
   })
+  it("should compile with multiple assertions", () => {
+    // This checks we have a sane return type
+    expected.assertions(2)
+    expect(1).toBe(1)
+    expect(2).toBe(2)
+  })
   it("should support toEqual", () => {
     expect([1, 2, 3]).toEqual([1, 2, 3])
   })
@@ -126,7 +132,14 @@ describe("VitestBdd", () => {
   })
   it("should support resolves", async () => {
     let promise = Js.Promise.resolve(42)
+    // Await not required as return value of async
+    expect(promise).resolves.toBe(42)
+  })
+  it("should force await on resolves", async () => {
+    let promise = Js.Promise.resolve(42)
+    // Await required here or ReScript will not compile
     await expect(promise).resolves.toBe(42)
+    expect(1).toBe(1)
   })
   it("should support rejects", async () => {
     let promise = Js.Promise.reject(MyException("fail"))

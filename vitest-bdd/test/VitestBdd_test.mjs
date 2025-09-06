@@ -8,25 +8,25 @@ var MyException = /* @__PURE__ */Caml_exceptions.create("VitestBdd_test.MyExcept
 
 Vitest.describe("VitestBdd", (function () {
         Vitest.it("should match snapshot", (function () {
-                return Vitest.expect({
-                              name: "John",
-                              age: 31
-                            }).toMatchSnapshot(undefined);
+                Vitest.expect({
+                        name: "John",
+                        age: 31
+                      }).toMatchSnapshot(undefined);
               }));
         Vitest.it("should match object", (function () {
-                return Vitest.expect({
-                              name: "John",
-                              age: 31
-                            }).toMatchObject({
-                            name: "John",
-                            age: 31
-                          });
+                Vitest.expect({
+                        name: "John",
+                        age: 31
+                      }).toMatchObject({
+                      name: "John",
+                      age: 31
+                    });
               }));
         Vitest.it("should support .not modifier", (function () {
-                return Vitest.expect(1).not.toBe(2);
+                Vitest.expect(1).not.toBe(2);
               }));
         Vitest.it("should support .soft modifier", (function () {
-                return Vitest.expect.soft(1).toBe(1);
+                Vitest.expect.soft(1).toBe(1);
               }));
         Vitest.it("should support .poll modifier", (async function () {
                 return Vitest.expect.poll((function () {
@@ -37,116 +37,121 @@ Vitest.describe("VitestBdd", (function () {
                             }).toBe(42);
               }));
         Vitest.it("should support toBe", (function () {
-                return Vitest.expect(1).toBe(1);
+                Vitest.expect(1).toBe(1);
+              }));
+        Vitest.it("should compile with multiple assertions", (function () {
+                Vitest.expect.assertions(2);
+                Vitest.expect(1).toBe(1);
+                Vitest.expect(2).toBe(2);
               }));
         Vitest.it("should support toEqual", (function () {
-                return Vitest.expect([
-                              1,
-                              2,
-                              3
-                            ]).toEqual([
-                            1,
-                            2,
-                            3
-                          ]);
+                Vitest.expect([
+                        1,
+                        2,
+                        3
+                      ]).toEqual([
+                      1,
+                      2,
+                      3
+                    ]);
               }));
         Vitest.it("should support toStrictEqual", (function () {
-                return Vitest.expect({
-                              a: 1,
-                              b: 2
-                            }).toStrictEqual({
-                            a: 1,
-                            b: 2
-                          });
+                Vitest.expect({
+                        a: 1,
+                        b: 2
+                      }).toStrictEqual({
+                      a: 1,
+                      b: 2
+                    });
               }));
         Vitest.it("should support toBeTruthy", (function () {
-                return Vitest.expect(true).toBeTruthy();
+                Vitest.expect(true).toBeTruthy();
               }));
         Vitest.it("should support toBeFalsy", (function () {
-                return Vitest.expect(false).toBeFalsy();
+                Vitest.expect(false).toBeFalsy();
               }));
         Vitest.it("should support toBeDefined", (function () {
-                return Vitest.expect(1).toBeDefined();
+                Vitest.expect(1).toBeDefined();
               }));
         Vitest.it("should support toBeUndefined", (function () {
-                return Vitest.expect(undefined).toBeUndefined();
+                Vitest.expect(undefined).toBeUndefined();
               }));
         Vitest.it("should support toBeNull", (function () {
-                return Vitest.expect(null).toBeNull();
+                Vitest.expect(null).toBeNull();
               }));
         Vitest.it("should support toBeNaN", (function () {
-                return Vitest.expect(NaN).toBeNaN();
+                Vitest.expect(NaN).toBeNaN();
               }));
         Vitest.it("should support toBeTypeOf", (function () {
-                return Vitest.expect("hello").toBeTypeOf("string");
+                Vitest.expect("hello").toBeTypeOf("string");
               }));
         Vitest.it("should support toBeCloseTo", (function () {
-                return Vitest.expect(3.14159).toBeCloseTo(3.14, 2);
+                Vitest.expect(3.14159).toBeCloseTo(3.14, 2);
               }));
         Vitest.it("should support toBeGreaterThan", (function () {
-                return Vitest.expect(5.0).toBeGreaterThan(4.0);
+                Vitest.expect(5.0).toBeGreaterThan(4.0);
               }));
         Vitest.it("should support toBeGreaterThanOrEqual", (function () {
-                return Vitest.expect(5.0).toBeGreaterThanOrEqual(5.0);
+                Vitest.expect(5.0).toBeGreaterThanOrEqual(5.0);
               }));
         Vitest.it("should support toBeLessThan", (function () {
-                return Vitest.expect(3.0).toBeLessThan(4.0);
+                Vitest.expect(3.0).toBeLessThan(4.0);
               }));
         Vitest.it("should support toBeLessThanOrEqual", (function () {
-                return Vitest.expect(4.0).toBeLessThanOrEqual(4.0);
+                Vitest.expect(4.0).toBeLessThanOrEqual(4.0);
               }));
         Vitest.it("should support toMatch", (function () {
-                return Vitest.expect("hello world").toMatch(/world/);
+                Vitest.expect("hello world").toMatch(/world/);
               }));
         Vitest.it("should support toMatchInlineSnapshot", (function () {
-                return Vitest.expect({
-                              foo: "bar"
-                            }).toMatchInlineSnapshot(undefined, "{\n  \"foo\": \"bar\",\n}");
+                Vitest.expect({
+                        foo: "bar"
+                      }).toMatchInlineSnapshot(undefined, "{\n  \"foo\": \"bar\",\n}");
               }));
         Vitest.it("should support toMatchSnapshot", (function () {
-                return Vitest.expect({
-                              name: "John",
-                              age: 30
-                            }).toMatchSnapshot(undefined);
+                Vitest.expect({
+                        name: "John",
+                        age: 30
+                      }).toMatchSnapshot(undefined);
               }));
         Vitest.it("should support toContain", (function () {
-                return Vitest.expect([
-                              1,
-                              2,
-                              3
-                            ]).toContain(2);
+                Vitest.expect([
+                        1,
+                        2,
+                        3
+                      ]).toContain(2);
               }));
         Vitest.it("should support toContainEqual", (function () {
-                return Vitest.expect([
-                              {
-                                a: 1
-                              },
-                              {
-                                a: 2
-                              }
-                            ]).toContainEqual({
-                            a: 2
-                          });
+                Vitest.expect([
+                        {
+                          a: 1
+                        },
+                        {
+                          a: 2
+                        }
+                      ]).toContainEqual({
+                      a: 2
+                    });
               }));
         Vitest.it("should support toHaveLength", (function () {
-                return Vitest.expect([
-                              1,
-                              2,
-                              3
-                            ]).toHaveLength(3);
+                Vitest.expect([
+                        1,
+                        2,
+                        3
+                      ]).toHaveLength(3);
               }));
         Vitest.it("should support toHaveProperty", (function () {
-                return Vitest.expect({
-                              foo: 42,
-                              bar: 7
-                            }).toHaveProperty("foo", 42);
+                Vitest.expect({
+                        foo: 42,
+                        bar: 7
+                      }).toHaveProperty("foo", 42);
               }));
         Vitest.it("should support toBeOneOf", (function () {
-                return Vitest.expect(2).toBeOneOf([
-                            1,
-                            2,
-                            3
-                          ]);
+                Vitest.expect(2).toBeOneOf([
+                      1,
+                      2,
+                      3
+                    ]);
               }));
         Vitest.it("should support toThrow", (function () {
                 var f = function () {
@@ -156,7 +161,7 @@ Vitest.describe("VitestBdd", (function () {
                         Error: new Error()
                       };
                 };
-                return Vitest.expect(f).toThrow(undefined);
+                Vitest.expect(f).toThrow(undefined);
               }));
         Vitest.it("should support toThrowError", (function () {
                 var f = function () {
@@ -166,11 +171,16 @@ Vitest.describe("VitestBdd", (function () {
                         Error: new Error()
                       };
                 };
-                return Vitest.expect(f).toThrowError(undefined, "fail");
+                Vitest.expect(f).toThrowError(undefined, "fail");
               }));
         Vitest.it("should support resolves", (async function () {
                 var promise = Promise.resolve(42);
-                return await Vitest.expect(promise).resolves.toBe(42);
+                return Vitest.expect(promise).resolves.toBe(42);
+              }));
+        Vitest.it("should force await on resolves", (async function () {
+                var promise = Promise.resolve(42);
+                await Vitest.expect(promise).resolves.toBe(42);
+                return Vitest.expect(1).toBe(1);
               }));
         Vitest.it("should support rejects", (async function () {
                 var promise = Promise.reject({
@@ -183,17 +193,17 @@ Vitest.describe("VitestBdd", (function () {
                           });
               }));
         Vitest.it("should support toSatisfy", (function () {
-                return Vitest.expect(10).toSatisfy(function (x) {
-                            return x > 5;
-                          });
+                Vitest.expect(10).toSatisfy(function (x) {
+                      return x > 5;
+                    });
               }));
         Vitest.it("should support toMatchObject", (function () {
-                return Vitest.expect({
-                              a: 1,
-                              b: 2
-                            }).toMatchObject({
-                            a: 1
-                          });
+                Vitest.expect({
+                        a: 1,
+                        b: 2
+                      }).toMatchObject({
+                      a: 1
+                    });
               }));
         Vitest.it("should support toMatchFileSnapshot", (async function () {
                 return await Vitest.expect("blah blah").toMatchFileSnapshot("blah-blah.txt", undefined);
@@ -206,7 +216,7 @@ Vitest.describe("VitestBdd", (function () {
                         Error: new Error()
                       };
                 };
-                return Vitest.expect(f).toThrowErrorMatchingSnapshot(undefined);
+                Vitest.expect(f).toThrowErrorMatchingSnapshot(undefined);
               }));
         Vitest.it("should support toThrowErrorMatchingInlineSnapshot", (function () {
                 var f = function () {
@@ -216,75 +226,75 @@ Vitest.describe("VitestBdd", (function () {
                         Error: new Error()
                       };
                 };
-                return Vitest.expect(f).toThrowErrorMatchingInlineSnapshot(undefined, "{ \n      \"Failure\": \"fail\"\n    }");
+                Vitest.expect(f).toThrowErrorMatchingInlineSnapshot(undefined, "{ \n      \"Failure\": \"fail\"\n    }");
               }));
         Vitest.it("should support .not modifier", (function () {
                 Vitest.expect.assertions(1);
-                return Vitest.expect(1).toBe(1);
+                Vitest.expect(1).toBe(1);
               }));
         Vitest.it("compare float in object properties", (function () {
-                return Vitest.expect({
-                              title: "0.1 + 0.2",
-                              sum: 0.1 + 0.20002
-                            }).toEqual({
-                            title: "0.1 + 0.2",
-                            sum: Vitest.expect.closeTo(0.3, 2)
-                          });
+                Vitest.expect({
+                        title: "0.1 + 0.2",
+                        sum: 0.1 + 0.20002
+                      }).toEqual({
+                      title: "0.1 + 0.2",
+                      sum: Vitest.expect.closeTo(0.3, 2)
+                    });
               }));
         Vitest.it("should support expected.anything in toEqual", (function () {
-                return Vitest.expect({
-                              a: 1,
-                              b: 2
-                            }).toEqual({
-                            a: Vitest.expect.anything(),
-                            b: Vitest.expect.anything()
-                          });
+                Vitest.expect({
+                        a: 1,
+                        b: 2
+                      }).toEqual({
+                      a: Vitest.expect.anything(),
+                      b: Vitest.expect.anything()
+                    });
               }));
         Vitest.it("should support expected.any in toEqual", (function () {
-                return Vitest.expect({
-                              name: "John",
-                              age: 30
-                            }).toEqual({
-                            name: Vitest.expect.any(String),
-                            age: Vitest.expect.any(Number)
-                          });
+                Vitest.expect({
+                        name: "John",
+                        age: 30
+                      }).toEqual({
+                      name: Vitest.expect.any(String),
+                      age: Vitest.expect.any(Number)
+                    });
               }));
         Vitest.it("should support expected.arrayContaining in toEqual", (function () {
-                return Vitest.expect({
-                              list: [
-                                1,
-                                2,
-                                3
-                              ]
-                            }).toEqual({
-                            list: Vitest.expect.arrayContaining([2])
-                          });
+                Vitest.expect({
+                        list: [
+                          1,
+                          2,
+                          3
+                        ]
+                      }).toEqual({
+                      list: Vitest.expect.arrayContaining([2])
+                    });
               }));
         Vitest.it("should support expected.objectContaining in toEqual", (function () {
-                return Vitest.expect({
-                              a: 1,
-                              b: 2
-                            }).toEqual(Vitest.expect.objectContaining({
-                                a: 1
-                              }));
+                Vitest.expect({
+                        a: 1,
+                        b: 2
+                      }).toEqual(Vitest.expect.objectContaining({
+                          a: 1
+                        }));
               }));
         Vitest.it("should support expected.stringContaining in toEqual", (function () {
-                return Vitest.expect({
-                              name: "hello world",
-                              age: 30
-                            }).toEqual({
-                            name: Vitest.expect.stringContaining("world"),
-                            age: Vitest.expect.any(Number)
-                          });
+                Vitest.expect({
+                        name: "hello world",
+                        age: 30
+                      }).toEqual({
+                      name: Vitest.expect.stringContaining("world"),
+                      age: Vitest.expect.any(Number)
+                    });
               }));
         Vitest.it("should support expected.stringMatching in toEqual", (function () {
-                return Vitest.expect({
-                              name: "abc123",
-                              age: 30
-                            }).toEqual({
-                            name: Vitest.expect.stringMatching(/\d+/),
-                            age: Vitest.expect.any(Number)
-                          });
+                Vitest.expect({
+                        name: "abc123",
+                        age: 30
+                      }).toEqual({
+                      name: Vitest.expect.stringMatching(/\d+/),
+                      age: Vitest.expect.any(Number)
+                    });
               }));
         Vitest.it("should support addSnapshotSerializer", (function () {
                 var called = {
@@ -302,7 +312,7 @@ Vitest.describe("VitestBdd", (function () {
                   print: serializer_print
                 };
                 Vitest.expect.addSnapshotSerializer(serializer);
-                return Vitest.expect(called.contents).toBe(false);
+                Vitest.expect(called.contents).toBe(false);
               }));
         Vitest.it("should support extend for custom matchers", (function () {
                 var matcher = {
@@ -325,12 +335,12 @@ Vitest.describe("VitestBdd", (function () {
                     })
                 };
                 Vitest.expect.extend(matcher);
-                return Vitest.expect(true).toBeTruthy();
+                Vitest.expect(true).toBeTruthy();
               }));
         Vitest.it("should support addEqualityTesters", (function () {
                 var tester = Caml_obj.equal;
                 Vitest.expect.addEqualityTesters([tester]);
-                return Vitest.expect(true).toBeTruthy();
+                Vitest.expect(true).toBeTruthy();
               }));
       }));
 
