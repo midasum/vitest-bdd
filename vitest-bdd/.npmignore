@@ -10,3 +10,6 @@
 
 # TypeScript target: include build result from esbuild
 !dist/*
+
+# Include readme
+!README.md
