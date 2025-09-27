@@ -41,15 +41,15 @@ Create a vitest config file
 
 ```ts
 // vitest.config.ts
-import { defineConfig } from "vitest/config";
-import { vitestBdd } from "vitest-bdd";
+import { defineConfig } from 'vitest/config'
+import { vitestBdd } from 'vitest-bdd'
 
 export default defineConfig({
   plugins: [vitestBdd()],
   test: {
-    include: ["**/*.feature", "**/*.spec.ts", "**/*.mdx"],
-  },
-});
+    include: ['**/*.feature', '**/*.spec.ts', '**/*.mdx']
+  }
+})
 ```
 
 ### Options
@@ -82,13 +82,13 @@ The last setting helps for ReScript users to mach `./test/Foobar.feature` with `
 
 ```ts
 function baseResolver(path: string): string | null {
-  for (const ext of [".ts", ".js", ".mjs", ".cjs", ".res.mjs"]) {
-    const p = `${path}${ext}`;
+  for (const ext of ['.ts', '.js', '.mjs', '.cjs', '.res.mjs']) {
+    const p = `${path}${ext}`
     if (existsSync(p)) {
-      return p;
+      return p
     }
   }
-  return null;
+  return null
 }
 
 export function stepsResolver(path: string): string | null {
@@ -97,30 +97,30 @@ export function stepsResolver(path: string): string | null {
   // to   /foo/bar.feature[.ts|.js|...]
   // or   /foo/bar.steps[.ts|.js|...]
   // or   /foo/barSteps[.ts|.js|...]
-  for (const r of [".feature", ".steps", "Steps"]) {
-    const p = baseResolver(path.replace(/\.feature$/, r));
+  for (const r of ['.feature', '.steps', 'Steps']) {
+    const p = baseResolver(path.replace(/\.feature$/, r))
     if (p) {
-      return p;
+      return p
     }
   }
   // Resolves to a common steps file in the directory:
   // from /foo/bar.feature
   // to   /foo/steps[.ts|.js|...]
-  return baseResolver(join(basename(path), "steps"));
+  return baseResolver(join(basename(path), 'steps'))
 }
 ```
 
 ```ts
 // vitest.config.ts
-import { defineConfig } from "vitest/config";
-import { vitestBdd } from "vitest-bdd";
+import { defineConfig } from 'vitest/config'
+import { vitestBdd } from 'vitest-bdd'
 
 export default defineConfig({
-  plugins: [vitestBdd({ markdownExtensions: [".mdx", ".text"] })],
+  plugins: [vitestBdd({ markdownExtensions: ['.mdx', '.text'] })],
   test: {
-    include: ["**/*.feature", "**/*.spec.ts", "**/*.mdx", "**/*.text"],
-  },
-});
+    include: ['**/*.feature', '**/*.spec.ts', '**/*.mdx', '**/*.text']
+  }
+})
 ```
 
 ### Describe your features
@@ -149,19 +149,19 @@ the feature file):
 
 ```ts
 // src/domain/test/calculator.feature.ts
-import { type Signal } from "tilia";
-import { expect } from "vitest";
-import { Given, type Step } from "vitest-bdd";
-import { makeCalculator } from "../feature/calculator";
+import { type Signal } from 'tilia'
+import { expect } from 'vitest'
+import { Given, type Step } from 'vitest-bdd'
+import { makeCalculator } from '../feature/calculator'
 
 // You can reuse steps in multiple contexts
 // Here anything that has a result value.
 function resultAssertions(Then: Step, calculator: { result: Signal<number> }) {
   // We define an async step, just to look cool 😎.
-  Then("the result is {number}", async (n: number) => {
-    await calculator.proccessBigComputation();
-    expect(calculator.result.value).toBe(n);
-  });
+  Then('the result is {number}', async (n: number) => {
+    await calculator.proccessBigComputation()
+    expect(calculator.result.value).toBe(n)
+  })
 }
 
 // You can use any variable name instead of When, And, and Then to match the
@@ -169,31 +169,31 @@ function resultAssertions(Then: Step, calculator: { result: Signal<number> }) {
 // the code in an async situation (because it's the most difficult to handle).
 // The last parameter is the test context (vitest.TestContext).
 Given(
-  "I have a {string} calculator",
+  'I have a {string} calculator',
   async ({ When, And, Then }, mode, _testContext) => {
     switch (mode) {
-      case "basic": {
-        const calculator = basicCalculator();
-        When("I add {number} and {number}", calculator.add);
-        And("I subtract {number} and {number}", calculator.subtract);
-        And("I multiply {number} by {number}", calculator.multiply);
-        And("I divide {number} by {number}", calculator.divide);
-        resultAssertions(Then, calculator);
-        break;
+      case 'basic': {
+        const calculator = basicCalculator()
+        When('I add {number} and {number}', calculator.add)
+        And('I subtract {number} and {number}', calculator.subtract)
+        And('I multiply {number} by {number}', calculator.multiply)
+        And('I divide {number} by {number}', calculator.divide)
+        resultAssertions(Then, calculator)
+        break
       }
-      case "rpn": {
-        const calculator = rpnCalculator();
-        When("I enter {number}", calculator.enter);
-        And("I enter {number}", calculator.enter);
-        And("I divide", calculator.divide);
-        resultAssertions(Then, calculator);
-        break;
+      case 'rpn': {
+        const calculator = rpnCalculator()
+        When('I enter {number}', calculator.enter)
+        And('I enter {number}', calculator.enter)
+        And('I divide', calculator.divide)
+        resultAssertions(Then, calculator)
+        break
       }
       default:
-        throw new Error(`Unknown calculator type "${type}"`);
+        throw new Error(`Unknown calculator type "${type}"`)
     }
   }
-);
+)
 ```
 
 For ReScript, the bindings are a little bit simpler for now:
@@ -239,12 +239,12 @@ reuse the form steps:
 
 ```ts
 // src/domain/test/preference-manager.feature.ts
-import { formSteps } from "@steps/form";
+import { formSteps } from '@steps/form'
 
-Given("I have a preference manager", ({ Step }) => {
-  const preferenceManager = makePreferenceManager();
-  formSteps(Step, preferenceManager);
-});
+Given('I have a preference manager', ({ Step }) => {
+  const preferenceManager = makePreferenceManager()
+  formSteps(Step, preferenceManager)
+})
 ```
 
 ### Gherkin in Markdown
@@ -309,18 +309,18 @@ Feature: Table
 
 ```ts
 // src/domain/test/tabular.feature.ts
-import { Given, Then, When, toRecords } from "vitest-bdd";
-import { makeTable } from "../feature/table";
+import { Given, Then, When, toRecords } from 'vitest-bdd'
+import { makeTable } from '../feature/table'
 
-Given("I have a table", ({ When, Then }, data) => {
+Given('I have a table', ({ When, Then }, data) => {
   // data : User[]
-  const table = makeTable(data);
+  const table = makeTable(data)
 
-  When("I sort by {string}", table.sort);
-  Then("the table is", (data) => {
-    expect(table.list).toEqual(toRecords(data));
-  });
-});
+  When('I sort by {string}', table.sort)
+  Then('the table is', data => {
+    expect(table.list).toEqual(toRecords(data))
+  })
+})
 ```
 
 You can also use `toNumbers` or `toStrings` to convert the first column of a
@@ -356,19 +356,19 @@ And the steps file:
 
 ```ts
 // /some/feature/calculator.feature.ts
-import { expect } from "vitest";
-import { Given } from "vitest-bdd";
-import { makeCalculator } from "../feature/calculator";
+import { expect } from 'vitest'
+import { Given } from 'vitest-bdd'
+import { makeCalculator } from '../feature/calculator'
 
-Soit("un calculator", ({ Quand, Alors }) => {
-  const calculator = makeCalculator();
-  Quand("j'ajoute {number} et {number}", calculator.add);
-  Quand("je soustrais {number} à {number}", calculator.subtract);
+Soit('un calculator', ({ Quand, Alors }) => {
+  const calculator = makeCalculator()
+  Quand("j'ajoute {number} et {number}", calculator.add)
+  Quand('je soustrais {number} à {number}', calculator.subtract)
 
-  Alors("le résultat doit être {number}", (expected: string) => {
-    expect(calculator.result.value).toBe(expected);
-  });
-});
+  Alors('le résultat doit être {number}', (expected: string) => {
+    expect(calculator.result.value).toBe(expected)
+  })
+})
 ```
 
 Don't forget to update some vscode settings (if you use the cucumber autocomplete extension for VS Code):
@@ -415,6 +415,7 @@ And finally, here are some nice extensions for VS Code that can support your BDD
   - Add `concurrent` option (true by default)
   - Add test context as last parameter to given step
   - Add full bindings for vitest assertions in ReScript
+  - Fix bundling to not include external dependencies (this created issues with concurrency and testContext)
 - **0.5.1** (2025-08-28)
   - Remove support for arrays in tests (accidental breaking change)
 - **0.5.0** (2025-08-27)
