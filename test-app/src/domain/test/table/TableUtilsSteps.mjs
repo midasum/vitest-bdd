@@ -24,10 +24,10 @@ VitestBdd.Given("I have a table", (function (param, data) {
                 setRecord(Core__Option.getExn(records.value[index], undefined));
               }));
         step("selected name should be {string}", (function (value) {
-                return Vitest.expect(record.value.name).toBe(value);
+                Vitest.expect(record.value.name).toBe(value);
               }));
         step("selected age should be {number}", (function (value) {
-                return Vitest.expect(Core__Int.fromString(record.value.age, undefined)).toBe(value);
+                Vitest.expect(Core__Int.fromString(record.value.age, undefined)).toBe(value);
               }));
       }));
 

@@ -51,6 +51,13 @@ describe("parseStep", () => {
     expect(step.params).toEqual([1, 2]);
   });
 
+  it("Should parse a step with many numbers", () => {
+    const step = parseStep("Given ", "I have 1 and 2 and 3");
+    expect(step.text).toBe("Given I have 1 and 2 and 3");
+    expect(step.query).toBe("i have {number} and {number} and {number}");
+    expect(step.params).toEqual([1, 2, 3]);
+  });
+
   it("Should parse a step with a negative number", () => {
     const step = parseStep("When ", "I add -1 and 2");
     expect(step.query).toBe("i add {number} and {number}");

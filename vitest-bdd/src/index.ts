@@ -70,8 +70,8 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
     out.push(text);
     map.addMapping({
       source: path,
-      generated: { line: out.length, column: 0 },
       original: { line: location.line, column },
+      generated: { line: out.length, column: 0 },
     });
   }
   const base = { line: 1, column: 0 };

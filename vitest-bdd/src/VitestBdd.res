@@ -38,7 +38,7 @@ type rec passertions<'a> = {
   toBeNaN: unit => promise<unit>,
   toBeTypeOf: string => promise<unit>,
   // Numbers
-  toBeCloseTo: (float, ~numDigits: int=?) => promise<unit>,
+  toBeCloseTo: (float, ~digits: int=?) => promise<unit>,
   toBeGreaterThan: float => promise<unit>,
   toBeGreaterThanOrEqual: float => promise<unit>,
   toBeLessThan: float => promise<unit>,
@@ -88,7 +88,7 @@ type rec assertions<'a> = {
   toBeNaN: unit => unit,
   toBeTypeOf: string => unit,
   // Numbers
-  toBeCloseTo: (float, ~numDigits: int=?) => unit,
+  toBeCloseTo: (float, ~digits: int=?) => unit,
   toBeGreaterThan: float => unit,
   toBeGreaterThanOrEqual: float => unit,
   toBeLessThan: float => unit,
@@ -154,7 +154,7 @@ module OfType = {
 // ========= Gherkin ==========
 
 @module("vitest-bdd")
-external given: (string, (given, 'args) => unit) => unit = "Given"
+external given: (string, (given, 'a) => unit) => unit = "Given"
 
 @module("vitest-bdd")
 external toRecords: array<array<string>> => array<'a> = "toRecords"

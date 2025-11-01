@@ -11,4 +11,3 @@ Feature: Calculator
   Scenario: Advanced calculator
     When I divide 1 by 2
     Then the result is 0.5
-

@@ -4,20 +4,20 @@ import * as Vitest from "vitest";
 
 Vitest.describe("ReScript tests and source maps", (function () {
         Vitest.it("should add two numbers", (function () {
-                return Vitest.expect(4).toBe(4);
+                Vitest.expect(4).toBe(4);
               }));
         Vitest.it("should work with async", (async function () {
                 return Vitest.expect(9).toBe(9);
               }));
         Vitest.it("should have more tests", (function () {
-                return Vitest.expect(3).toBe(3);
+                Vitest.expect(3).toBe(3);
               }));
         Vitest.it("should have more and more tests", (function () {
-                return Vitest.expect(3).toBe(3);
+                Vitest.expect(3).toBe(3);
               }));
         Vitest.it.todo("todo");
         Vitest.it.skip("skipped test", (function () {
-                return Vitest.expect(3).toBe(3);
+                Vitest.expect(3).toBe(3);
               }));
       }));
 

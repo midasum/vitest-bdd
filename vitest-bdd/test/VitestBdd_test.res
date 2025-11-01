@@ -82,7 +82,7 @@ describe("VitestBdd", () => {
     expect("hello").toBeTypeOf("string")
   })
   it("should support toBeCloseTo", () => {
-    expect(3.14159).toBeCloseTo(3.14, ~numDigits=2)
+    expect(3.14159).toBeCloseTo(3.14, ~digits=2)
   })
   it("should support toBeGreaterThan", () => {
     expect(5.0).toBeGreaterThan(4.0)

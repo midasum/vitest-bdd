@@ -45,7 +45,7 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
     const out: string[] = [];
     const push = (text: string) => {
       out.push(text);
-      sm(0, out.length);
+      sm(1, out.length);
     };
     const shortpath = path.split("/").slice(-4, -1).join("/") + ".[ts|js|mjs|cjs|res.mjs]";
     push(`import { describe, it, assert } from "vitest";`);
@@ -85,8 +85,8 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
     function sm(rline: number, cline: number) {
       map.addMapping({
         source: path,
-        generated: { line: cline, column: 0 },
         original: { line: rline, column: 0 },
+        generated: { line: cline, column: 0 },
       });
     }
     let ri = 1;

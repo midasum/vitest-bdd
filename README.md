@@ -196,7 +196,9 @@ Given(
 )
 ```
 
-For ReScript, the bindings are a little bit simpler for now:
+For ReScript, the bindings are a little bit simpler without the possibility to rename the "step" function.
+
+Please note that due to limitations with the type system, we cannot have multiple arguments for "Given" in rescript. You need to add a step for extra parameters or use a table.
 
 ```rescript
 // src/domain/test/CalculatorSteps.res
