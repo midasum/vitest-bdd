@@ -1,7 +1,7 @@
 {
   "name": "vitest-bdd-monorepo",
   "private": true,
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Monorepo for vitest-bdd plugin and related packages.",
   "homepage": "https://github.com/midasum/vitest-bdd",
   "repository": {
