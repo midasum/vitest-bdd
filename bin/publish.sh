@@ -61,7 +61,7 @@ elif [[ $1 == "--canary" ]]; then
   CANARY=true pnpm publish --tag canary --access public --no-git-checks
 else
   pnpm publish --access public --no-git-checks
-  git tag $VERSION
+  git tag v$VERSION
 fi
 cd ..
 
@@ -74,7 +74,6 @@ sleep 3
 
 # Reset git repo
 git reset --hard HEAD
-git tag v$VERSION
 
 if [[ $1 == "--beta" ]]; then
   echo "Beta versions published successfully!"
