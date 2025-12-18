@@ -26,17 +26,9 @@
   "author": "Gaspard Anna Bucher <g.a.bucher@midasum.com>",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
-    },
-    "./src/VitestBdd.res": "./src/VitestBdd.res",
-    "./src/VitestBdd.resi": "./src/VitestBdd.resi",
-    "./src/VitestBdd.mjs": "./src/VitestBdd.mjs"
-  },
   "sideEffects": false,
   "engines": {
     "node": ">=18.0.0"
@@ -61,14 +53,14 @@
     "clean-package": "^2.2.0",
     "rescript": "11.1.4",
     "rimraf": "^5.0.0",
-    "tsup": "^8.5.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.8.3",
     "vitest": "^3.2.3"
   },
   "dependencies": {
     "@cucumber/gherkin": "^32.1.2",
     "@cucumber/messages": "^27.2.0",
-    "source-map": "^0.7.4"
+    "source-map": "^0.7.6"
   },
   "peerDependencies": {
     "vite": "*"
