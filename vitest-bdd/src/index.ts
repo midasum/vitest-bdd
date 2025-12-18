@@ -1,9 +1,9 @@
-import { existsSync, readFileSync } from "node:fs";
-import { basename, extname, join } from "node:path";
-import { SourceMapGenerator } from "source-map";
-import type { Plugin } from "vite";
-import { parse, type SourceLocation } from "./parser";
-import { resCompile, resCompiledResolver } from "./resCompile";
+import {existsSync, readFileSync} from "node:fs";
+import {basename, extname, join} from "node:path";
+import {SourceMapGenerator} from "source-map";
+import type {Plugin} from "vite";
+import {parse, type SourceLocation} from "./parser";
+import {resCompile, resCompiledResolver} from "./resCompile";
 export * from "./steps";
 export * from "./utils";
 
@@ -28,7 +28,7 @@ const defaultOptions: Required<VitestBddOptions> = {
 };
 
 export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
-  const options: Required<VitestBddOptions> = { ...defaultOptions, ...opts };
+  const options: Required<VitestBddOptions> = {...defaultOptions, ...opts};
   return {
     name: "vitest-bdd",
     enforce: "pre",
@@ -43,7 +43,7 @@ export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
 }
 
 function compile(path: string, opts: Required<VitestBddOptions>) {
-  const { debug, rescriptExtensions, markdownExtensions, gherkinExtensions } = opts;
+  const {debug, rescriptExtensions, markdownExtensions, gherkinExtensions} = opts;
   const concurrent = opts.concurrent ? ".concurrent" : "";
   const ext = extname(path);
   if (rescriptExtensions.includes(ext)) {
@@ -63,18 +63,18 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
   `;
   }
   const out: string[] = [];
-  const map = new SourceMapGenerator({ file: path });
+  const map = new SourceMapGenerator({file: path});
   function push(text: string, location: SourceLocation) {
     const line = lines[location.line];
     const column = line ? line.length - line.replace(/^(-|\*) /, "").trimStart().length : 0;
     out.push(text);
     map.addMapping({
       source: path,
-      original: { line: location.line, column },
-      generated: { line: out.length, column: 0 },
+      original: {line: location.line, column},
+      generated: {line: out.length, column: 0},
     });
   }
-  const base = { line: 1, column: 0 };
+  const base = {line: 1, column: 0};
   const stepsPath = opts.stepsResolver(path);
   if (!stepsPath) {
     const shortpath = path.split("/").slice(-4).join("/");
@@ -114,11 +114,11 @@ function compile(path: string, opts: Required<VitestBddOptions>) {
   if (debug) {
     console.log(out.join("\n"));
   }
-  return { code: out.join("\n"), map: map.toJSON() };
+  return {code: out.join("\n"), map: map.toJSON()};
 }
 
 function baseResolver(path: string): string | null {
-  for (const ext of [".ts", ".js", ".mjs", ".cjs", ".res.mjs"]) {
+  for (const ext of [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".res.mjs", ".res.jsx", ".res.tsx"]) {
     const p = `${path}${ext}`;
     if (existsSync(p)) {
       return p;

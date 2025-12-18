@@ -82,7 +82,7 @@ The last setting helps for ReScript users to mach `./test/Foobar.feature` with `
 
 ```ts
 function baseResolver(path: string): string | null {
-  for (const ext of ['.ts', '.js', '.mjs', '.cjs', '.res.mjs']) {
+  for (const ext of [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".res.mjs", ".res.jsx", ".res.tsx"]) {
     const p = `${path}${ext}`
     if (existsSync(p)) {
       return p
@@ -413,6 +413,8 @@ And finally, here are some nice extensions for VS Code that can support your BDD
 # Changelog
 
 - **0.6.2** (2025-12-18)
+  - Add default support for "tsx" and "jsx" step file discovery
+- **0.6.1** (2025-12-18)
   - Removed "exports" to fix uses for ReScript users with different suffix settings
 - **0.6.0** (2025-09-01)
   - Add support for table parsing (toRecords, toNumbers, toStrings)

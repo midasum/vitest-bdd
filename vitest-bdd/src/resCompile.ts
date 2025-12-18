@@ -1,6 +1,6 @@
-import { existsSync, readFileSync } from "node:fs";
-import { SourceMapGenerator } from "source-map";
-import type { VitestBddOptions } from ".";
+import {existsSync, readFileSync} from "node:fs";
+import {SourceMapGenerator} from "source-map";
+import type {VitestBddOptions} from ".";
 
 const TEST_RE = /(describe|it|test|only|skip|todo)\(("([^"]*)")/;
 type Stone = {
@@ -11,7 +11,7 @@ type Stone = {
 // Parse rescript tests
 // TODO: Also use this SourceMap maker to parse ReScript Gherkins steps
 export function resCompile(path: string, opts: Required<VitestBddOptions>) {
-  const { resCompiledResolver } = opts;
+  const {resCompiledResolver} = opts;
   const text = readFileSync(path, "utf8");
   const resLines = text.split("\n");
   const rmap: Stone[] = [];
@@ -19,7 +19,7 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
     const line = resLines[i];
     let re = TEST_RE.exec(line);
     if (re) {
-      rmap.push({ key: re[2], line: i + 1 });
+      rmap.push({key: re[2], line: i + 1});
     }
   }
   if (rmap.length === 0) {
@@ -34,12 +34,12 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
   const compiledPath = resCompiledResolver(path);
 
   if (!compiledPath) {
-    const map = new SourceMapGenerator({ file: path });
+    const map = new SourceMapGenerator({file: path});
     function sm(rline: number, cline: number) {
       map.addMapping({
         source: path,
-        original: { line: rline, column: 0 },
-        generated: { line: cline, column: 0 },
+        original: {line: rline, column: 0},
+        generated: {line: cline, column: 0},
       });
     }
     const out: string[] = [];
@@ -47,14 +47,14 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
       out.push(text);
       sm(1, out.length);
     };
-    const shortpath = path.split("/").slice(-4, -1).join("/") + ".[ts|js|mjs|cjs|res.mjs]";
+    const shortpath = path.split("/").slice(-4, -1).join("/") + ".[ts|tsx|js|jsx|mjs|cjs|res.mjs|res.jsx|res.tsx]";
     push(`import { describe, it, assert } from "vitest";`);
     push(`describe.concurrent(${JSON.stringify(path.split("/").slice(-1)[0])}, () => {`);
     push(`  it(${JSON.stringify("Should have a compiled file")}, () => {`);
     push(`    assert.fail(${JSON.stringify(`Compiled js file for ${JSON.stringify(shortpath)} not found.`)});`);
     push(`  });`);
     push(`});`);
-    return { code: out.join("\n"), map: map.toJSON() };
+    return {code: out.join("\n"), map: map.toJSON()};
   } else {
     const smap: number[][] = [];
     const compiled = readFileSync(compiledPath, "utf8");
@@ -81,12 +81,12 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
         }
       }
     }
-    const map = new SourceMapGenerator({ file: path });
+    const map = new SourceMapGenerator({file: path});
     function sm(rline: number, cline: number) {
       map.addMapping({
         source: path,
-        original: { line: rline, column: 0 },
-        generated: { line: cline, column: 0 },
+        original: {line: rline, column: 0},
+        generated: {line: cline, column: 0},
       });
     }
     let ri = 1;
@@ -108,7 +108,7 @@ export function resCompile(path: string, opts: Required<VitestBddOptions>) {
       ci = cline;
     }
 
-    return { code: compiled, map: map.toJSON() };
+    return {code: compiled, map: map.toJSON()};
   }
 }
 
