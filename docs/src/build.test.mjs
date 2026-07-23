@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import os from "node:os";
 import path from "node:path";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { crossValidate, findConfigs, loadConfig } from "./build.mjs";
 import { renderDocsPage } from "./templates.mjs";
 
@@ -209,4 +209,24 @@ test("renders guide body when pageMain omits slots", async () => {
   assert.match(html, /<section class="chapter" id="remote-data">/);
   assert.match(html, /<li><a href="#remote-data">Remote Data<\/a><\/li>/);
   assert.match(html, /Reference: <a href="\.\/api\.html#make">make<\/a>/);
+  assert.match(html, /<p class="eyebrow">Guide<span class="sep">·<\/span>v1\.x<\/p>/);
+});
+
+test("underlines only prose links", async () => {
+  const css = await readFile(path.resolve(process.cwd(), "assets/style.css"), "utf8");
+
+  assert.equal(css.match(/text-decoration: underline/g)?.length, 1);
+  assert.match(css, /\.entry \.prose > ol a \{[\s\S]*text-decoration: underline;/);
+  assert.doesNotMatch(css, /\.xref a,[\s\S]*text-decoration: underline;/);
+});
+
+test("uses shared heading spacing with a larger hero title", async () => {
+  const css = await readFile(path.resolve(process.cwd(), "assets/style.css"), "utf8");
+  const spacing = css.match(/\.hero,\s*\.docs-head,\s*\.api-head\s*\{([^}]*)\}/)?.[1];
+  const heroTitle = css.match(/\.hero h1\s*\{([^}]*)\}/)?.[1];
+
+  assert.match(spacing, /padding-top: clamp\(40px, 6vw, 64px\)/);
+  assert.match(spacing, /padding-bottom: clamp\(28px, 4vw, 40px\)/);
+  assert.match(heroTitle, /font-size: clamp\(34px, 5\.2vw, 52px\)/);
+  assert.match(heroTitle, /margin: 2rem 0 1rem/);
 });
