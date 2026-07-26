@@ -1,14 +1,13 @@
 ---
 name: epureVitest
+label: epureVitest(options)
 slug: epure-vitest
 kind: function
-module: core
 since: "0.1"
 sort: 10
 summary: The Vite plugin — compiles feature files and Gherkin-in-Markdown into Vitest suites.
-signature:
-  ts: "function epureVitest(options?: EpureVitestOptions): Plugin"
-  res: "// configured in vitest.config.ts — the plugin side stays in TypeScript"
+signature.ts: "function epureVitest(options?: EpureVitestOptions): Plugin"
+signature.res: "// configured in vitest.config.ts — the plugin side stays in TypeScript"
 tags: []
 ---
 

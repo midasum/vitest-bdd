@@ -1,136 +1,148 @@
 base: ../base-config.yaml
+
 var:
-  dist: ../../../dist
-  assets: ../../assets
-  project: epurejs
+  homeMain:
+    file: home/index.html
+  gherkinIndex:
+    dir: api/gherkin
+    each: '        <a href="#{{slug}}">{{label}}</a>'
+  vitestIndex:
+    dir: api/vitest
+    each: '        <a href="#{{slug}}">{{label}}</a>'
+  gherkinEntries:
+    dir: api/gherkin
+    transform: apiMd
+    each: |-
+      <article class="entry" id="{{slug}}">
+        <header class="entry-head">
+          <h2><a href="#{{slug}}">{{label}}</a></h2>
+          <p class="tags"><span class="gherkin">Gherkin</span>{{tagSpans}}<span>Since {{since}}</span></p>
+        </header>
+        <p class="summary">{{summary}}</p>
+        <div class="sig-wrap" data-pair>{{toggleButton}}{{signatureTs}}{{signatureRes}}</div>
+        <div class="prose">{{body}}</div>
+      </article>
+  vitestEntries:
+    dir: api/vitest
+    transform: apiMd
+    each: |-
+      <article class="entry" id="{{slug}}">
+        <header class="entry-head">
+          <h2><a href="#{{slug}}">{{label}}</a></h2>
+          <p class="tags"><span class="vitest">Vitest</span>{{tagSpans}}<span>Since {{since}}</span></p>
+        </header>
+        <p class="summary">{{summary}}</p>
+        <div class="sig-wrap" data-pair>{{toggleButton}}{{signatureTs}}{{signatureRes}}</div>
+        <div class="prose">{{body}}</div>
+      </article>
+  apiMain: |-
+    <div class="api-head">
+      <div class="wrap">
+        <p class="eyebrow">Reference<span class="sep">·</span>v1.x<span class="sep">·</span>TypeScript &amp; ReScript signatures</p>
+        <h1>API Reference</h1>
+        <p class="sec-lead">The public surface of @epure/vitest: the plugin, the step definitions, and the ReScript bindings for Vitest. Each entry gives the signature, behavior, and one minimal example.</p>
+      </div>
+    </div>
 
-shared:
-  literals:
-    viewSwitchScript: |-
-      /* feature | steps toggle on contract figures — per figure, delegated,
-         independent of the global language toggle. */
-      document.addEventListener("click", function (e) {
-        var btn = e.target.closest(".viewswitch button");
-        if (!btn) return;
-        var fig = btn.closest("figure");
-        fig.setAttribute("data-view", btn.dataset.view);
-        fig.querySelectorAll(".viewswitch button").forEach(function (b) {
-          b.setAttribute("aria-pressed", String(b === btn));
-        });
-      });
-    wordmarkSvg: |-
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="5.5"/>
-        <path d="M12 1v22M1 12h22"/>
-      </svg>
-    faviconUrl: |-
-      data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b0402a' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='5.5'/%3E%3Cpath d='M12 1v22M1 12h22'/%3E%3C/svg%3E
-    header: |-
-      <header class="top">
-        <div class="wrap">
-          <a class="wordmark" href="./index.html" aria-label="@epure/vitest — home">{{wordmarkSvg}}@epure/vitest</a>
-          <nav class="nav" aria-label="Site">
-            <a href="./index.html">Home</a>
-            <a href="./guide.html"{{docsCurrentAttr}}>Guide</a>
-            <a href="./api.html"{{apiCurrentAttr}}>API</a>
-            <a href="https://github.com/epuremethod/vitest">GitHub</a>
-          </nav>
-        </div>
-      </header>
-    footer: |-
-      <footer class="foot">
-        <div class="wrap">
-          <div class="fcell"><span class="lbl">Package</span><span class="val"><a href="https://www.npmjs.com/package/@epure/vitest">@epure/vitest on npm</a></span></div>
-          <div class="fcell"><span class="lbl">Source</span><span class="val"><a href="https://github.com/epuremethod/vitest">github.com/epuremethod/vitest</a></span></div>
-          <div class="fcell"><span class="lbl">License</span><span class="val">MIT</span></div>
-          <div class="fcell"><span class="lbl">Method</span><span class="val"><a href="https://epuremethod.com">épure</a></span></div>
-          <div class="fcell"><span class="lbl">Site</span><span class="val">epurejs.dev</span></div>
-        </div>
-      </footer>
-    moduleLabelCore: |-
-      Gherkin
-    moduleLabelReact: |-
-      Vitest
+    <div class="wrap api-layout">
+      <nav class="api-index" aria-label="API index">
+        <p class="k idx-group">Gherkin</p>
+    {{gherkinIndex}}
+        <p class="k idx-group">Vitest</p>
+    {{vitestIndex}}
+      </nav>
+      <div class="api-entries">
+    {{gherkinEntries}}
+    {{vitestEntries}}
+      </div>
+    </div>
+  toc:
+    dir: guide
+    each: '        <li><a href="#{{slug}}">{{title}}</a></li>'
+  chapters:
+    dir: guide
+    transform: guideMd
+    each: |-
+      <section class="chapter" id="{{slug}}">
+        <div class="ch-kicker"><span class="no">{{chapter}}</span><span class="rule"></span></div>
+        <h2><a href="#{{slug}}">{{title}}</a></h2>
+        {{body}}
+        {{refsBlock}}
+      </section>
+  guideMain: |-
+    <div class="docs-head">
+      <div class="wrap">
+        <p class="eyebrow">Guide<span class="sep">·</span>v1.x</p>
+        <h1>The Guide</h1>
+        <p class="standfirst">A reading path through @epure/vitest, in order: why a contract must run, the shape of a feature file, steps as closures, the wiring into Vitest, tables and other languages, contracts inside prose, and writing Vitest in ReScript. Read it top to bottom once. When you need to look something up later, use the <a href="./api.html">API reference</a> instead — it is flat, complete, and made for that.</p>
+      </div>
+    </div>
 
-pages:
-  api:
+    <div class="wrap docs-layout">
+      <nav class="toc" aria-label="Chapters">
+        <p class="k idx-group">Read in order</p>
+        <ol>
+    {{toc}}
+        </ol>
+      </nav>
+      <div class="chapters">
+    {{chapters}}
+      </div>
+    </div>
+
+build:
+  - var:
+      title: "@epure/vitest — Contracts That Run"
+      description: "@epure/vitest — contracts that run. Every .feature file is also a Vitest suite: plain Gherkin bound to typed steps, so what business signed is exactly what the tests measure."
+      htmlAttrs: 'lang="en"'
+      homeCurrentAttr: ' aria-current="page"'
+      main: "{{homeMain}}"
+      scripts: |-
+        <script>(function () {
+          var fig = document.getElementById("hero-code");
+          fig.querySelectorAll(".langswitch button").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              fig.setAttribute("data-lang", btn.dataset.lang);
+              fig.querySelectorAll(".langswitch button").forEach(function (b) {
+                b.setAttribute("aria-pressed", String(b === btn));
+              });
+            });
+          });
+        })();</script>
+    output: ../../../dist/index.html
+    input: "{{shell}}"
+  - var:
+      title: "API Reference — @epure/vitest"
+      description: "@epure/vitest API reference — the Vite plugin, Gherkin step definitions, table helpers, and the ReScript bindings for Vitest."
+      htmlAttrs: 'lang="en" data-lang="ts"'
+      apiCurrentAttr: ' aria-current="page"'
+      prePaint: "<script>{{prePaintScript}}</script>"
+      main: "{{apiMain}}"
+      scripts: |-
+        <script>{{toggleListenerScript}}</script>
+        <script>{{viewSwitchScript}}</script>
+    output: ../../../dist/api.html
+    input: "{{shell}}"
+  - var:
+      title: "The Guide — @epure/vitest"
+      description: "The @epure/vitest guide — contracts that run: plain-language feature files bound to typed steps, executed by Vitest, in TypeScript and ReScript."
+      htmlAttrs: 'lang="en" data-lang="ts"'
+      guideCurrentAttr: ' aria-current="page"'
+      prePaint: "<script>{{prePaintScript}}</script>"
+      skip: '<a class="skip" href="#content">Skip to content</a>'
+      mainAttrs: ' id="content"'
+      main: "{{guideMain}}"
+      scripts: |-
+        <script>{{toggleListenerScript}}</script>
+        <script>{{docsScrollSpyScript}}</script>
+    output: ../../../dist/guide.html
+    input: "{{shell}}"
+  - output: ../../../dist/style.css
     input:
-      markdownDir: api
-    output: "{{dist}}/api.html"
-    assets:
-      copy:
-        - from: index.html
-          to: "{{dist}}/index.html"
-        - from: "{{assets}}/style.css"
-          to: "{{dist}}/style.css"
-        - from: "{{assets}}/fonts"
-          to: "{{dist}}/fonts"
-          recursive: true
-        - from: "../../../epure-vitest/llms.txt"
-          to: "{{dist}}/llms.txt"
-    templates:
-      pageMain: |-
-        <div class="api-head">
-          <div class="wrap">
-            <p class="eyebrow">Reference<span class="sep">·</span>v1.x<span class="sep">·</span>TypeScript &amp; ReScript signatures</p>
-            <h1>API Reference</h1>
-            <p class="sec-lead">The public surface of @epure/vitest: the plugin, the step definitions, and the ReScript bindings for Vitest. Each entry gives the signature, behavior, and one minimal example.</p>
-          </div>
-        </div>
-
-        <div class="wrap api-layout">
-          <nav class="api-index" aria-label="API index">
-        {{index}}
-          </nav>
-          <div class="api-entries">
-        {{articles}}
-          </div>
-        </div>
-    document:
-      title: |-
-        API Reference — @epure/vitest
-      description: |-
-        @epure/vitest API reference — the Vite plugin, Gherkin step definitions, table helpers, and the ReScript bindings for Vitest.
-      scripts:
-        - |-
-          {{viewSwitchScript}}
-
-  guide:
+      copy: ../../assets/style.css
+  - output: ../../../dist/fonts
     input:
-      markdownDir: guide
-    output: "{{dist}}/guide.html"
-    assets:
-      copy:
-        - from: index.html
-          to: "{{dist}}/index.html"
-        - from: "{{assets}}/style.css"
-          to: "{{dist}}/style.css"
-        - from: "{{assets}}/fonts"
-          to: "{{dist}}/fonts"
-          recursive: true
-    templates:
-      pageMain: |-
-        <div class="docs-head">
-          <div class="wrap">
-            <p class="eyebrow">Guide<span class="sep">·</span>v1.x</p>
-            <h1>The Guide</h1>
-            <p class="standfirst">A reading path through @epure/vitest, in order: why a contract must run, the shape of a feature file, steps as closures, the wiring into Vitest, tables and other languages, contracts inside prose, and writing Vitest in ReScript. Read it top to bottom once. When you need to look something up later, use the <a href="./api.html">API reference</a> instead — it is flat, complete, and made for that.</p>
-          </div>
-        </div>
-
-        <div class="wrap docs-layout">
-          <nav class="toc" aria-label="Chapters">
-            <p class="k idx-group">Read in order</p>
-            <ol>
-        {{toc}}
-            </ol>
-          </nav>
-          <div class="chapters">
-        {{chapters}}
-          </div>
-        </div>
-    document:
-      title: |-
-        The Guide — @epure/vitest
-      description: |-
-        The @epure/vitest guide — contracts that run: plain-language feature files bound to typed steps, executed by Vitest, in TypeScript and ReScript.
+      copy: ../../assets/fonts
+  - output: ../../../dist/llms.txt
+    input:
+      copy: ../../../epure-vitest/llms.txt

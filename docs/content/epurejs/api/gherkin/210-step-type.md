@@ -1,14 +1,13 @@
 ---
 name: Step
+label: Step
 slug: step-type
 kind: type
-module: core
 since: "0.1"
 sort: 210
 summary: A step binder — the functions the Given builder destructures to register When, Then, and friends.
-signature:
-  ts: "type Step = (pattern: string, op: Operation) => void"
-  res: "type given = {step: 'a. (string, 'a) => unit}"
+signature.ts: "type Step = (pattern: string, op: Operation) => void"
+signature.res: "type given = {step: 'a. (string, 'a) => unit}"
 tags: []
 ---
 

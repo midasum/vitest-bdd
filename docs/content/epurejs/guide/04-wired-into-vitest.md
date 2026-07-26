@@ -2,6 +2,7 @@
 title: Wired into Vitest
 slug: wired-into-vitest
 sort: 4
+chapter: "04"
 refs: [epure-vitest, options-type]
 ---
 

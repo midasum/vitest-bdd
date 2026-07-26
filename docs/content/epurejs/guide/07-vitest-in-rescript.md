@@ -2,6 +2,7 @@
 title: Vitest in ReScript
 slug: vitest-in-rescript
 sort: 7
+chapter: "07"
 refs: [expect, expected, assertions-type, describe, test, before-each]
 ---
 

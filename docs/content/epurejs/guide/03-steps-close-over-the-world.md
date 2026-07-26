@@ -2,6 +2,7 @@
 title: Steps close over the world
 slug: steps-close-over-the-world
 sort: 3
+chapter: "03"
 refs: [given, step-type]
 ---
 

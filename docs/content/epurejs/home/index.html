@@ -1,36 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="@epure/vitest — contracts that run. Every .feature file is also a Vitest suite: plain Gherkin bound to typed steps, so what business signed is exactly what the tests measure.">
-<title>@epure/vitest — Contracts That Run</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b0402a' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='5.5'/%3E%3Cpath d='M12 1v22M1 12h22'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="./style.css">
-</head>
-<body>
-
-<header class="top">
-  <div class="wrap">
-    <a class="wordmark" href="./index.html" aria-label="@epure/vitest — home">
-      <!-- registration crosshair — @epure/vitest's own mark, in sanguine -->
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="5.5"/>
-        <path d="M12 1v22M1 12h22"/>
-      </svg>
-      @epure/vitest
-    </a>
-    <nav class="nav" aria-label="Site">
-      <a href="./index.html" aria-current="page">Home</a>
-      <a href="./guide.html">Guide</a>
-      <a href="./api.html">API</a>
-      <a href="https://github.com/epuremethod/vitest">GitHub</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-
   <section class="hero" aria-labelledby="hero-title">
     <div class="wrap">
       <div>
@@ -170,33 +137,3 @@
       </aside>
     </div>
   </section>
-
-</main>
-
-<footer class="foot">
-  <div class="wrap">
-    <div class="fcell"><span class="lbl">Package</span><span class="val"><a href="https://www.npmjs.com/package/@epure/vitest">@epure/vitest on npm</a></span></div>
-    <div class="fcell"><span class="lbl">Source</span><span class="val"><a href="https://github.com/epuremethod/vitest">github.com/epuremethod/vitest</a></span></div>
-    <div class="fcell"><span class="lbl">License</span><span class="val">MIT</span></div>
-    <div class="fcell"><span class="lbl">Method</span><span class="val"><a href="https://epuremethod.com">épure</a></span></div>
-    <div class="fcell"><span class="lbl">Site</span><span class="val">epurejs.dev</span></div>
-  </div>
-</footer>
-
-<script>
-  // feature | steps toggle on the hero code figure
-  (function () {
-    var fig = document.getElementById('hero-code');
-    fig.querySelectorAll('.langswitch button').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        fig.setAttribute('data-lang', btn.dataset.lang);
-        fig.querySelectorAll('.langswitch button').forEach(function (b) {
-          b.setAttribute('aria-pressed', String(b === btn));
-        });
-      });
-    });
-  })();
-</script>
-
-</body>
-</html>

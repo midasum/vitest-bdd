@@ -2,6 +2,7 @@
 title: Contracts in the prose
 slug: contracts-in-the-prose
 sort: 6
+chapter: "06"
 refs: []
 ---
 

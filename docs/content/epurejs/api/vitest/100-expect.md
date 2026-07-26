@@ -1,14 +1,13 @@
 ---
 name: expect
+label: expect(actual)
 slug: expect
 kind: function
-module: react
 since: "0.4"
 sort: 100
 summary: Vitest's expect, typed for ReScript — the assertion entry point.
-signature:
-  ts: "function expect<T>(actual: T): Assertion<T>"
-  res: "let expect: 'a => assertions<'a>"
+signature.ts: "function expect<T>(actual: T): Assertion<T>"
+signature.res: "let expect: 'a => assertions<'a>"
 tags: []
 ---
 

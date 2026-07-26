@@ -3,22 +3,25 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
-    "build": "node src/build.mjs",
-    "dev": "node src/dev.mjs",
-    "check": "node src/build.mjs",
-    "test": "node --test src/*.test.mjs"
+    "build": "bun src/build.ts",
+    "dev": "bun src/dev.ts & live-server ../dist --watch=../dist --host=127.0.0.1 --port=4175 --no-browser --wait=100",
+    "check": "bun test src && bun src/build.ts",
+    "test": "bun test src"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
-    "gray-matter": "^4.0.3",
+    "@epure/minidoc": "file:../../minidoc",
     "live-server": "^1.2.2",
-    "markdown-it": "^14.1.0",
+    "markdown-it": "^14.3.0",
     "markdown-it-container": "^4.0.0",
-    "prismjs": "^1.30.0",
-    "sury": "11.0.0-alpha.9",
-    "yaml": "^2.9.0"
+    "prismjs": "^1.30.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "@types/markdown-it": "^14.1.2",
+    "@types/markdown-it-container": "^4.0.0",
+    "@types/prismjs": "^1.26.6"
   }
 }

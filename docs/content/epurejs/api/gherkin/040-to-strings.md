@@ -1,14 +1,13 @@
 ---
 name: toStrings
+label: toStrings(table)
 slug: to-strings
 kind: function
-module: core
 since: "0.6"
 sort: 40
 summary: Flatten a one-column Gherkin table into a list of strings.
-signature:
-  ts: "function toStrings(table: string[][]): string[]"
-  res: "let toStrings: array<array<string>> => array<string>"
+signature.ts: "function toStrings(table: string[][]): string[]"
+signature.res: "let toStrings: array<array<string>> => array<string>"
 tags: []
 ---
 

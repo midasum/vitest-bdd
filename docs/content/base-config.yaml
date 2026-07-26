@@ -1,225 +1,122 @@
 var:
-  project: epurejs
-
-shared:
-  literals:
-    wordmarkSvg: |-
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 3C7.2 4.9 4.6 8.8 5.5 13.3 6.3 17 9 20.1 12 21c3-0.9 5.7-4 6.5-7.7C19.4 8.8 16.8 4.9 12 3Z"/>
-        <path d="M12 7v10M12 11.5 9.2 9.7M12 11.5l2.8-1.8M12 15.5 8.8 13.4M12 15.5l3.2-2.1" stroke-width="1.1"/>
-      </svg>
-    faviconUrl: |-
-      data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232e7d3a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3C7.2 4.9 4.6 8.8 5.5 13.3 6.3 17 9 20.1 12 21c3-0.9 5.7-4 6.5-7.7C19.4 8.8 16.8 4.9 12 3Z'/%3E%3Cpath d='M12 7v10M12 11.5 9.2 9.7M12 11.5l2.8-1.8M12 15.5 8.8 13.4M12 15.5l3.2-2.1' stroke-width='1.1'/%3E%3C/svg%3E
-    prePaintScript: |-
-      /* Language choice, resolved before first paint.
-         Priority: ?lang= query param > localStorage > "ts". */
-      (function () {
-        var q = new URLSearchParams(location.search).get("lang");
-        var saved = null;
-        try { saved = localStorage.getItem("epure-vitest-lang"); } catch (e) {}
-        var lang = (q === "ts" || q === "res") ? q : (saved === "res" ? "res" : "ts");
-        document.documentElement.setAttribute("data-lang", lang);
-      })();
-    toggleListenerScript: |-
-      /* Language toggle: one delegated listener flips html[data-lang] and persists.
-         The buttons carry no state — CSS renders them from the attribute. */
-      document.addEventListener("click", function (e) {
-        if (!e.target.closest(".lang-toggle, .toggle")) return;
-        var next = document.documentElement.getAttribute("data-lang") === "ts" ? "res" : "ts";
-        document.documentElement.setAttribute("data-lang", next);
-        try { localStorage.setItem("epure-vitest-lang", next); } catch (err) {}
+  wordmarkSvg: |-
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="5.5"/>
+      <path d="M12 1v22M1 12h22"/>
+    </svg>
+  faviconUrl: |-
+    data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b0402a' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='5.5'/%3E%3Cpath d='M12 1v22M1 12h22'/%3E%3C/svg%3E
+  prePaintScript: |-
+    /* Language choice, resolved before first paint.
+       Priority: ?lang= query param > localStorage > "ts". */
+    (function () {
+      var q = new URLSearchParams(location.search).get("lang");
+      var saved = null;
+      try { saved = localStorage.getItem("epure-vitest-lang"); } catch (e) {}
+      var lang = (q === "ts" || q === "res") ? q : (saved === "res" ? "res" : "ts");
+      document.documentElement.setAttribute("data-lang", lang);
+    })();
+  toggleListenerScript: |-
+    /* Language toggle: one delegated listener flips html[data-lang] and persists.
+       The buttons carry no state — CSS renders them from the attribute. */
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".lang-toggle, .toggle")) return;
+      var next = document.documentElement.getAttribute("data-lang") === "ts" ? "res" : "ts";
+      document.documentElement.setAttribute("data-lang", next);
+      try { localStorage.setItem("epure-vitest-lang", next); } catch (err) {}
+    });
+  docsScrollSpyScript: |-
+    /* Scroll-spy: highlight the current chapter in the reading path. */
+    (function () {
+      var links = {};
+      document.querySelectorAll(".toc a[href^='#']").forEach(function (a) {
+        links[a.hash.slice(1)] = a;
       });
-    docsScrollSpyScript: |-
-      /* Scroll-spy: highlight the current chapter in the reading path. */
-      (function () {
-        var links = {};
-        document.querySelectorAll(".toc a[href^='#']").forEach(function (a) {
-          links[a.hash.slice(1)] = a;
+      var spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          Object.keys(links).forEach(function (id) { links[id].removeAttribute("aria-current"); });
+          links[en.target.id].setAttribute("aria-current", "true");
         });
-        var spy = new IntersectionObserver(function (entries) {
-          entries.forEach(function (en) {
-            if (!en.isIntersecting) return;
-            Object.keys(links).forEach(function (id) { links[id].removeAttribute("aria-current"); });
-            links[en.target.id].setAttribute("aria-current", "true");
-          });
-        }, { rootMargin: "-10% 0px -75% 0px" });
-        document.querySelectorAll(".chapter[id]").forEach(function (s) { spy.observe(s); });
-      })();
-    header: |-
-      <header class="top">
-        <div class="wrap">
-          <a class="wordmark" href="./index.html" aria-label="@epure/vitest — home">{{wordmarkSvg}}@epure/vitest</a>
-          <nav class="nav" aria-label="Site">
-            <a href="./index.html">Home</a>
-            <a href="./guide.html"{{docsCurrentAttr}}>Guide</a>
-            <a href="./api.html"{{apiCurrentAttr}}>API</a>
-            <a href="https://github.com/epuremethod/vitest">GitHub</a>
-          </nav>
-        </div>
-      </header>
-    footer: |-
-      <footer class="foot">
-        <div class="wrap">
-          <div class="fcell"><span class="lbl">Package</span><span class="val"><a href="https://www.npmjs.com/package/@epure/vitest">@epure/vitest on npm</a></span></div>
-          <div class="fcell"><span class="lbl">Source</span><span class="val"><a href="https://github.com/epuremethod/vitest">github.com/epuremethod/vitest</a></span></div>
-          <div class="fcell"><span class="lbl">License</span><span class="val">MIT</span></div>
-          <div class="fcell"><span class="lbl">Method</span><span class="val"><a href="https://epuremethod.com">épure</a></span></div>
-          <div class="fcell"><span class="lbl">Site</span><span class="val">epurejs.dev</span></div>
-        </div>
-      </footer>
-    shell: |-
-      <!doctype html>
-      <html {{htmlAttrs}}>
-      <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="{{description}}">
-      <title>{{title}}</title>
-      <link rel="icon" href="{{faviconUrl}}">
-      <link rel="stylesheet" href="./style.css">
-      {{prePaint}}
-      </head>
-      <body>
-      {{skip}}
-      {{header}}
-      <main{{mainAttrs}}>
-      {{main}}
-      </main>
-      {{footer}}
-      {{scripts}}
-      </body>
-      </html>
-    moduleLabelCore: |-
-      Gherkin
-    moduleLabelReact: |-
-      Vitest
-
-pages:
-  api:
-    input:
-      markdownDir: api
-      glob: "*.md"
-      parser: parseApiEntry
-      sourceLabel: content/api/{{file}}
-    output: ../../dist/{{project}}/api.html
-    templates:
-      indexGroup: |-
-        <p class="k idx-group">{{moduleLabel}}</p>
-        {{indexItems}}
-      indexItem: |-
-        <a href="#{{slug}}">{{indexLabel}}</a>
-      signaturePair: |-
-        <div class="sig-wrap" data-pair>{{toggleButton}}{{tsHtml}}{{resHtml}}</div>
-      entry: |-
-        <article class="entry" id="{{slug}}">
-          <header class="entry-head">
-            <h2><a href="#{{slug}}">{{indexLabel}}</a></h2>
-            <p class="tags">{{tags}}<span>Since {{since}}</span></p>
-          </header>
-          <p class="summary">{{summary}}</p>
-          {{signaturePair}}
-          <div class="prose">{{bodyHtml}}</div>
-        </article>
-      pageMain: |-
-        <div class="api-head">
-          <div class="wrap">
-            <p class="eyebrow">Reference<span class="sep">·</span>v1.x<span class="sep">·</span>TypeScript &amp; ReScript signatures</p>
-            <h1>API Reference</h1>
-            <p class="sec-lead">The public surface of @epure/vitest. Each entry gives the signature, behavior, and one minimal example.</p>
-          </div>
-        </div>
-
-        <div class="wrap api-layout">
-          <nav class="api-index" aria-label="API index">
-        {{index}}
-          </nav>
-          <div class="api-entries">
-        {{articles}}
-          </div>
-        </div>
-    document:
-      title: |-
-        API Reference — @epure/vitest
-      description: |-
-        @epure/vitest API reference for TypeScript and ReScript.
-      activeNav: api
-      htmlAttrs: |-
-        lang="en" data-lang="ts"
-      includePrePaint: true
-      includeToggleScript: true
-      includeSkip: false
-      mainAttrs: |-
-    assets:
-      copy:
-        - from: index.html
-          to: ../../dist/{{project}}/index.html
-        - from: ../../assets/style.css
-          to: ../../dist/{{project}}/style.css
-        - from: ../../assets/fonts
-          to: ../../dist/{{project}}/fonts
-          recursive: true
-
-  guide:
-    input:
-      markdownDir: guide
-      glob: "*.md"
-      parser: parseGuideChapter
-      sourceLabel: content/guide/{{file}}
-    output: ../../dist/{{project}}/guide.html
-    templates:
-      tocItem: |-
-        <li><a href="#{{slug}}">{{title}}</a></li>
-      refs: |-
-        <p class="xref">Reference: {{refs}} <span class="arrow">→</span></p>
-      chapter: |-
-        <section class="chapter" id="{{slug}}">
-          <div class="ch-kicker"><span class="no">{{chapterNo}}</span><span class="rule"></span></div>
-          <h2><a href="#{{slug}}">{{title}}</a></h2>
-          {{bodyHtml}}
-          {{refsBlock}}
-        </section>
-      pageMain: |-
-        <div class="docs-head">
-          <div class="wrap">
-            <p class="eyebrow">Guide<span class="sep">·</span>v1.x<span class="sep">·</span>Guided tour</p>
-            <h1>The Guide</h1>
-            <p class="standfirst">A reading path through @epure/vitest, from executable contracts to typed steps and Vitest integration.</p>
-          </div>
-        </div>
-
-        <div class="wrap docs-layout">
-          <nav class="toc" aria-label="Chapters">
-            <p class="k idx-group">Read in order</p>
-            <ol>
-        {{toc}}
-            </ol>
-          </nav>
-          <div class="chapters">
-        {{chapters}}
-          </div>
-        </div>
-    document:
-      title: |-
-        The Guide — @epure/vitest
-      description: |-
-        The @epure/vitest guide — executable contracts for TypeScript and ReScript.
-      activeNav: docs
-      htmlAttrs: |-
-        lang="en" data-lang="ts"
-      includePrePaint: true
-      includeToggleScript: true
-      includeSkip: true
-      mainAttrs: |2-
-         id="content"
-      scripts:
-        - |-
-          {{docsScrollSpyScript}}
-    assets:
-      copy:
-        - from: index.html
-          to: ../../dist/{{project}}/index.html
-        - from: ../../assets/style.css
-          to: ../../dist/{{project}}/style.css
-        - from: ../../assets/fonts
-          to: ../../dist/{{project}}/fonts
-          recursive: true
+      }, { rootMargin: "-10% 0px -75% 0px" });
+      document.querySelectorAll(".chapter[id]").forEach(function (s) { spy.observe(s); });
+    })();
+  viewSwitchScript: |-
+    /* feature | steps toggle on contract figures — per figure, delegated,
+       independent of the global language toggle. */
+    document.addEventListener("click", function (e) {
+      var btn = e.target.closest(".viewswitch button");
+      if (!btn) return;
+      var fig = btn.closest("figure");
+      fig.setAttribute("data-view", btn.dataset.view);
+      fig.querySelectorAll(".viewswitch button").forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b === btn));
+      });
+    });
+  toggleButton: |-
+    <button class="lang-toggle" type="button" aria-label="Switch example language"><span class="lt lt-ts">TS</span><span class="lt lt-res">RES</span></button>
+  signatureTs:
+    value: "{{signature.ts}}"
+    transform: typescript
+  signatureRes:
+    value: "{{signature.res}}"
+    transform: rescript
+  tagSpans:
+    list: tags
+    each: <span>{{item}}</span>
+  refsBlock:
+    list: refs
+    each: <a href="./api.html#{{item}}">{{item}}</a>
+    join: ", "
+    template: '<p class="xref">Reference: {{body}} <span class="arrow">→</span></p>'
+  homeCurrentAttr: ""
+  guideCurrentAttr: ""
+  apiCurrentAttr: ""
+  prePaint: ""
+  skip: ""
+  mainAttrs: ""
+  scripts: ""
+  header: |-
+    <header class="top">
+      <div class="wrap">
+        <a class="wordmark" href="./index.html" aria-label="@epure/vitest — home">{{wordmarkSvg}}@epure/vitest</a>
+        <nav class="nav" aria-label="Site">
+          <a href="./index.html"{{homeCurrentAttr}}>Home</a>
+          <a href="./guide.html"{{guideCurrentAttr}}>Guide</a>
+          <a href="./api.html"{{apiCurrentAttr}}>API</a>
+          <a href="https://github.com/epuremethod/vitest">GitHub</a>
+        </nav>
+      </div>
+    </header>
+  footer: |-
+    <footer class="foot">
+      <div class="wrap">
+        <div class="fcell"><span class="lbl">Package</span><span class="val"><a href="https://www.npmjs.com/package/@epure/vitest">@epure/vitest on npm</a></span></div>
+        <div class="fcell"><span class="lbl">Source</span><span class="val"><a href="https://github.com/epuremethod/vitest">github.com/epuremethod/vitest</a></span></div>
+        <div class="fcell"><span class="lbl">License</span><span class="val">MIT</span></div>
+        <div class="fcell"><span class="lbl">Method</span><span class="val"><a href="https://epuremethod.com">épure</a></span></div>
+        <div class="fcell"><span class="lbl">Site</span><span class="val">epurejs.dev</span></div>
+      </div>
+    </footer>
+  shell: |-
+    <!doctype html>
+    <html {{htmlAttrs}}>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{description}}">
+    <title>{{title}}</title>
+    <link rel="icon" href="{{faviconUrl}}">
+    <link rel="stylesheet" href="./style.css">
+    {{prePaint}}
+    </head>
+    <body>
+    {{skip}}
+    {{header}}
+    <main{{mainAttrs}}>
+    {{main}}
+    </main>
+    {{footer}}
+    {{scripts}}
+    </body>
+    </html>

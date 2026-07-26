@@ -1,14 +1,13 @@
 ---
 name: toRecords
+label: toRecords(table)
 slug: to-records
 kind: function
-module: core
 since: "0.6"
 sort: 30
 summary: Convert a Gherkin data table into records keyed by its header row.
-signature:
-  ts: "function toRecords(table: string[][]): Record<string, string>[]"
-  res: "let toRecords: array<array<string>> => array<'a>"
+signature.ts: "function toRecords(table: string[][]): Record<string, string>[]"
+signature.res: "let toRecords: array<array<string>> => array<'a>"
 tags: []
 ---
 

@@ -1,14 +1,13 @@
 ---
 name: test
+label: test(name, fn)
 slug: test
 kind: function
-module: react
 since: "0.4"
 sort: 130
 summary: Declare one test — test and it are the same binding, sync or async.
-signature:
-  ts: "function test(name: string, fn: () => void | Promise<void>): void"
-  res: "let test: (string, 'a) => unit"
+signature.ts: "function test(name: string, fn: () => void | Promise<void>): void"
+signature.res: "let test: (string, 'a) => unit"
 tags: []
 ---
 

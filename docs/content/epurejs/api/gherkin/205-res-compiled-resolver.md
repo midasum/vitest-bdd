@@ -1,14 +1,13 @@
 ---
 name: resCompiledResolver
+label: resCompiledResolver(path)
 slug: res-compiled-resolver
 kind: function
-module: core
 since: "0.4"
 sort: 205
 summary: Resolve a ReScript source file to its compiled JavaScript module.
-signature:
-  ts: "function resCompiledResolver(path: string): string | null"
-  res: "// used by the TypeScript plugin configuration"
+signature.ts: "function resCompiledResolver(path: string): string | null"
+signature.res: "// used by the TypeScript plugin configuration"
 tags: []
 ---
 

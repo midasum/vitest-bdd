@@ -1,14 +1,13 @@
 ---
 name: describe
+label: describe(name, fn)
 slug: describe
 kind: function
-module: react
 since: "0.4"
 sort: 120
 summary: Group tests under a name — with concurrent, skip, only and todo variants.
-signature:
-  ts: "function describe(name: string, fn: () => void): void"
-  res: "let describe: (string, unit => unit) => unit"
+signature.ts: "function describe(name: string, fn: () => void): void"
+signature.res: "let describe: (string, unit => unit) => unit"
 tags: []
 ---
 

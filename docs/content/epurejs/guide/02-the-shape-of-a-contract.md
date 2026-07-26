@@ -2,6 +2,7 @@
 title: The shape of a contract
 slug: the-shape-of-a-contract
 sort: 2
+chapter: "02"
 refs: [steps-resolver]
 ---
 

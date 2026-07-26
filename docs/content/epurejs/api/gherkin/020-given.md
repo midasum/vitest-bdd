@@ -1,14 +1,13 @@
 ---
 name: Given
+label: Given(pattern, build)
 slug: given
 kind: function
-module: core
 since: "0.1"
 sort: 20
 summary: Bind a Given pattern to a builder that creates the scenario's context and its steps.
-signature:
-  ts: "function Given(pattern: string, build: (steps: Context, ...params: Param[]) => void | Promise<void>): void"
-  res: "let given: (string, (given, 'a) => unit) => unit"
+signature.ts: "function Given(pattern: string, build: (steps: Context, ...params: Param[]) => void | Promise<void>): void"
+signature.res: "let given: (string, (given, 'a) => unit) => unit"
 tags: []
 ---
 

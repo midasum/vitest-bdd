@@ -1,14 +1,13 @@
 ---
 name: assertions
+label: assertions
 slug: assertions-type
 kind: type
-module: react
 since: "0.6"
 sort: 220
 summary: The typed matcher surface returned by expect.
-signature:
-  ts: "type Assertion<T> // vitest's own — @epure/vitest adds nothing on the TS side"
-  res: "type rec assertions<'a> = {not: assertions<'a>, toBe: 'a => unit, toEqual: 'a => unit, resolves: passertions<'b>, ...}"
+signature.ts: "type Assertion<T> // vitest's own — @epure/vitest adds nothing on the TS side"
+signature.res: "type rec assertions<'a> = {not: assertions<'a>, toBe: 'a => unit, toEqual: 'a => unit, resolves: passertions<'b>, ...}"
 tags: []
 ---
 

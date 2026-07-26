@@ -1,14 +1,13 @@
 ---
 name: expected
+label: expected
 slug: expected
 kind: function
-module: react
 since: "0.6"
 sort: 110
 summary: The statics of Vitest's expect — soft, poll, asymmetric matchers, extension points.
-signature:
-  ts: "expect.soft(...) / expect.poll(...) / expect.closeTo(...) — statics on expect itself"
-  res: "let expected: expected"
+signature.ts: "expect.soft(...) / expect.poll(...) / expect.closeTo(...) — statics on expect itself"
+signature.res: "let expected: expected"
 tags: []
 ---
 

@@ -2,6 +2,7 @@
 title: Tables and other tongues
 slug: tables-and-other-tongues
 sort: 5
+chapter: "05"
 refs: [to-records, to-strings, to-numbers]
 ---
 

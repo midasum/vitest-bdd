@@ -1,14 +1,13 @@
 ---
 name: stepsResolver
+label: stepsResolver(path)
 slug: steps-resolver
 kind: function
-module: core
 since: "0.6"
 sort: 60
 summary: The default mapping from a feature file to its steps file.
-signature:
-  ts: "function stepsResolver(path: string): string | null"
-  res: "// resolution happens in the plugin — override it from vitest.config.ts"
+signature.ts: "function stepsResolver(path: string): string | null"
+signature.res: "// resolution happens in the plugin — override it from vitest.config.ts"
 tags: []
 ---
 

@@ -1,14 +1,13 @@
 ---
 name: EpureVitestOptions
+label: EpureVitestOptions
 slug: options-type
 kind: type
-module: core
 since: "0.1"
 sort: 200
 summary: Configuration accepted by the epureVitest plugin.
-signature:
-  ts: "type EpureVitestOptions = { debug?; concurrent?; markdownExtensions?; gherkinExtensions?; rescriptExtensions?; stepsResolver?; resCompiledResolver? }"
-  res: "// plugin options are written in vitest.config.ts (TypeScript)"
+signature.ts: "type EpureVitestOptions = { debug?; concurrent?; markdownExtensions?; gherkinExtensions?; rescriptExtensions?; stepsResolver?; resCompiledResolver? }"
+signature.res: "// plugin options are written in vitest.config.ts (TypeScript)"
 tags: []
 ---
 

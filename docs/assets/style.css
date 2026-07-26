@@ -715,7 +715,7 @@ pre.code {
   background: var(--clay-soft);
   padding: 3px 8px;
 }
-.tags span.core {
+.tags span.gherkin {
   background: var(--clay);
   border-color: var(--clay);
   color: #fff; /* 7.4:1 */

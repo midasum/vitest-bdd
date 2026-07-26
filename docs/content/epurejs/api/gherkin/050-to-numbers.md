@@ -1,14 +1,13 @@
 ---
 name: toNumbers
+label: toNumbers(table)
 slug: to-numbers
 kind: function
-module: core
 since: "0.6"
 sort: 50
 summary: Flatten a one-column Gherkin table into a list of numbers.
-signature:
-  ts: "function toNumbers(table: string[][]): number[]"
-  res: "let toNumbers: array<array<string>> => array<float>"
+signature.ts: "function toNumbers(table: string[][]): number[]"
+signature.res: "let toNumbers: array<array<string>> => array<float>"
 tags: []
 ---
 

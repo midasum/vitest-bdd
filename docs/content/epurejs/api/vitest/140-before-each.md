@@ -1,14 +1,13 @@
 ---
 name: beforeEach
+label: beforeEach(fn)
 slug: before-each
 kind: function
-module: react
 since: "0.6"
 sort: 140
 summary: Lifecycle hooks — beforeAll, beforeEach, afterEach, afterAll, onTestFinished.
-signature:
-  ts: "function beforeEach(fn: () => void | Promise<void>): void"
-  res: "let beforeEach: (string, 'a) => unit"
+signature.ts: "function beforeEach(fn: () => void | Promise<void>): void"
+signature.res: "let beforeEach: (string, 'a) => unit"
 tags: []
 ---
 
