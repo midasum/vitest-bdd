@@ -12,6 +12,20 @@ async function generated(file: string): Promise<string> {
 }
 
 describe("documentation build", () => {
+  test("loads the shared shell from partial files", async () => {
+    const [html, config] = await Promise.all([
+      generated("index.html"),
+      readFile(new URL("content/base-config.yaml", root), "utf8"),
+    ]);
+
+    for (const name of ["shell", "header", "nav", "footer"]) {
+      expect(config).toContain(`${name}:\n    file: partial/${name}.html`);
+      await access(new URL(`content/partial/${name}.html`, root));
+    }
+    expect(html).toContain('<nav class="nav" aria-label="Site">');
+    expect(html).toContain('<footer class="foot">');
+  });
+
   test("builds the home fragment once inside the document shell", async () => {
     const [html, fragment] = await Promise.all([
       generated("index.html"),

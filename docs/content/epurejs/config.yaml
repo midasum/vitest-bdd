@@ -1,6 +1,9 @@
 base: ../base-config.yaml
 
 var:
+  dist: ../../../dist
+  assets: ../../assets
+  epureVitest: ../../../epure-vitest
   homeMain:
     file: home/index.html
   gherkinIndex:
@@ -91,7 +94,9 @@ var:
     </div>
 
 build:
-  - var:
+  - output: "{{dist}}/index.html"
+    input: "{{shell}}"
+    var:
       title: "@epure/vitest — Contracts That Run"
       description: "@epure/vitest — contracts that run. Every .feature file is also a Vitest suite: plain Gherkin bound to typed steps, so what business signed is exactly what the tests measure."
       htmlAttrs: 'lang="en"'
@@ -109,9 +114,9 @@ build:
             });
           });
         })();</script>
-    output: ../../../dist/index.html
+  - output: "{{dist}}/api.html"
     input: "{{shell}}"
-  - var:
+    var:
       title: "API Reference — @epure/vitest"
       description: "@epure/vitest API reference — the Vite plugin, Gherkin step definitions, table helpers, and the ReScript bindings for Vitest."
       htmlAttrs: 'lang="en" data-lang="ts"'
@@ -121,9 +126,9 @@ build:
       scripts: |-
         <script>{{toggleListenerScript}}</script>
         <script>{{viewSwitchScript}}</script>
-    output: ../../../dist/api.html
+  - output: "{{dist}}/guide.html"
     input: "{{shell}}"
-  - var:
+    var:
       title: "The Guide — @epure/vitest"
       description: "The @epure/vitest guide — contracts that run: plain-language feature files bound to typed steps, executed by Vitest, in TypeScript and ReScript."
       htmlAttrs: 'lang="en" data-lang="ts"'
@@ -135,14 +140,12 @@ build:
       scripts: |-
         <script>{{toggleListenerScript}}</script>
         <script>{{docsScrollSpyScript}}</script>
-    output: ../../../dist/guide.html
-    input: "{{shell}}"
-  - output: ../../../dist/style.css
+  - output: "{{dist}}/style.css"
     input:
-      copy: ../../assets/style.css
-  - output: ../../../dist/fonts
+      copy: "{{assets}}/style.css"
+  - output: "{{dist}}/fonts"
     input:
-      copy: ../../assets/fonts
-  - output: ../../../dist/llms.txt
+      copy: "{{assets}}/fonts"
+  - output: "{{dist}}/llms.txt"
     input:
-      copy: ../../../epure-vitest/llms.txt
+      copy: "{{epureVitest}}/llms.txt"

@@ -76,47 +76,11 @@ var:
   skip: ""
   mainAttrs: ""
   scripts: ""
-  header: |-
-    <header class="top">
-      <div class="wrap">
-        <a class="wordmark" href="./index.html" aria-label="@epure/vitest — home">{{wordmarkSvg}}@epure/vitest</a>
-        <nav class="nav" aria-label="Site">
-          <a href="./index.html"{{homeCurrentAttr}}>Home</a>
-          <a href="./guide.html"{{guideCurrentAttr}}>Guide</a>
-          <a href="./api.html"{{apiCurrentAttr}}>API</a>
-          <a href="https://github.com/epuremethod/vitest">GitHub</a>
-        </nav>
-      </div>
-    </header>
-  footer: |-
-    <footer class="foot">
-      <div class="wrap">
-        <div class="fcell"><span class="lbl">Package</span><span class="val"><a href="https://www.npmjs.com/package/@epure/vitest">@epure/vitest on npm</a></span></div>
-        <div class="fcell"><span class="lbl">Source</span><span class="val"><a href="https://github.com/epuremethod/vitest">github.com/epuremethod/vitest</a></span></div>
-        <div class="fcell"><span class="lbl">License</span><span class="val">MIT</span></div>
-        <div class="fcell"><span class="lbl">Method</span><span class="val"><a href="https://epuremethod.com">épure</a></span></div>
-        <div class="fcell"><span class="lbl">Site</span><span class="val">epurejs.dev</span></div>
-      </div>
-    </footer>
-  shell: |-
-    <!doctype html>
-    <html {{htmlAttrs}}>
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{description}}">
-    <title>{{title}}</title>
-    <link rel="icon" href="{{faviconUrl}}">
-    <link rel="stylesheet" href="./style.css">
-    {{prePaint}}
-    </head>
-    <body>
-    {{skip}}
-    {{header}}
-    <main{{mainAttrs}}>
-    {{main}}
-    </main>
-    {{footer}}
-    {{scripts}}
-    </body>
-    </html>
+  shell:
+    file: partial/shell.html
+  header:
+    file: partial/header.html
+  nav:
+    file: partial/nav.html
+  footer:
+    file: partial/footer.html
