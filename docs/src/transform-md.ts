@@ -10,8 +10,9 @@ import "prismjs/components/prism-yaml.js";
 const languages = ["typescript", "rescript", "res", "gherkin", "yaml"];
 const toggle =
   '<button class="lang-toggle" type="button" aria-label="Switch example language"><span class="lt lt-ts">TS</span><span class="lt lt-res">RES</span></button>';
-const switcher =
-  '<div class="viewswitch" role="group" aria-label="Contract pane"><button type="button" data-view="feature" aria-pressed="true">feature</button><button type="button" data-view="steps" aria-pressed="false">steps</button></div>';
+function switcher(source: string): string {
+  return `<div class="viewswitch" role="group" aria-label="Contract pane"><button type="button" data-view="${source}" aria-pressed="true">${source}</button><button type="button" data-view="steps" aria-pressed="false">steps</button></div>`;
+}
 
 type Page = "api" | "guide";
 
@@ -57,11 +58,18 @@ function pairs(tokens: Token[]): void {
 function contracts(tokens: Token[]): void {
   for (let index = 0; index < tokens.length; index++) {
     const token = tokens[index];
-    if (token?.type !== "fence" || language(token.info.trim()) !== "gherkin") continue;
+    if (token?.type !== "fence") continue;
+    const source = language(token.info.trim());
+    if (source !== "gherkin" && source !== "yaml") continue;
     const next = tokens[index + 1];
     if (next?.type !== "fence" || language(next.info.trim()) !== "typescript") continue;
     const paired = next.meta?.pair === "start";
-    token.meta = { ...token.meta, contract: "start", contractPair: paired };
+    token.meta = {
+      ...token.meta,
+      contract: "start",
+      contractPair: paired,
+      contractSource: source === "gherkin" ? "feature" : source,
+    };
     if (paired) {
       next.meta = { ...next.meta, contract: "mid" };
       const last = tokens[index + 2];
@@ -118,7 +126,8 @@ function markdown(page: Page): MarkdownIt {
 
     const contract = token.meta?.contract;
     if (contract === "start") {
-      return `<figure class="ex"${token.meta.contractPair ? " data-pair" : ""} data-view="feature"><figcaption class="exbar"><span class="k">Contract</span>${switcher}</figcaption>${code}`;
+      const source = token.meta.contractSource;
+      return `<figure class="ex"${token.meta.contractPair ? " data-pair" : ""} data-view="${source}"><figcaption class="exbar"><span class="k">Contract</span>${switcher(source)}</figcaption>${code}`;
     }
     if (contract === "mid") return code;
     if (contract === "end") return `${code}</figure>`;

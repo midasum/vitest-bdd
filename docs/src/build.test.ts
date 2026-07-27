@@ -80,6 +80,9 @@ describe("documentation build", () => {
       "assertions-type",
     ]);
     expect(html).toContain('data-view="feature"');
+    expect(html).toContain('data-view="yaml"');
+    expect(html).toContain('<pre class="language-yaml">');
+    expect(html).toContain("adds negative numbers");
     expect(html).toContain('class="viewswitch"');
   });
 

@@ -42,7 +42,7 @@ var:
       document.querySelectorAll(".chapter[id]").forEach(function (s) { spy.observe(s); });
     })();
   viewSwitchScript: |-
-    /* feature | steps toggle on contract figures — per figure, delegated,
+    /* contract | steps toggle on contract figures — per figure, delegated,
        independent of the global language toggle. */
     document.addEventListener("click", function (e) {
       var btn = e.target.closest(".viewswitch button");

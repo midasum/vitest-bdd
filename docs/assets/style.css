@@ -283,7 +283,8 @@ section + section { border-top: 1px solid var(--line); }
 .langswitch button[data-lang="steps"][aria-pressed="true"],
 .viewswitch button[data-view="steps"][aria-pressed="true"] { background: var(--chip-steps); }
 .langswitch button[data-lang="feature"][aria-pressed="true"],
-.viewswitch button[data-view="feature"][aria-pressed="true"] { background: var(--chip-feature); }
+.viewswitch button[data-view="feature"][aria-pressed="true"],
+.viewswitch button[data-view="yaml"][aria-pressed="true"] { background: var(--chip-feature); }
 pre.code {
   margin: 0;
   padding: 20px 22px;
@@ -779,6 +780,7 @@ pre[class*=" language-"] {
 .entry .ex[data-pair] > pre.language-rescript,
 .entry .ex[data-pair] > pre.language-res,
 .entry .ex[data-view] > pre.language-gherkin,
+.entry .ex[data-view] > pre.language-yaml,
 .example > pre.code,
 .example[data-pair] > pre.language-typescript,
 .example[data-pair] > pre.language-rescript,
@@ -858,13 +860,17 @@ html[data-lang="res"] [data-pair] > pre.language-typescript {
   right: 10px;
 }
 
-/* ---------- feature | steps toggle on contract figures ----------
+/* ---------- contract | steps toggle on contract figures ----------
    Independent of the language toggle: the view picks the pane, and
    inside the steps pane html[data-lang] still picks ts or res. */
 .entry .ex[data-view="feature"] > pre.language-typescript,
 .entry .ex[data-view="feature"] > pre.language-rescript,
 .entry .ex[data-view="feature"] > pre.language-res,
-.entry .ex[data-view="steps"] > pre.language-gherkin {
+.entry .ex[data-view="yaml"] > pre.language-typescript,
+.entry .ex[data-view="yaml"] > pre.language-rescript,
+.entry .ex[data-view="yaml"] > pre.language-res,
+.entry .ex[data-view="steps"] > pre.language-gherkin,
+.entry .ex[data-view="steps"] > pre.language-yaml {
   display: none;
 }
 

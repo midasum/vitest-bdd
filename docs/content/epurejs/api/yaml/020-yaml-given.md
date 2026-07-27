@@ -20,6 +20,21 @@ fixtures do not execute those operations yet.
 
 Handlers may be asynchronous. Each key can be registered once per test process.
 
+```yaml
+feature: YAML calculator
+background:
+  given: a calculator
+examples:
+  - scenario: adds two numbers
+    given: a calculator
+    left: 1
+    right: 2
+    result: 3
+  - scenario: adds negative numbers
+    left: -4
+    right: 2
+    result: -2
+```
 ```typescript
 // calculator.test.yaml.ts
 import { Given } from "@epure/vitest";
