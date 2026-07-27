@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Added `yamlBdd` for source-mapped YAML example fixtures.
-- Added YAML background handlers through `@epure/vitest/yaml`.
+- Added source-mapped YAML example fixtures to `epureVitest`.
+- Extended `Given` to YAML scenario and background handlers with Vitest's test
+  context.
 
 ## 1.1.0 — 2026-07-22
 

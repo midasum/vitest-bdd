@@ -62,7 +62,7 @@ export function yamlCompile(path: string, options: YamlCompileOptions): { code: 
   const concurrent = options.concurrent === false ? "" : ".concurrent";
   push(`import { describe, it } from "vitest";`, top);
   push(`import ${JSON.stringify(options.stepsPath)};`, top);
-  push(`import { runScenario } from "@epure/vitest/yaml";`, top);
+  push(`import { loadYaml } from "@epure/vitest/runtime";`, top);
   push(`describe${concurrent}(${JSON.stringify(feature)}, () => {`, featurePos);
   if (examples !== undefined) {
     if (!isSeq(examples)) {
@@ -75,7 +75,7 @@ export function yamlCompile(path: string, options: YamlCompileOptions): { code: 
   push(`});`, top);
   return done();
 
-  function readTop(): { feature: string; featurePos: Position; given: string; examples: Node | undefined } {
+  function readTop(): { feature: string; featurePos: Position; given: string | undefined; examples: Node | undefined } {
     const contents = doc.contents;
     if (!isMap(contents)) {
       throw new Error(`${path}: document must be a mapping with "feature", "background", "examples"`);
@@ -117,9 +117,6 @@ export function yamlCompile(path: string, options: YamlCompileOptions): { code: 
     if (feature === undefined) {
       throw new Error(`${path}: missing "feature" title`);
     }
-    if (given === undefined) {
-      throw new Error(`${path}: background needs a "given" step`);
-    }
     return { feature, featurePos, given, examples };
   }
 
@@ -133,6 +130,7 @@ export function yamlCompile(path: string, options: YamlCompileOptions): { code: 
     }
     let title: string | undefined;
     let titlePos = itemPos;
+    let scenarioGiven: string | undefined;
     const data: Pair<Node, Node | null>[] = [];
     for (const pair of item.items as Pair<Node, Node | null>[]) {
       const key = isScalar(pair.key) ? String(pair.key.value) : fail("scenario keys must be scalars");
@@ -142,6 +140,11 @@ export function yamlCompile(path: string, options: YamlCompileOptions): { code: 
         }
         title = pair.value.value;
         titlePos = posOf(pair.key, itemPos);
+      } else if (key === "given") {
+        if (!isScalar(pair.value) || typeof pair.value.value !== "string") {
+          return fail(`"given" must be a string step name`);
+        }
+        scenarioGiven = pair.value.value;
       } else {
         data.push(pair);
       }
@@ -149,14 +152,18 @@ export function yamlCompile(path: string, options: YamlCompileOptions): { code: 
     if (title === undefined) {
       return fail(`missing "scenario" description`);
     }
-    push(`  it(${JSON.stringify(title)}, async () => {`, titlePos);
-    push(`    await runScenario(${JSON.stringify(given)}, {`, titlePos);
+    const setup = scenarioGiven ?? given;
+    if (setup === undefined) {
+      return fail(`scenario needs a "given" step`);
+    }
+    push(`  it(${JSON.stringify(title)}, async (ctx) => {`, titlePos);
+    push(`    await loadYaml(${JSON.stringify(setup)}, {`, titlePos);
     for (const pair of data) {
       const key = isScalar(pair.key) ? String(pair.key.value) : "?";
       const value: unknown = pair.value?.toJSON() ?? null;
       push(`      ${JSON.stringify(key)}: ${JSON.stringify(value)},`, posOf(pair.key, titlePos));
     }
-    push(`    });`, titlePos);
+    push(`    }, ctx);`, titlePos);
     push(`  });`, titlePos);
   }
 }

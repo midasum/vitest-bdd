@@ -70,7 +70,7 @@ describe("API content", () => {
   test("uses the grouped schema in rendered order", async () => {
     const api = await apiEntries();
     expect(api.filter(({ group }) => group === "gherkin")).toHaveLength(9);
-    expect(api.filter(({ group }) => group === "yaml")).toHaveLength(4);
+    expect(api.filter(({ group }) => group === "yaml")).toHaveLength(1);
     expect(api.filter(({ group }) => group === "vitest")).toHaveLength(6);
     const expected = [
       "name",

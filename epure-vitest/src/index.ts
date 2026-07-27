@@ -22,7 +22,7 @@ export type EpureVitestOptions = {
   gherkinExtensions?: string[];
   /** ReScript files Vitest should translate with source maps. */
   rescriptExtensions?: string[];
-  /** Resolve a feature or Markdown contract to its steps module. */
+  /** Resolve a contract to its steps module. */
   stepsResolver?: (path: string) => string | null;
   /** Resolve a ReScript source file to its compiled JavaScript module. */
   resCompiledResolver?: (path: string) => string | null;
@@ -30,18 +30,6 @@ export type EpureVitestOptions = {
 
 /** @deprecated Use {@link EpureVitestOptions} instead. */
 export type VitestBddOptions = EpureVitestOptions;
-
-/** Configuration accepted by {@link yamlBdd}. */
-export type YamlBddOptions = {
-  /** File suffix compiled into suites. Defaults to `.test.yaml`. */
-  suffix?: string;
-  /** Run scenarios concurrently. Defaults to `true`. */
-  concurrent?: boolean;
-  /** Resolve a fixture to its steps module. */
-  stepsResolver?: (path: string) => string | null;
-  /** Print each generated module. */
-  debug?: boolean;
-};
 
 const defaultOptions: Required<EpureVitestOptions> = {
   debug: false,
@@ -60,7 +48,7 @@ export function epureVitest(opts: EpureVitestOptions = {}): Plugin {
     name: "@epure/vitest",
     enforce: "pre",
     load(id) {
-      return compile(id, options);
+      return compile(id.split("?")[0] ?? id, options);
     },
   };
 }
@@ -76,31 +64,17 @@ export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
   return epureVitest(opts);
 }
 
-/** Create the Vite plugin that translates YAML examples into Vitest suites. */
-export function yamlBdd(options: YamlBddOptions = {}): Plugin {
-  const suffix = options.suffix ?? ".test.yaml";
-  const resolveSteps = options.stepsResolver ?? yamlStepsResolver;
-  return {
-    name: "@epure/vitest/yaml",
-    enforce: "pre",
-    load(id) {
-      const path = id.split("?")[0] ?? id;
-      if (!path.endsWith(suffix)) {
-        return;
-      }
-      return yamlCompile(path, {
-        stepsPath: resolveSteps(path),
-        concurrent: options.concurrent,
-        debug: options.debug,
-      });
-    },
-  };
-}
-
 function compile(path: string, opts: Required<EpureVitestOptions>) {
   const { debug, rescriptExtensions, markdownExtensions, gherkinExtensions } = opts;
   const concurrent = opts.concurrent ? ".concurrent" : "";
   const ext = extname(path);
+  if (ext === ".yaml") {
+    return yamlCompile(path, {
+      stepsPath: opts.stepsResolver(path),
+      concurrent: opts.concurrent,
+      debug,
+    });
+  }
   if (rescriptExtensions.includes(ext)) {
     return resCompile(path, opts);
   }
@@ -183,19 +157,13 @@ function baseResolver(path: string): string | null {
 }
 
 export function stepsResolver(path: string): string | null {
-  for (const r of [".feature", ".steps", "Steps"]) {
-    const p = baseResolver(path.replace(/\.feature$/, r));
-    if (p) {
-      return p;
+  const ext = extname(path);
+  const stem = ext === "" ? path : path.slice(0, -ext.length);
+  for (const p of [path, `${stem}.steps`, `${stem}Steps`]) {
+    const resolved = baseResolver(p);
+    if (resolved) {
+      return resolved;
     }
   }
   return baseResolver(join(dirname(path), "steps"));
-}
-
-/** Resolve `name.test.yaml` to a fixture-specific or shared steps module. */
-export function yamlStepsResolver(path: string): string | null {
-  const stem = path.replace(/\.yaml$/, "");
-  return (
-    baseResolver(stem) ?? baseResolver(stem.replace(/\.test$/, ".steps")) ?? baseResolver(join(dirname(path), "steps"))
-  );
 }

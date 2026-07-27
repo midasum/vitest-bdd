@@ -52,11 +52,11 @@ describe("documentation build", () => {
 
     expect(html).toContain('<a href="./api.html" aria-current="page">API</a>');
     expect(index).toMatch(
-      /Gherkin[\s\S]*epureVitest\(options\)[\s\S]*Given\(pattern, build\)[\s\S]*toRecords\(table\)[\s\S]*YAML[\s\S]*yamlBdd\(options\)[\s\S]*given\(key, handler\)/,
+      /Gherkin[\s\S]*epureVitest\(options\)[\s\S]*Given\(pattern, build\)[\s\S]*toRecords\(table\)[\s\S]*YAML[\s\S]*Given\(name, handle\)/,
     );
     expect(index).toMatch(/Vitest[\s\S]*expect\(actual\)[\s\S]*expected[\s\S]*describe\(name, fn\)/);
     expect(html).toContain('<article class="entry" id="epure-vitest">');
-    expect(html.match(/<article class="entry"/g)).toHaveLength(19);
+    expect(html.match(/<article class="entry"/g)).toHaveLength(16);
     expect(html).toContain('<pre class="sig language-typescript">');
     expect(html).toContain('<pre class="sig language-rescript">');
     expect(html).toContain('<span class="gherkin">Gherkin</span>');
@@ -71,10 +71,7 @@ describe("documentation build", () => {
       "options-type",
       "res-compiled-resolver",
       "step-type",
-      "yaml-bdd",
       "yaml-given",
-      "yaml-steps-resolver",
-      "yaml-options-type",
       "expect",
       "expected",
       "describe",

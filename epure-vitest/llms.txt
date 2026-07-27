@@ -1,8 +1,8 @@
 # @epure/vitest
 
-@epure/vitest is a Vite plugin that translates Gherkin feature files and
-Gherkin blocks in Markdown into Vitest suites in memory. It also provides
-ReScript bindings for Vitest and a YAML fixture plugin for structured examples.
+@epure/vitest is a Vite plugin that translates Gherkin feature files, Gherkin
+blocks in Markdown, and structured YAML fixtures into Vitest suites in memory.
+It also provides ReScript bindings for Vitest.
 
 Documentation: https://epurejs.dev
 Repository: https://github.com/epuremethod/vitest
@@ -15,21 +15,23 @@ Installed contracts:
 
 ## Mental model
 
-- `epureVitest()` connects contract files to Vitest through Vite.
-- `Given` registers the builder for a scenario's initial step.
+- `epureVitest()` connects `.feature`, Markdown, YAML, and ReScript files to
+  Vitest through Vite.
+- `Given` registers a feature builder or YAML scenario handler.
 - The builder receives named step functions. Operations registered through
   those functions close over the state created by that builder.
 - Each scenario gets its own state and can run concurrently.
 - `toRecords`, `toStrings`, and `toNumbers` convert Gherkin data tables.
-- `yamlBdd()` translates `*.test.yaml` fixtures into source-mapped suites.
-- `given` from `@epure/vitest/yaml` registers a YAML background handler that
-  receives each example's data.
+- `.yaml` files are translated into source-mapped suites; Vitest's
+  `test.include` controls which YAML files are tests.
+- For YAML, `Given` receives step bindings, each example's data, and Vitest
+  `TestContext`, in the same positions as feature bindings, captures, and
+  context.
 
 ## Critical rules
 
-- Include contract extensions such as `.feature` and `.md` in Vitest's
+- Include contract extensions such as `.feature`, `.md`, and `.yaml` in Vitest's
   `test.include`.
-- Include `*.test.yaml` when using `yamlBdd()`.
 - Place the steps module beside its contract using one of the documented
   resolver conventions, or provide `stepsResolver`.
 - Use `EpureVitest` from ReScript. `VitestBdd` is a deprecated compatibility

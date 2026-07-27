@@ -1,32 +1,36 @@
 ---
-name: given
-label: given(key, handler)
+name: Given
+label: Given(name, handle)
 slug: yaml-given
 kind: function
 since: "1.2"
 sort: 20
-summary: Register the handler named by a YAML fixture's background.
-signature.ts: "function given(key: string, handler: (data: Record<string, unknown>) => void | Promise<void>): void"
+summary: Bind a YAML given name to a handler receiving steps, data, and test context.
+signature.ts: "function Given(name: string, handle: (steps: Context, data: Record<string, unknown>, context: TestContext) => void | Promise<void>): void"
 signature.res: "// YAML fixture steps are a TypeScript API"
 tags: []
 ---
 
-Import lowercase `given` from `@epure/vitest/yaml` in the fixture's steps
-module. Its key matches `background.given`; its handler receives every field in
-an example except `scenario`.
+Import `Given` from `@epure/vitest` in the fixture's steps module, just as for
+a feature file. Its name matches the scenario's `given`, or
+`background.given` when the scenario does not provide one. Its handler receives
+step bindings first, every field except `scenario` and `given` second, and
+Vitest's `TestContext` last. Step bindings can register operations, though YAML
+fixtures do not execute those operations yet.
 
 Handlers may be asynchronous. Each key can be registered once per test process.
 
 ```typescript
-// calculator.test.ts
-import { given } from "@epure/vitest/yaml";
+// calculator.test.yaml.ts
+import { Given } from "@epure/vitest";
 import { expect } from "vitest";
 
-given("a calculator", ({ left, right, result }) => {
+Given("a calculator", (_steps, { left, right, result }, context) => {
   expect(Number(left) + Number(right)).toBe(result);
+  expect(context.task.name).toBeTypeOf("string");
 });
 ```
 
-This API is separate from Gherkin's uppercase
-[Given](api.html#given): YAML dispatches one structured object to one
-background handler rather than matching prose steps.
+This is the same [Given](api.html#given) registration used by Gherkin. Its
+arguments occupy the same positions: step bindings first, contract data or
+captures in the middle, and the test context last.

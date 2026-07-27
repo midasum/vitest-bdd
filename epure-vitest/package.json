@@ -40,11 +40,6 @@
       "import": "./dist/runtime.js",
       "require": "./dist/runtime.cjs"
     },
-    "./yaml": {
-      "types": "./dist/yaml.d.ts",
-      "import": "./dist/yaml.js",
-      "require": "./dist/yaml.cjs"
-    },
     "./rescript.json": "./rescript.json",
     "./src/*": "./src/*"
   },

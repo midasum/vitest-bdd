@@ -3,6 +3,7 @@ background:
   given: a calculator
 examples:
   - scenario: adds two numbers
+    given: a calculator
     left: 1
     right: 2
     result: 3

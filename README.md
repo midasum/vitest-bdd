@@ -27,54 +27,48 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [epureVitest()],
   test: {
-    include: ["**/*.feature", "**/*.md", "**/*.spec.ts"],
+    include: ["**/*.feature", "**/*.md", "**/*.test.yaml", "**/*.spec.ts"],
   },
 });
 ```
 
-`epureVitest` translates feature files and Gherkin code fences in Markdown into
-Vitest suites in memory. It does not write generated test files to disk.
+`epureVitest` translates feature files, Gherkin code fences in Markdown, and
+structured YAML fixtures into Vitest suites in memory. It does not write
+generated test files to disk.
 
 ## YAML fixtures
 
-Use `yamlBdd` when scenarios are structured examples rather than prose:
-
-```ts
-// vitest.config.ts
-import { yamlBdd } from "@epure/vitest";
-import { defineConfig } from "vitest/config";
-
-export default defineConfig({
-  plugins: [yamlBdd()],
-  test: { include: ["**/*.test.yaml"] },
-});
-```
+Include `.yaml` files in Vitest when scenarios are structured examples rather
+than prose. `epureVitest` compiles every `.yaml` file Vitest loads; the
+`test.include` glob controls which fixtures are tests.
 
 ```yaml
 feature: Calculator
-background:
-  given: a calculator
 examples:
   - scenario: adds two numbers
+    given: a calculator
     left: 1
     right: 2
     result: 3
 ```
 
-Register the background in `calculator.test.ts`, `calculator.steps.ts`, or a
-shared `steps.ts` beside the fixture:
+Register each `given` in `calculator.test.yaml.ts`, `calculator.test.steps.ts`,
+or a shared `steps.ts` beside the fixture:
 
 ```ts
-import { given } from "@epure/vitest/yaml";
+import { Given } from "@epure/vitest";
 import { expect } from "vitest";
 
-given("a calculator", ({ left, right, result }) => {
+Given("a calculator", (_steps, { left, right, result }, context) => {
   expect(Number(left) + Number(right)).toBe(result);
+  expect(context.task.name).toBeTypeOf("string");
 });
 ```
 
-Each example becomes a source-mapped Vitest test. Fields other than `scenario`
-are passed to the registered handler as `Record<string, unknown>`.
+Each example becomes a source-mapped Vitest test. A scenario's `given`
+overrides `background.given`; one of them is required. The remaining fields
+occupy the parameter position in the same `Given` API used by features:
+step bindings first, scenario data second, and Vitest's `TestContext` last.
 
 ## Write a contract
 

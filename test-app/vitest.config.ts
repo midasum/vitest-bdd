@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { epureVitest, stepsResolver as originalStepsResolver, yamlBdd } from "@epure/vitest";
+import { epureVitest, stepsResolver as originalStepsResolver } from "@epure/vitest";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
@@ -8,7 +8,6 @@ export default defineConfig({
     epureVitest({
       stepsResolver: testStepsResolver,
     }),
-    yamlBdd(),
     tsconfigPaths(),
   ],
 

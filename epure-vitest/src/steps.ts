@@ -8,20 +8,23 @@ type Runner = {
 };
 
 type Operations = Record<string, Operation>;
+type Build = (...params: any[]) => void | Promise<void>;
+type Builder = (params: any[], testContext: TestContext) => Promise<Runner>;
 /** Register a scenario operation such as `When` or `Then`. */
 export type Step = (key: string, op: Operation) => void;
 /** Named scenario operations supplied to a `Given` builder. */
 export type Context = Record<string, Step>;
 
-const builders: Record<string, (given: StepType, testContext: TestContext) => Promise<Runner>> = {};
+const builders: Record<string, Builder> = {};
 
 /**
- * Register the builder for a scenario's initial `Given` step.
+ * Register a feature builder or YAML handler for a scenario's `Given`.
  *
- * Operations registered by the builder close over its private scenario state.
+ * Operations registered by the builder close over private scenario state.
+ * YAML places scenario data where a feature places captured parameters.
  */
-export function Given(key: string, build: (...params: any[]) => void | Promise<void>) {
-  const op = async (given: StepType, testContext: TestContext) => {
+export function Given(key: string, build: Build) {
+  const builder = async (params: any[], testContext: TestContext) => {
     const ops: Operations = {};
     const runner = {
       operation: (query: string) => {
@@ -42,19 +45,28 @@ export function Given(key: string, build: (...params: any[]) => void | Promise<v
         },
       },
     );
-    await build(ctx, ...[...given.params, testContext]);
+    await build(ctx, ...params, testContext);
     return runner;
   };
   for (const query of normalize(key)) {
-    builders[query] = op;
+    builders[query] = builder;
   }
 }
 
 /** @internal Used by translated suites through `@epure/vitest/runtime`. */
 export function load(given: StepType, testContext: TestContext): Promise<Runner> {
-  const build = builders[given.query];
-  if (!build) {
+  const builder = builders[given.query];
+  if (!builder) {
     throw new Error(`Missing loader for "${given.text}"`);
   }
-  return build(given, testContext);
+  return builder(given.params, testContext);
+}
+
+/** @internal Used by generated YAML suites. */
+export async function loadYaml(key: string, data: Record<string, unknown>, testContext: TestContext): Promise<void> {
+  const builder = builders[key];
+  if (!builder) {
+    throw new Error(`Missing Given for ${JSON.stringify(key)}`);
+  }
+  await builder([data], testContext);
 }
