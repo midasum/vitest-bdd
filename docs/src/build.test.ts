@@ -4,6 +4,7 @@ import { build } from "./build";
 
 const root = new URL("../", import.meta.url);
 const output = new URL("../../dist/", import.meta.url);
+const pages = ["index.html", "guide.html", "api.html"];
 
 beforeAll(build);
 
@@ -106,6 +107,31 @@ describe("documentation build", () => {
       ["style.css", "fonts/ibm-plex-sans-400.woff2", "llms.txt"].map((file) => access(new URL(file, output))),
     );
   });
+
+  test("links the source as a labelled GitHub mark", async () => {
+    for (const page of pages) {
+      const html = await generated(page);
+      const nav = html.match(/<nav class="nav"[\s\S]*?<\/nav>/)?.[0] ?? "";
+
+      expect(nav).toContain(
+        '<a class="nav__icon" href="https://github.com/epuremethod/vitest" aria-label="Source on GitHub">',
+      );
+      expect(nav).toContain('<path d="M9 19c-4.3 1.4');
+      expect(nav).not.toContain(">GitHub<");
+    }
+  });
+
+  test("credits the icon set wherever the site ships it", async () => {
+    const notice = await readFile(new URL("NOTICE.txt", root), "utf8");
+
+    expect(notice).toContain("Tabler Icons");
+    expect(notice).toContain("MIT License");
+    expect(notice).toContain("Copyright (c) 2020-2026 Paweł Kuna");
+    expect(await generated("notice.txt")).toBe(notice);
+    for (const page of pages) {
+      expect(await generated(page)).toContain("Tabler Icons (MIT)");
+    }
+  });
 });
 
 describe("stylesheet behavior", () => {
@@ -115,5 +141,14 @@ describe("stylesheet behavior", () => {
     expect(css.match(/text-decoration: underline/g)).toHaveLength(1);
     expect(css).toMatch(/\.entry \.prose > ol a \{[\s\S]*text-decoration: underline;/);
     expect(css).not.toMatch(/\.xref a,[\s\S]*text-decoration: underline;/);
+  });
+
+  test("marks the current page with a shaded pill, in the mono label type", async () => {
+    const css = await readFile(new URL("assets/style.css", root), "utf8");
+
+    expect(css).toMatch(/\.nav a \{[\s\S]*?font-family: var\(--mono\);[\s\S]*?text-transform: uppercase;/);
+    expect(css).toMatch(/\.nav a \{[\s\S]*?border-radius: 7px;/);
+    expect(css).toMatch(/\.nav a\[aria-current="page"\] \{[\s\S]*?background: var\(--shade\);/);
+    expect(css).toMatch(/\.nav__icon svg \{[\s\S]*?width: 18px;/);
   });
 });

@@ -168,3 +168,6 @@ build:
   - output: "{{dist}}/llms.txt"
     input:
       copy: "{{epureVitest}}/llms.txt"
+  - output: "{{dist}}/notice.txt"
+    input:
+      copy: ../../NOTICE.txt
