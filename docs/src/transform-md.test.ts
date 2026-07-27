@@ -70,8 +70,8 @@ describe("API markdown", () => {
     expect(html).toContain('data-view="yaml" aria-pressed="true">yaml</button>');
     expect(html).toContain('data-view="steps" aria-pressed="false">steps</button>');
     expect(html).toContain("token key atrule");
-    expect(html).toContain('<pre class="language-yaml">');
-    expect(html).toContain('<pre class="language-typescript">');
+    expect(html).toContain('<pre data-pane="yaml" class="language-yaml">');
+    expect(html).toContain('<pre data-pane="steps" hidden class="language-typescript">');
     expect(html.match(/<figure/g)?.length).toBe(1);
   });
 

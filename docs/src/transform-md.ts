@@ -16,6 +16,10 @@ function switcher(source: string): string {
 
 type Page = "api" | "guide";
 
+function pane(code: string, view: string, hidden = false): string {
+  return code.replace("<pre ", `<pre data-pane="${view}"${hidden ? " hidden" : ""} `);
+}
+
 function language(name: string): string {
   return name === "res" ? "rescript" : name;
 }
@@ -127,10 +131,10 @@ function markdown(page: Page): MarkdownIt {
     const contract = token.meta?.contract;
     if (contract === "start") {
       const source = token.meta.contractSource;
-      return `<figure class="ex"${token.meta.contractPair ? " data-pair" : ""} data-view="${source}"><figcaption class="exbar"><span class="k">Contract</span>${switcher(source)}</figcaption>${code}`;
+      return `<figure class="ex"${token.meta.contractPair ? " data-pair" : ""} data-view="${source}"><figcaption class="exbar"><span class="k">Contract</span>${switcher(source)}</figcaption>${pane(code, source)}`;
     }
-    if (contract === "mid") return code;
-    if (contract === "end") return `${code}</figure>`;
+    if (contract === "mid") return pane(code, "steps", true);
+    if (contract === "end") return `${pane(code, "steps", true)}</figure>`;
     if (pair === "start") {
       return `<figure class="ex" data-pair><figcaption class="exbar"><span class="k">Example</span></figcaption>${code}`;
     }

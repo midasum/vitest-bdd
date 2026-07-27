@@ -49,6 +49,9 @@ var:
       if (!btn) return;
       var fig = btn.closest("figure");
       fig.setAttribute("data-view", btn.dataset.view);
+      fig.querySelectorAll("[data-pane]").forEach(function (pane) {
+        pane.hidden = pane.dataset.pane !== btn.dataset.view;
+      });
       fig.querySelectorAll(".viewswitch button").forEach(function (b) {
         b.setAttribute("aria-pressed", String(b === btn));
       });

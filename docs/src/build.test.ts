@@ -81,9 +81,10 @@ describe("documentation build", () => {
     ]);
     expect(html).toContain('data-view="feature"');
     expect(html).toContain('data-view="yaml"');
-    expect(html).toContain('<pre class="language-yaml">');
+    expect(html).toContain('<pre data-pane="yaml" class="language-yaml">');
     expect(html).toContain("adds negative numbers");
     expect(html).toContain('class="viewswitch"');
+    expect(html).toContain("pane.hidden = pane.dataset.pane !== btn.dataset.view;");
   });
 
   test("builds the guide with padded chapters and links", async () => {
