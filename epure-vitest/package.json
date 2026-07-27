@@ -1,7 +1,7 @@
 {
   "name": "@epure/vitest",
   "version": "0.0.0",
-  "description": "Gherkin test runner for Vitest",
+  "description": "Gherkin and YAML test runner for Vitest",
   "homepage": "https://epurejs.dev",
   "repository": {
     "type": "git",
@@ -39,6 +39,11 @@
       "types": "./dist/runtime.d.ts",
       "import": "./dist/runtime.js",
       "require": "./dist/runtime.cjs"
+    },
+    "./yaml": {
+      "types": "./dist/yaml.d.ts",
+      "import": "./dist/yaml.js",
+      "require": "./dist/yaml.cjs"
     },
     "./rescript.json": "./rescript.json",
     "./src/*": "./src/*"
@@ -78,7 +83,8 @@
   "dependencies": {
     "@cucumber/gherkin": "^32.1.2",
     "@cucumber/messages": "^27.2.0",
-    "source-map": "^0.7.6"
+    "source-map": "^0.7.6",
+    "yaml": "^2.9.0"
   },
   "peerDependencies": {
     "vite": "*"

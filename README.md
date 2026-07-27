@@ -1,6 +1,7 @@
 # @epure/vitest
 
-Gherkin contracts run by Vitest, with typed steps for TypeScript and ReScript.
+Gherkin contracts and structured YAML fixtures run by Vitest, with typed steps
+for TypeScript and ReScript.
 
 > `@epure/vitest` is the new name of `vitest-bdd`. Existing APIs remain as
 > deprecated aliases, but new code should use the names shown below.
@@ -33,6 +34,47 @@ export default defineConfig({
 
 `epureVitest` translates feature files and Gherkin code fences in Markdown into
 Vitest suites in memory. It does not write generated test files to disk.
+
+## YAML fixtures
+
+Use `yamlBdd` when scenarios are structured examples rather than prose:
+
+```ts
+// vitest.config.ts
+import { yamlBdd } from "@epure/vitest";
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  plugins: [yamlBdd()],
+  test: { include: ["**/*.test.yaml"] },
+});
+```
+
+```yaml
+feature: Calculator
+background:
+  given: a calculator
+examples:
+  - scenario: adds two numbers
+    left: 1
+    right: 2
+    result: 3
+```
+
+Register the background in `calculator.test.ts`, `calculator.steps.ts`, or a
+shared `steps.ts` beside the fixture:
+
+```ts
+import { given } from "@epure/vitest/yaml";
+import { expect } from "vitest";
+
+given("a calculator", ({ left, right, result }) => {
+  expect(Number(left) + Number(right)).toBe(result);
+});
+```
+
+Each example becomes a source-mapped Vitest test. Fields other than `scenario`
+are passed to the registered handler as `Record<string, unknown>`.
 
 ## Write a contract
 

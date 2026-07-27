@@ -1,12 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import { readdir, readFile } from "node:fs/promises";
-import { splitFrontmatter, type Value } from "@epure/minidoc";
+import { parse } from "yaml";
 
 const content = new URL("../content/epurejs/", import.meta.url);
 const slugPattern = /^[a-z0-9-]+$/;
 
+type Value = string | { kind: "list"; items: string[] };
 type Vars = Record<string, Value>;
-type ApiGroup = "gherkin" | "vitest";
+type ApiGroup = "gherkin" | "yaml" | "vitest";
 
 function scalar(vars: Vars, name: string): string {
   const value = vars[name];
@@ -20,6 +21,26 @@ function list(vars: Vars, name: string): string[] {
   return (value as { kind: "list"; items: string[] }).items;
 }
 
+function frontmatter(text: string, file: string): Vars {
+  if (!text.startsWith("---\n")) {
+    throw new Error(`${file}: missing frontmatter`);
+  }
+  const end = text.indexOf("\n---", 4);
+  if (end < 0) {
+    throw new Error(`${file}: unclosed frontmatter`);
+  }
+  const value = parse(text.slice(4, end));
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error(`${file}: frontmatter must be a mapping`);
+  }
+  return Object.fromEntries(
+    Object.entries(value).map(([name, item]) => [
+      name,
+      Array.isArray(item) ? { kind: "list", items: item.map(String) } : String(item),
+    ]),
+  );
+}
+
 async function entries(dir: "guide" | `api/${ApiGroup}`) {
   const root = new URL(`${dir}/`, content);
   const files = (await readdir(root)).filter((file) => file.endsWith(".md")).sort();
@@ -27,7 +48,7 @@ async function entries(dir: "guide" | `api/${ApiGroup}`) {
     files.map(async (file) => ({
       group: dir.startsWith("api/") ? (dir.slice(4) as ApiGroup) : undefined,
       file,
-      vars: splitFrontmatter(await readFile(new URL(file, root), "utf8"), `${dir}/${file}`).vars,
+      vars: frontmatter(await readFile(new URL(file, root), "utf8"), `${dir}/${file}`),
     })),
   );
 }
@@ -40,7 +61,7 @@ async function apiEntries() {
     .map((entry) => entry.name)
     .sort();
   const files = contents.filter((entry) => entry.isFile() && entry.name.endsWith(".md")).map((entry) => entry.name);
-  expect(groups).toEqual(["gherkin", "vitest"]);
+  expect(groups).toEqual(["gherkin", "vitest", "yaml"]);
   expect(files, "Markdown files must belong to an API group").toEqual([]);
   return (await Promise.all(groups.map((group) => entries(`api/${group as ApiGroup}`)))).flat();
 }
@@ -49,6 +70,7 @@ describe("API content", () => {
   test("uses the grouped schema in rendered order", async () => {
     const api = await apiEntries();
     expect(api.filter(({ group }) => group === "gherkin")).toHaveLength(9);
+    expect(api.filter(({ group }) => group === "yaml")).toHaveLength(4);
     expect(api.filter(({ group }) => group === "vitest")).toHaveLength(6);
     const expected = [
       "name",

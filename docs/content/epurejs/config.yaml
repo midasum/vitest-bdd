@@ -25,6 +25,22 @@ var:
         <div class="sig-wrap" data-pair>{{toggleButton}}{{signatureTs}}{{signatureRes}}</div>
         <div class="prose">{{body}}</div>
       </article>
+  yamlIndex:
+    dir: api/yaml
+    each: '        <a href="#{{slug}}">{{label}}</a>'
+  yamlEntries:
+    dir: api/yaml
+    transform: apiMd
+    each: |-
+      <article class="entry" id="{{slug}}">
+        <header class="entry-head">
+          <h2><a href="#{{slug}}">{{label}}</a></h2>
+          <p class="tags"><span>YAML</span>{{tagSpans}}<span>Since {{since}}</span></p>
+        </header>
+        <p class="summary">{{summary}}</p>
+        <div class="sig-wrap" data-pair>{{toggleButton}}{{signatureTs}}{{signatureRes}}</div>
+        <div class="prose">{{body}}</div>
+      </article>
   vitestEntries:
     dir: api/vitest
     transform: apiMd
@@ -43,7 +59,7 @@ var:
       <div class="wrap">
         <p class="eyebrow">Reference<span class="sep">·</span>v1.x<span class="sep">·</span>TypeScript &amp; ReScript signatures</p>
         <h1>API Reference</h1>
-        <p class="sec-lead">The public surface of @epure/vitest: the plugin, the step definitions, and the ReScript bindings for Vitest. Each entry gives the signature, behavior, and one minimal example.</p>
+        <p class="sec-lead">The public surface of @epure/vitest: Gherkin contracts, structured YAML fixtures, and the ReScript bindings for Vitest. Each entry gives the signature, behavior, and one minimal example.</p>
       </div>
     </div>
 
@@ -51,11 +67,14 @@ var:
       <nav class="api-index" aria-label="API index">
         <p class="k idx-group">Gherkin</p>
     {{gherkinIndex}}
+        <p class="k idx-group">YAML</p>
+    {{yamlIndex}}
         <p class="k idx-group">Vitest</p>
     {{vitestIndex}}
       </nav>
       <div class="api-entries">
     {{gherkinEntries}}
+    {{yamlEntries}}
     {{vitestEntries}}
       </div>
     </div>
@@ -118,7 +137,7 @@ build:
     input: "{{shell}}"
     var:
       title: "API Reference — @epure/vitest"
-      description: "@epure/vitest API reference — the Vite plugin, Gherkin step definitions, table helpers, and the ReScript bindings for Vitest."
+      description: "@epure/vitest API reference — Vite plugins for Gherkin contracts and YAML fixtures, step definitions, table helpers, and ReScript bindings."
       htmlAttrs: 'lang="en" data-lang="ts"'
       apiCurrentAttr: ' aria-current="page"'
       prePaint: "<script>{{prePaintScript}}</script>"

@@ -4,9 +4,11 @@ import { SourceMapGenerator } from "source-map";
 import type { Plugin } from "vite";
 import { parse, type SourceLocation } from "./parser";
 import { resCompile, resCompiledResolver } from "./resCompile";
-export { Given, type Context, type Step } from "./steps";
-export { toNumbers, toRecords, toStrings } from "./utils";
+import { yamlCompile } from "./yamlCompile";
+
 export { resCompiledResolver } from "./resCompile";
+export { type Context, Given, type Step } from "./steps";
+export { toNumbers, toRecords, toStrings } from "./utils";
 
 /** Configuration accepted by {@link epureVitest}. */
 export type EpureVitestOptions = {
@@ -28,6 +30,18 @@ export type EpureVitestOptions = {
 
 /** @deprecated Use {@link EpureVitestOptions} instead. */
 export type VitestBddOptions = EpureVitestOptions;
+
+/** Configuration accepted by {@link yamlBdd}. */
+export type YamlBddOptions = {
+  /** File suffix compiled into suites. Defaults to `.test.yaml`. */
+  suffix?: string;
+  /** Run scenarios concurrently. Defaults to `true`. */
+  concurrent?: boolean;
+  /** Resolve a fixture to its steps module. */
+  stepsResolver?: (path: string) => string | null;
+  /** Print each generated module. */
+  debug?: boolean;
+};
 
 const defaultOptions: Required<EpureVitestOptions> = {
   debug: false,
@@ -60,6 +74,27 @@ export function vitestBdd(opts: VitestBddOptions = {}): Plugin {
     warned = true;
   }
   return epureVitest(opts);
+}
+
+/** Create the Vite plugin that translates YAML examples into Vitest suites. */
+export function yamlBdd(options: YamlBddOptions = {}): Plugin {
+  const suffix = options.suffix ?? ".test.yaml";
+  const resolveSteps = options.stepsResolver ?? yamlStepsResolver;
+  return {
+    name: "@epure/vitest/yaml",
+    enforce: "pre",
+    load(id) {
+      const path = id.split("?")[0] ?? id;
+      if (!path.endsWith(suffix)) {
+        return;
+      }
+      return yamlCompile(path, {
+        stepsPath: resolveSteps(path),
+        concurrent: options.concurrent,
+        debug: options.debug,
+      });
+    },
+  };
 }
 
 function compile(path: string, opts: Required<EpureVitestOptions>) {
@@ -155,4 +190,12 @@ export function stepsResolver(path: string): string | null {
     }
   }
   return baseResolver(join(dirname(path), "steps"));
+}
+
+/** Resolve `name.test.yaml` to a fixture-specific or shared steps module. */
+export function yamlStepsResolver(path: string): string | null {
+  const stem = path.replace(/\.yaml$/, "");
+  return (
+    baseResolver(stem) ?? baseResolver(stem.replace(/\.test$/, ".steps")) ?? baseResolver(join(dirname(path), "steps"))
+  );
 }

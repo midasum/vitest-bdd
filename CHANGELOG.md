@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added `yamlBdd` for source-mapped YAML example fixtures.
+- Added YAML background handlers through `@epure/vitest/yaml`.
+
 ## 1.1.0 — 2026-07-22
 
 - Renamed the package from `vitest-bdd` to `@epure/vitest`.

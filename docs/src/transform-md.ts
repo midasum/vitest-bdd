@@ -1,11 +1,13 @@
 import MarkdownIt from "markdown-it";
+import type Token from "markdown-it/lib/token.mjs";
 import container from "markdown-it-container";
 import Prism from "prismjs";
 import "prismjs/components/prism-typescript.js";
 import "prismjs/components/prism-rescript.js";
 import "prismjs/components/prism-gherkin.js";
+import "prismjs/components/prism-yaml.js";
 
-const languages = ["typescript", "rescript", "res", "gherkin"];
+const languages = ["typescript", "rescript", "res", "gherkin", "yaml"];
 const toggle =
   '<button class="lang-toggle" type="button" aria-label="Switch example language"><span class="lt lt-ts">TS</span><span class="lt lt-res">RES</span></button>';
 const switcher =
@@ -38,7 +40,7 @@ function callouts(body: string): void {
   }
 }
 
-function pairs(tokens: MarkdownIt.Token[]): void {
+function pairs(tokens: Token[]): void {
   for (let index = 0; index < tokens.length; index++) {
     const token = tokens[index];
     if (token?.type !== "fence") continue;
@@ -52,7 +54,7 @@ function pairs(tokens: MarkdownIt.Token[]): void {
   }
 }
 
-function contracts(tokens: MarkdownIt.Token[]): void {
+function contracts(tokens: Token[]): void {
   for (let index = 0; index < tokens.length; index++) {
     const token = tokens[index];
     if (token?.type !== "fence" || language(token.info.trim()) !== "gherkin") continue;
@@ -72,7 +74,7 @@ function contracts(tokens: MarkdownIt.Token[]): void {
   }
 }
 
-function headings(tokens: MarkdownIt.Token[]): void {
+function headings(tokens: Token[]): void {
   if (tokens.some((token) => token.type === "heading_open")) {
     throw new Error("API entry body must not contain headings");
   }
@@ -81,15 +83,15 @@ function headings(tokens: MarkdownIt.Token[]): void {
 function markdown(page: Page): MarkdownIt {
   const md = new MarkdownIt({ html: false });
   md.use(container, "story", {
-    render: (tokens, index) =>
+    render: (tokens: Token[], index: number) =>
       tokens[index]?.nesting === 1 ? '<div class="story">\n<span class="k">Story</span>\n' : "</div>\n",
   });
   md.use(container, "pro", {
-    render: (tokens, index) =>
+    render: (tokens: Token[], index: number) =>
       tokens[index]?.nesting === 1 ? '<div class="pro">\n<span class="k">Pro tip</span>\n' : "</div>\n",
   });
   md.use(container, "def", {
-    render: (tokens, index) => (tokens[index]?.nesting === 1 ? '<div class="defcard">\n' : "</div>\n"),
+    render: (tokens: Token[], index: number) => (tokens[index]?.nesting === 1 ? '<div class="defcard">\n' : "</div>\n"),
   });
 
   md.renderer.rules.fence = (tokens, index) => {
@@ -98,7 +100,7 @@ function markdown(page: Page): MarkdownIt {
     const name = language(token.info.trim());
     if (!languages.includes(name)) {
       throw new Error(
-        `code fence uses unsupported language "${name}" (only "typescript", "rescript", "res", or "gherkin" allowed)`,
+        `code fence uses unsupported language "${name}" (only "typescript", "rescript", "res", "gherkin", or "yaml" allowed)`,
       );
     }
     const code = highlight(token.content.replace(/\n$/, ""), name);

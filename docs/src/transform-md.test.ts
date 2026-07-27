@@ -14,7 +14,7 @@ describe("guide markdown", () => {
 
   test("pairs TypeScript and ReScript fences", () => {
     const html = guideMd(
-      ["```typescript", "const value: string = \"ok\"", "```", "```rescript", "let value: string = \"ok\"", "```"].join(
+      ["```typescript", 'const value: string = "ok"', "```", "```rescript", 'let value: string = "ok"', "```"].join(
         "\n",
       ),
     );
@@ -50,6 +50,13 @@ describe("API markdown", () => {
     expect(html).toContain("token keyword");
     expect(html).toContain('class="language-typescript"');
     expect(html).toContain('class="language-rescript"');
+  });
+
+  test("renders YAML fixture examples", () => {
+    const html = apiMd(["```yaml", "feature: Calculator", "examples:", "  - scenario: adds numbers", "```"].join("\n"));
+
+    expect(html).toContain("token key atrule");
+    expect(html).toContain('<pre class="code">');
   });
 
   test("rejects headings, unknown containers, and unsupported fences", () => {

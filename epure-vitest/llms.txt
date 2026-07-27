@@ -2,7 +2,7 @@
 
 @epure/vitest is a Vite plugin that translates Gherkin feature files and
 Gherkin blocks in Markdown into Vitest suites in memory. It also provides
-ReScript bindings for Vitest.
+ReScript bindings for Vitest and a YAML fixture plugin for structured examples.
 
 Documentation: https://epurejs.dev
 Repository: https://github.com/epuremethod/vitest
@@ -21,11 +21,15 @@ Installed contracts:
   those functions close over the state created by that builder.
 - Each scenario gets its own state and can run concurrently.
 - `toRecords`, `toStrings`, and `toNumbers` convert Gherkin data tables.
+- `yamlBdd()` translates `*.test.yaml` fixtures into source-mapped suites.
+- `given` from `@epure/vitest/yaml` registers a YAML background handler that
+  receives each example's data.
 
 ## Critical rules
 
 - Include contract extensions such as `.feature` and `.md` in Vitest's
   `test.include`.
+- Include `*.test.yaml` when using `yamlBdd()`.
 - Place the steps module beside its contract using one of the documented
   resolver conventions, or provide `stepsResolver`.
 - Use `EpureVitest` from ReScript. `VitestBdd` is a deprecated compatibility

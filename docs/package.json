@@ -12,16 +12,18 @@
     "test": "bun test src"
   },
   "dependencies": {
-    "@epure/minidoc": "file:../../minidoc",
+    "@epure/minidoc": "0.1.0-beta.20260726T234354",
     "live-server": "^1.2.2",
     "markdown-it": "^14.3.0",
     "markdown-it-container": "^4.0.0",
-    "prismjs": "^1.30.0"
+    "prismjs": "^1.30.0",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@types/bun": "^1.3.14",
     "@types/markdown-it": "^14.1.2",
     "@types/markdown-it-container": "^4.0.0",
+    "@types/node": "^24.0.3",
     "@types/prismjs": "^1.26.6"
   }
 }
