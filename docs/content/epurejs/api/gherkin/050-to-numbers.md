@@ -11,7 +11,7 @@ signature.res: "let toNumbers: array<array<string>> => array<float>"
 tags: []
 ---
 
-`toNumbers` takes the first column of a data table and parses each cell as a number. Use it when a scenario enumerates values — intervals, amounts, thresholds — and the step wants them ready for arithmetic. Siblings: [toStrings](api.html#to-strings), [toRecords](api.html#to-records). One column, no header row — each cell one number:
+`toNumbers` takes the first column of a data table and parses each cell as a number. Use it when a scenario enumerates values — intervals, amounts, or thresholds — and the step needs them ready for arithmetic. Its sibling helpers are [toStrings](api.html#to-strings) and [toRecords](api.html#to-records). One column, no header row — each cell represents one number:
 
 ```gherkin
 Then the review intervals are

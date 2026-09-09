@@ -5,13 +5,13 @@ slug: expected
 kind: function
 since: "0.6"
 sort: 110
-summary: The statics of Vitest's expect — soft, poll, asymmetric matchers, extension points.
-signature.ts: "expect.soft(...) / expect.poll(...) / expect.closeTo(...) — statics on expect itself"
+summary: The static properties of Vitest's expect — soft, poll, asymmetric matchers, and extension points.
+signature.ts: "expect.soft(...) / expect.poll(...) / expect.closeTo(...) — static properties on expect itself"
 signature.res: "let expected: expected"
 tags: []
 ---
 
-In JavaScript, `expect` is both a function and a bag of statics. ReScript types cannot express that duality, so the statics live under a second binding to the same object: `expected`. It carries `soft` (record the failure, keep running), `poll` (retry an assertion until it passes or times out), `assertions`/`hasAssertions` (count guards for async tests), `unreachable`, and the asymmetric matchers used *inside* [expect](api.html#expect) comparisons: `closeTo`, `anything`, `any`, `arrayContaining`, `objectContaining`, `stringContaining`, `stringMatching`. Extension points `extend`, `addSnapshotSerializer` and `addEqualityTesters` are bound as well.
+In JavaScript, `expect` is both a function and an object with static properties. ReScript types cannot express that duality, so the static properties live under a second binding to the same object: `expected`. It provides `soft` (record the failure and keep running), `poll` (retry an assertion until it passes or times out), `assertions`/`hasAssertions` (count guards for async tests), `unreachable`, and the asymmetric matchers used *inside* [expect](api.html#expect) comparisons: `closeTo`, `anything`, `any`, `arrayContaining`, `objectContaining`, `stringContaining`, and `stringMatching`. The extension points `extend`, `addSnapshotSerializer`, and `addEqualityTesters` are bound as well.
 
 `expected.any` takes a constructor; the `OfType` module provides `string`, `number`, `boolean` and `array` for the common cases.
 

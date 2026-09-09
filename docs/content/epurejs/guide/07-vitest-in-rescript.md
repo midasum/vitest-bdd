@@ -6,11 +6,11 @@ chapter: "07"
 refs: [expect, expected, assertions-type, describe, test, before-each]
 ---
 
-The second thing @epure/vitest does looks unrelated until you build an épure application: complete ReScript bindings for Vitest. The business floor of such an application is pure ReScript functions; the contracts sit above them, but the functions themselves deserve unit tests in the language they are written in. Without bindings, a ReScript team writes its tests in TypeScript — a translation layer at exactly the boundary the method tries to keep clean.
+The second thing @epure/vitest does may seem unrelated until you build an épure application: it provides complete ReScript bindings for Vitest. The business floor of such an application consists of pure ReScript functions; the contracts sit above them, but the functions themselves deserve unit tests in the language in which they are written. Without bindings, a ReScript team writes its tests in TypeScript — a translation layer at exactly the boundary the method tries to keep clean.
 
-`open EpureVitest` and the whole runner is there. The former `VitestBdd`
-module remains available as a deprecated alias and produces a compiler/editor
-warning:
+With `open EpureVitest`, the whole runner is available. The former `VitestBdd`
+module remains available as a deprecated alias and produces warnings in the
+compiler and editor:
 
 ```rescript
 // Scheduler_test.res
@@ -30,13 +30,13 @@ describe("Scheduler", () => {
 })
 ```
 
-Failures point at the `.res` line — source maps survive the compiler — and `describe`, [test](api.html#test), `it` and `bench` come with `Skip`, `Only` and `Todo` modules for the modes, plus [hooks](api.html#before-each) for suites that manage a resource.
+Failures point to the `.res` line — source maps survive the compiler — and `describe`, [test](api.html#test), `it`, and `bench` come with `Skip`, `Only`, and `Todo` modules for the modes, plus [hooks](api.html#before-each) for suites that manage a resource.
 
 ### Assertions that know their type
 
 [expect](api.html#expect) returns a typed [record of matchers](api.html#assertions-type): `expect(5.0)` offers float comparisons, `expect([1, 2])` offers array matchers, and `toBe` demands the same type it was given. A matcher misuse that would fail at runtime in JavaScript does not compile here.
 
-The statics of JavaScript's `expect` — a function that is also an object — cannot be one binding in ReScript, so they live under [expected](api.html#expected): `soft`, `poll`, assertion counting, and the asymmetric matchers for use inside comparisons:
+The static properties of JavaScript's `expect` — a function that is also an object — cannot share one binding in ReScript, so they live under [expected](api.html#expected): `soft`, `poll`, assertion counting, and the asymmetric matchers used inside comparisons:
 
 ```rescript
 expect({title: "0.1 + 0.2", sum: 0.1 +. 0.20002}).toEqual({
@@ -52,5 +52,5 @@ Steps files are ReScript too — `SchedulingSteps.res` next to `Scheduling.featu
 :::
 
 ::: story
-Alice's scheduler is four pure functions in `Scheduler.res`. The contract holds the behavior Nadia signed; the unit tests hold the edge cases Nadia never thought to ask about — leap days, an empty deck, an interval already at the ceiling. Two nets, one runner, zero translation.
+Alice's scheduler is four pure functions in `Scheduler.res`. The contract holds the behavior Nadia signed off on; the unit tests hold the edge cases Nadia never thought to ask about — leap days, an empty deck, an interval already at the ceiling. Two nets, one runner, zero translation.
 :::

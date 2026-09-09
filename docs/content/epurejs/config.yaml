@@ -96,7 +96,7 @@ var:
       <div class="wrap">
         <p class="eyebrow">Guide<span class="sep">·</span>v1.x</p>
         <h1>The Guide</h1>
-        <p class="standfirst">A reading path through @epure/vitest, in order: why a contract must run, the shape of a feature file, steps as closures, the wiring into Vitest, tables and other languages, contracts inside prose, and writing Vitest in ReScript. Read it top to bottom once. When you need to look something up later, use the <a href="./api.html">API reference</a> instead — it is flat, complete, and made for that.</p>
+        <p class="standfirst">A reading path through @epure/vitest, in order: why a contract must run, the shape of a feature file, steps as closures, the wiring into Vitest, tables and other languages, contracts in prose, and writing Vitest in ReScript. Read it from top to bottom once. When you need to look something up later, use the <a href="./api.html">API reference</a> instead — it is flat, complete, and designed for reference.</p>
       </div>
     </div>
 
@@ -117,7 +117,7 @@ build:
     input: "{{shell}}"
     var:
       title: "@epure/vitest — Contracts That Run"
-      description: "@epure/vitest — contracts that run. Every .feature file is also a Vitest suite: plain Gherkin bound to typed steps, so what business signed is exactly what the tests measure."
+      description: "@epure/vitest — contracts that run. Every .feature file is also a Vitest suite: plain Gherkin bound to typed steps, so what the business signed is exactly what the tests measure."
       htmlAttrs: 'lang="en"'
       homeCurrentAttr: ' aria-current="page"'
       main: "{{homeMain}}"

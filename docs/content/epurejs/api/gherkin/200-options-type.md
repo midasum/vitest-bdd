@@ -16,10 +16,10 @@ The former `VitestBddOptions` name remains as a deprecated TypeScript alias.
 
 - `concurrent` (default `true`) — run scenarios concurrently. Safe because each scenario builds its own context; disable only for suites that share external state.
 - `gherkinExtensions` (default `[".feature"]`) — files parsed as pure Gherkin.
-- `markdownExtensions` (default `[".md", ".mdx", ".markdown"]`) — files scanned for `gherkin` code fences; see guide chapter [Contracts in the prose](guide.html#contracts-in-the-prose).
+- `markdownExtensions` (default `[".md", ".mdx", ".markdown"]`) — files scanned for `gherkin` code fences; see the guide chapter [Contracts in prose](guide.html#contracts-in-the-prose).
 - `.yaml` files are always compiled as structured fixtures; use Vitest's
   `test.include` to select them.
-- `rescriptExtensions` (default `[".res"]`) — ReScript sources translated with source maps.
+- `rescriptExtensions` (default `[".res"]`) — ReScript sources compiled with source maps.
 - `stepsResolver` (default [stepsResolver](api.html#steps-resolver)) — how a
   feature, Markdown, or YAML file finds its steps.
 - `resCompiledResolver` — how a ReScript source finds its compiled JavaScript module.

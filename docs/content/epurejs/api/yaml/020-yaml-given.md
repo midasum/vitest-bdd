@@ -14,7 +14,7 @@ tags: []
 Import `Given` from `@epure/vitest` in the fixture's steps module, just as for
 a feature file. Its name matches the scenario's `given`, or
 `background.given` when the scenario does not provide one. Its handler receives
-step bindings first, every field except `scenario` and `given` second, and
+step bindings first, then every field except `scenario` and `given`, and
 Vitest's `TestContext` last. Step bindings can register operations, though YAML
 fixtures do not execute those operations yet.
 

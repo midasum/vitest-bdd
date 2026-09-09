@@ -27,7 +27,7 @@ Feature: The interval ladder
       | luz   | 16       | 3     |
 ```
 
-A table arrives at the step as raw rows of strings — the last parameter. Three helpers shape it: [toRecords](api.html#to-records) reads the header row and returns one record per line, [toStrings](api.html#to-strings) and [toNumbers](api.html#to-numbers) flatten a single column into a list.
+A table arrives in the step as raw rows of strings, passed as the last parameter. Three helpers shape it: [toRecords](api.html#to-records) reads the header row and returns one record per data row, while [toStrings](api.html#to-strings) and [toNumbers](api.html#to-numbers) flatten a single column into a list.
 
 ```typescript
 import { Given, toRecords } from "@epure/vitest";
@@ -55,11 +55,11 @@ given("a deck with cards", ({step}, rows) => {
 })
 ```
 
-The `Then the deck is` assertion compares the *whole* table: the contract states not only that `gato` moved but that nothing else did. Tables make completeness cheap to say.
+The `Then the deck is` assertion compares the *whole* table: the contract states not only that `gato` moved but that nothing else did. Tables make completeness easy to express.
 
 ### The contract speaks the owner's language
 
-Nadia thinks about scheduling in French, and there is no reason her contract shouldn't. Gherkin ships with some forty languages; a `# language:` header switches the keywords:
+Nadia thinks about scheduling in French, and there is no reason her contract should not be in French too. Gherkin ships with some forty languages; a `# language:` header switches the keywords:
 
 ```gherkin
 # language: fr
@@ -71,7 +71,7 @@ Fonctionnalité: Programmation des révisions
     Alors "gato" est programmée dans 0 jours
 ```
 
-The steps file cooperates without a single option, because binder names were never keywords — the context proxy hands out whatever names you destructure:
+The steps file works without any configuration because binder names were never keywords — the context proxy exposes whatever names you destructure:
 
 ```typescript
 Soit("une carte {string} avec un intervalle de {number} jours", ({ Quand, Alors }, nom: string, jours: number) => {

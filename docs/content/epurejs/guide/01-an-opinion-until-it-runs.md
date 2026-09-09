@@ -8,9 +8,9 @@ refs: []
 
 This chapter is for the person deciding whether @epure/vitest belongs in their stack. There is no code in it.
 
-A specification nobody executes is an opinion. It starts true, drifts quietly, and is discovered to be fiction at the worst possible moment — usually by the person who signed it. Every team owns a document like this: the requirements page, the acceptance checklist, the PDF with the rules in it. The code moved; the document did not; nobody can say when they parted.
+A specification nobody executes is an opinion. It starts out true, drifts quietly, and is discovered to be fiction at the worst possible moment — usually by the person who signed it. Every team owns a document like this: the requirements page, the acceptance checklist, the PDF containing the rules. The code moved; the document did not; nobody can say when they parted.
 
-@epure/vitest exists to remove the gap by removing the second artifact. A `.feature` file — plain Given/When/Then that the people who own the rules can read — is handed to Vitest as a test suite, directly. Not generated into one, not mirrored by one: the file business reads is the file the runner executes. When reality drifts from the contract, the build fails and the failure names the clause.
+@epure/vitest exists to remove the gap by removing the second artifact. A `.feature` file — plain Given/When/Then that the people who own the rules can read — is handed directly to Vitest as a test suite. It is neither converted into nor mirrored by another file: the file the business reads is the file the runner executes. When reality drifts from the contract, the build fails and the failure names the clause.
 
 ### Two things, deliberately small
 
@@ -24,7 +24,7 @@ The landing page borrows a word for the first job: *compas* — the divider, the
 
 ### The proof sheet of épure
 
-In the [épure](https://epuremethod.com) method, feature files are written *before* the code, by a domain expert and a method expert together, and signed by the people who own the need. From that moment the contract governs the whole structure: the AI implements against it, the senior reviews against it, and @epure/vitest is what makes the governing literal — every scenario runs green or the window does not close. [tilia](https://tiliajs.dev) is the foundation sheet, [@tilia/query](https://tiliajs.dev/query/) the data sheet; this is the proof sheet, and this guide is the last panel of the drawing.
+In the [épure](https://epuremethod.com) method, feature files are written *before* the code by a domain expert and a method expert working together, then signed by the people who own the need. From that moment, the contract governs the whole structure: the AI implements against it, the senior reviewer assesses the work against it, and @epure/vitest makes that governance literal — every scenario runs green, or the window does not close. [tilia](https://tiliajs.dev) is the foundation sheet, [@tilia/query](https://tiliajs.dev/query/) the data sheet; this is the proof sheet, and this guide is the last panel of the drawing.
 
 ### How this guide works
 
@@ -34,4 +34,4 @@ Readers of the [tilia](https://tiliajs.dev) and [@tilia/query](https://tiliajs.d
 Nadia teaches Spanish and owns the review rules. Last month Alice shipped a change that rescheduled failed cards to the next day. Nadia had signed off — on a PDF. The PDF still says *same day*.
 :::
 
-Each chapter is one part of the tool: the shape of a contract, steps as closures, the wiring into Vitest, tables and languages, contracts inside prose, and the ReScript port. If you decide for your team, this chapter and the [last](#onward) may be all you need. The chapters between are for whoever writes the contracts — and whoever, human or machine, is held to them.
+Each chapter covers one part of the tool: the shape of a contract, steps as closures, the wiring into Vitest, tables and languages, contracts inside prose, and the ReScript port. If you are deciding for your team, this chapter and the [last](#onward) may be all you need. The chapters between are for whoever writes the contracts — and whoever, human or machine, is held to them.

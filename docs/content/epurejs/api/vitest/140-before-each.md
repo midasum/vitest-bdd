@@ -11,9 +11,9 @@ signature.res: "let beforeEach: (string, 'a) => unit"
 tags: []
 ---
 
-The four suite hooks are bound as in Vitest: `beforeAll`/`afterAll` bracket a suite, `beforeEach`/`afterEach` bracket every test. `onTestFinished` registers per-test cleanup from inside the test itself — the better home for teardown that belongs to one test's setup rather than the whole suite.
+The four suite hooks are bound as in Vitest: `beforeAll`/`afterAll` bracket a suite, while `beforeEach`/`afterEach` bracket every test. `onTestFinished` registers per-test cleanup from inside the test itself — a better place for teardown that belongs to one test's setup rather than the whole suite.
 
-Contracts rarely need any of these: a [Given](api.html#given) builder runs per scenario and *is* the setup, with cleanup in closure reach. Reach for hooks in unit suites that manage an external resource.
+Contracts rarely need any of these: a [Given](api.html#given) builder runs once per scenario and *is* the setup, with cleanup available through its closure. Use hooks in unit suites that manage an external resource.
 
 ```rescript
 open EpureVitest

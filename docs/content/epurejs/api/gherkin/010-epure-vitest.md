@@ -18,7 +18,7 @@ matching `markdownExtensions`, and configured ReScript files. Vitest's
 `test.include` controls which files are tests. There is no separate runner and
 no generated code on disk.
 
-Scenarios run concurrently by default — each `Given` builds its own context, so there is no shared world to serialize on. Set `concurrent: false` if a suite genuinely needs order. See guide chapter [Wired into Vitest](guide.html#wired-into-vitest).
+Scenarios run concurrently by default — each `Given` builds its own context, so there is no shared world that requires serialized access. Set `concurrent: false` if a suite genuinely requires sequential execution. See the guide chapter [Wired into Vitest](guide.html#wired-into-vitest).
 
 The former `vitestBdd` export remains as a deprecated alias and warns once per
 process when called.

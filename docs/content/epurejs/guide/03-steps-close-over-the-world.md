@@ -62,7 +62,7 @@ Nadia keeps `days` and `day` in the contract; Alice writes `day(s)` only in the 
 
 ### What falls out of the closure
 
-**Concurrency for free.** Each scenario calls the builder again and gets a fresh world; nothing is shared, so Vitest runs scenarios concurrently by default. Nobody serializes on a global.
+**Concurrency for free.** Each scenario calls the builder again and gets a fresh world; nothing is shared, so Vitest runs scenarios concurrently by default. No one has to serialize access to global state.
 
 **Names are yours.** The context the builder destructures is a proxy: `When`, `Then`, `And`, `But` — or `Quand` and `Alors` — any name becomes a [step binder](api.html#step-type). Matching is by pattern text, so the binder names exist only to read well next to the feature file. ReScript keeps a single `step` field for all of them.
 
@@ -75,7 +75,7 @@ In ReScript, `given` captures at most one `{string}` or `{number}` parameter —
 :::
 
 ::: story
-Alice deletes the fix she had started writing. The failed-card scenario runs red — `expected 1, received 0` — pointing at the exact clause Nadia corrected. Now the fix has a definition of done that Nadia wrote.
+Alice deletes the fix she had started writing. The failed-card scenario runs red — `expected 1, received 0` — and points to the exact clause Nadia corrected. Now the fix has a definition of done that Nadia wrote.
 :::
 
 The steps exist. What remains is to make Vitest treat a `.feature` file as one of its own.

@@ -11,7 +11,7 @@ signature.res: "let test: (string, 'a) => unit"
 tags: []
 ---
 
-`test` and `it` bind Vitest's identical pair; pick the one that reads better in the sentence. The body may be synchronous or `async` — source maps carry through the ReScript compiler, so a failure points at the `.res` line, not the compiled `.mjs`. `bench` is bound alongside for benchmarks, and `Skip`, `Only` and `Todo` (see [describe](api.html#describe)) provide the mode variants.
+`test` and `it` are bindings for Vitest's identical functions; pick the one that reads better in the sentence. The body may be synchronous or `async` — source maps survive the ReScript compiler, so a failure points to the `.res` line, not the compiled `.mjs`. `bench` is bound alongside them for benchmarks, and `Skip`, `Only`, and `Todo` (see [describe](api.html#describe)) provide the mode variants.
 
 ```typescript
 import { expect, it } from "vitest";

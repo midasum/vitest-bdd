@@ -20,7 +20,7 @@ with `calculator.test.yaml.ts`, then tries `calculator.test.steps.ts`. The
 `Steps` suffix exists for ReScript, whose module names forbid dots:
 `test/Cards.feature` finds `test/CardsSteps.res`.
 
-Pass your own function as the `stepsResolver` option of [epureVitest](api.html#epure-vitest) to change the convention; return `null` to let the default error surface. The resolver is exported so a custom one can fall back on it.
+Pass your own function as the `stepsResolver` option of [epureVitest](api.html#epure-vitest) to change the convention; return `null` to allow the default error to surface. The resolver is exported so that a custom one can fall back on it.
 
 ```typescript
 import { defineConfig } from "vitest/config";

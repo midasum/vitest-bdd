@@ -23,21 +23,21 @@ Feature: Review scheduling
     And the interval of "gato" is 1 day
 ```
 
-That second scenario is the one the shipped bug violated — now it is two lines of plain language with a pass/fail verdict attached.
+That second scenario is the one the shipped bug violated — now it is plain language with a pass/fail verdict attached.
 
 ### The grammar, entirely
 
-A `Feature:` names the sheet. Each `Scenario:` is one test: it begins with `Given` (the situation), acts with `When`, and asserts with `Then`. `And` and `But` continue whichever kind of step came before — they are readability, not semantics. Values in quotes and bare numbers are parameters; the step definitions capture them. A `Background:` section holds steps shared by every scenario in the file, and data tables carry structured values — both wait until [chapter five](#tables-and-other-tongues).
+A `Feature:` names the sheet. Each `Scenario:` is one test: it begins with `Given` (the situation), continues with `When` (the action), and asserts with `Then`. `And` and `But` continue whichever kind of step came before — they improve readability without changing semantics. Values in quotes and bare numbers are parameters; the step definitions capture them. A `Background:` section holds steps shared by every scenario in the file, and data tables carry structured values — both are covered in [chapter five](#tables-and-other-tongues).
 
-That is the whole grammar. The point of the smallness is who it admits: Nadia reads this file with no training, catches the wrong rule *before* implementation, and what she approves is — verbatim — what runs.
+That is the whole grammar. Its small size makes it accessible: Nadia reads this file with no training, catches the wrong rule *before* implementation, and what she approves is — verbatim — what runs.
 
 ::: story
-Nadia reads the draft and stops at a line Alice thought was obvious: "No — failing a mature card resets the interval to one day, not zero. Zero means they see it twice in one session." One word changes in the contract. No code exists yet to fix.
+Nadia reads the draft and stops at a line Alice thought was obvious: "No — failing a mature card resets the interval to one day, not zero. Zero means they see it twice in one session." One word changes in the contract. There is no code yet that needs fixing.
 :::
 
 ### Where contracts live
 
-A feature file sits next to the code it governs, and its steps file sits next to it, found by naming convention: `scheduling.feature` looks for `scheduling.feature.ts`, then `scheduling.steps.ts`, then `schedulingSteps.ts` — the last form exists because ReScript module names cannot contain dots, so `Scheduling.feature` pairs with `SchedulingSteps.res`. A directory-wide `steps.ts` catches whatever remains, and the convention itself is [replaceable](api.html#steps-resolver).
+A feature file sits next to the code it governs, and its steps file sits next to it, found by naming convention: for `scheduling.feature`, the resolver looks for `scheduling.feature.ts`, then `scheduling.steps.ts`, then `schedulingSteps.ts` — the last form exists because ReScript module names cannot contain dots, so `Scheduling.feature` pairs with `SchedulingSteps.res`. A directory-wide `steps.ts` catches whatever remains, and the convention itself is [replaceable](api.html#steps-resolver).
 
 In an épure project the features gather in the domain's test directory — `src/domain/test/*.feature` — one file per behavior, named after the need it answers. The contract is versioned with the code, reviewed in the same pull request, and signed in the tool where signatures mean something: the repository.
 
