@@ -1,6 +1,7 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { SourceMapConsumer } from "source-map";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { epureVitest, stepsResolver, vitestBdd } from "./index";
 
@@ -40,6 +41,54 @@ describe("epureVitest", () => {
       if (!result || typeof result === "string") throw new Error("Expected compiled code");
 
       expect(result.code).toContain('from "@epure/vitest/runtime"');
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("resCompile", () => {
+  it("maps a test whose name follows `it(` on the next line", async () => {
+    const dir = await mkdtemp(path.join(os.tmpdir(), "epure-vitest-"));
+    try {
+      const source = path.join(dir, "Query_test.res");
+      await writeFile(
+        source,
+        [
+          "open EpureVitest",
+          "",
+          'describe("Query", () => {',
+          "  it(",
+          '    "should answer the anchor",',
+          "    () => expect(1).toBe(1),",
+          "  )",
+          "})",
+          "",
+        ].join("\n"),
+      );
+      await writeFile(
+        `${source}.mjs`,
+        [
+          'import * as Vitest from "vitest";',
+          "",
+          'Vitest.describe("Query", () => {',
+          '  Vitest.it("should answer the anchor", () => Vitest.expect(1).toBe(1));',
+          "});",
+          "",
+        ].join("\n"),
+      );
+      const log = vi.spyOn(console, "log").mockImplementation(() => {});
+
+      const plugin = epureVitest();
+      const load = plugin.load;
+      if (typeof load !== "function") throw new Error("Expected a Vite load hook");
+      const result = await load.call({} as never, source);
+      if (!result || typeof result === "string") throw new Error("Expected compiled code");
+
+      expect(log).not.toHaveBeenCalled();
+      const consumer = await new SourceMapConsumer(result.map as never);
+      // The compiled `it` on line 4 is the source `it(` on line 4.
+      expect(consumer.originalPositionFor({ line: 4, column: 0 }).line).toBe(4);
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

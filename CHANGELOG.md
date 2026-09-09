@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Mapped a ReScript test whose name `rescript format` moved to the line after
+  `it(`; such tests printed `No source mapping` and reported failures against
+  the wrong line.
 - Added source-mapped YAML example fixtures to `epureVitest`.
 - Extended `Given` to YAML scenario and background handlers with Vitest's test
   context.

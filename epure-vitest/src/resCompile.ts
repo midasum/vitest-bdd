@@ -3,6 +3,10 @@ import { SourceMapGenerator } from "source-map";
 import type { EpureVitestOptions } from ".";
 
 const TEST_RE = /(describe|it|test|only|skip|todo)\(("([^"]*)")/;
+// `rescript format` breaks a long call after the paren: the name is on the
+// next line, and the test is attributed to the line of the call.
+const OPEN_RE = /(describe|it|test|only|skip|todo)\(\s*$/;
+const NAME_RE = /^\s*("([^"]*)")/;
 type Stone = {
   key: string;
   line: number;
@@ -17,9 +21,14 @@ export function resCompile(path: string, opts: Required<EpureVitestOptions>) {
   const rmap: Stone[] = [];
   for (let i = 0; i < resLines.length; i++) {
     const line = resLines[i];
-    let re = TEST_RE.exec(line);
+    const re = TEST_RE.exec(line);
     if (re) {
       rmap.push({ key: re[2], line: i + 1 });
+      continue;
+    }
+    const next = OPEN_RE.test(line) && i + 1 < resLines.length ? NAME_RE.exec(resLines[i + 1]) : null;
+    if (next) {
+      rmap.push({ key: next[1], line: i + 1 });
     }
   }
   if (rmap.length === 0) {
